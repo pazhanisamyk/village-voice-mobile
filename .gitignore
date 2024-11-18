@@ -1,0 +1,19 @@
+# React Native files
+node_modules/
+android/
+ios/
+*.log
+
+# Environment variables
+.env
+
+# macOS files
+.DS_Store
+
+# IDE files
+.vscode/
+.idea/
+
+# Build files
+build/
+dist/
