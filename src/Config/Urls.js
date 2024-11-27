@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://192.168.1.35:3000/api/villagevoice';
+export const API_BASE_URL = 'http://192.168.24.119:3000/api/villagevoice';
 
 export const getApiUrl = (endpoint) => API_BASE_URL + endpoint;
 

@@ -7,6 +7,7 @@ import Colors from "../../../Styles/Colors";
 import { useFocusEffect } from "@react-navigation/native";
 import AlertPopup from "../../../Components/AlertPopup";
 import { showSuccess } from "../../../Utils/helperfunctions";
+import strings from "../../../Constants/languages";
 
 const AdminHomeScreen = () => {
     const [selectedTAb, setSelectedTab] = useState(1);
@@ -126,7 +127,7 @@ const AdminHomeScreen = () => {
                 isCancelVisible={isModalVisible}
                 onPressCancel={onPressCancel}
                 onPressSubmit={onPressSubmit}
-                message="Are you sure you want to quit?"
+                message={strings.LOGOUT_MSG}
             />
         </View>
     )

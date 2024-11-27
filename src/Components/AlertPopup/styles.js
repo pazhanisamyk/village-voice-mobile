@@ -26,10 +26,10 @@ const Styles = StyleSheet.create({
         color: Colors.background
     },
     closeButton: {
-        width: '30%',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: moderateScale(16),
+        paddingHorizontal: moderateScale(15),
         backgroundColor: Colors.blue,
     },
     closeButtonText: {

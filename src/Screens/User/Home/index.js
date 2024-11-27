@@ -3,6 +3,7 @@ import Imagepaths from "../../../Constants/Imagepaths";
 import Styles from "./styles";
 import { useEffect, useState } from "react";
 import AlertPopup from "../../../Components/AlertPopup";
+import strings from "../../../Constants/languages";
 
 const UserHomeScreen = ({ navigation }) => {
 
@@ -99,7 +100,7 @@ const UserHomeScreen = ({ navigation }) => {
                 isCancelVisible={isModalVisible}
                 onPressCancel={onPressCancel}
                 onPressSubmit={onPressSubmit}
-                message="Are you sure you want to quit?"
+                message={strings.LOGOUT_MSG}
             />
         </View>
     )

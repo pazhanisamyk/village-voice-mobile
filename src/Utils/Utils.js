@@ -6,7 +6,7 @@ export async function getHeaders() {
     if (userData) {
       userData = JSON.parse(userData);
       return {
-        authorization: `${userData.token}`,
+        authorization: `${userData?.token}`,
       };
     }
     return {};

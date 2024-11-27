@@ -8,6 +8,7 @@ import { moderateScale } from "../../Styles/ResponsiveSizes";
 import AlertPopup from "../../Components/AlertPopup";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
+import strings from "../../Constants/languages";
 
 const EditProfile = ({ navigation, route }) => {
     const [username, setUsername] = useState('');
@@ -86,7 +87,7 @@ const EditProfile = ({ navigation, route }) => {
                     <TouchableOpacity style={Styles.backArrow} onPress={onPressBack}>
                         <Image source={Imagepaths.arrow_left} style={Styles.backIcon} />
                     </TouchableOpacity>
-                    <Text style={Styles.headertext}>Edit Profile</Text>
+                    <Text style={Styles.headertext}>{strings.EDIT_PROFILE}</Text>
                 </View>
                 <View style={Styles.outerContainer}>
                     <TouchableOpacity onPress={() => { }} style={Styles.profileOutline}>
@@ -94,27 +95,27 @@ const EditProfile = ({ navigation, route }) => {
                         <Image source={Imagepaths.camera} style={Styles.camera} />
                     </TouchableOpacity>
                     <View style={Styles.editprofileContainer}>
-                        <Text style={Styles.title}>Username</Text>
+                        <Text style={Styles.title}>{strings.USERNAME}</Text>
                         <TextInput
                             placeholderTextColor={Colors.gray}
                             ref={inputRef}
                             value={username}
-                            placeholder="Enter Username"
+                            placeholder={strings.ENTER_USERNAME}
                             keyboardType={'default'}
                             onChangeText={(text) => setUsername(text)}
                             style={Styles.inputStyle}
                         />
-                        <Text style={Styles.title}>E-mail</Text>
+                        <Text style={Styles.title}>{strings.EMAIL}</Text>
                         <TextInput
                             placeholderTextColor={Colors.gray}
                             ref={inputRef}
                             value={email}
-                            placeholder="Enter E-mail"
+                            placeholder={strings.ENTER_EMAIL}
                             keyboardType={'email-address'}
                             onChangeText={(text) => setEmail(text)}
                             style={Styles.inputStyle}
                         />
-                        <Text style={Styles.title}>Phone Number ( view only )</Text>
+                        <Text style={Styles.title}>{strings.PHONE_NUMBER} ( {strings.VIEW_ONLY} )</Text>
                         <TextInput
                             placeholderTextColor={Colors.gray}
                             editable={false}
@@ -129,7 +130,7 @@ const EditProfile = ({ navigation, route }) => {
                     <CustomButton
                         onPress={validateInput}
                         gradientColors={[Colors.red, Colors.red]}
-                        title="Update profile"
+                        title={strings.UPDATE_PROFILE}
                         textColor={Colors.white}
                         ButtonStyles={{ marginTop: moderateScale(40) }} />
                 </View>

@@ -2,10 +2,11 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import Styles from './styles';
 import Colors from '../../Styles/Colors';
+import strings from '../../Constants/languages';
 
 const AlertPopup = ({
     message = '',
-    header = 'Warning',
+    header = strings.WARNING,
     isModalVisible = false,
     isCancelVisible = false,
     onPressSubmit = () => { },
@@ -30,10 +31,10 @@ const AlertPopup = ({
                         </View>
                         <View style={Styles.footerContainer}>
                             {isCancelVisible && <TouchableOpacity onPress={onPressCancel} style={[Styles.closeButton, { backgroundColor: Colors.red1, marginRight: '10%' }]}>
-                                <Text style={Styles.closeButtonText}>Cancel</Text>
+                                <Text style={Styles.closeButtonText}>{strings.CANCEL}</Text>
                             </TouchableOpacity>}
                             <TouchableOpacity onPress={onPressSubmit} style={Styles.closeButton}>
-                                <Text style={Styles.closeButtonText}>Okay</Text>
+                                <Text style={Styles.closeButtonText}>{strings.OKAY}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

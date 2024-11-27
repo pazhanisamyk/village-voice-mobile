@@ -40,8 +40,7 @@ function App(): React.JSX.Element {
   return (
     <View style={{flex: 1}}>
       <Provider store={Store}>
-        <SplashScreen navigation={'nav'} />
-        {/* <CommonRoutes /> */}
+        <CommonRoutes />
         </Provider>
         <FlashMessage position="top" />        
         <NoInternetPopup show={!internetConnection} onRetry={onRetryInternenet} />

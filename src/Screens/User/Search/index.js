@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Colors from "../../../Styles/Colors";
 import Imagepaths from "../../../Constants/Imagepaths";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
+import strings from "../../../Constants/languages";
 
 const Search = () => {
     const [searchValue, setSearchValue] = useState('');
@@ -60,7 +61,7 @@ const Search = () => {
                         ref={inputRef}
                         onFocus={()=> setShowSearchHistory(true)}
                         value={searchValue}
-                        placeholder="Search Complaints"
+                        placeholder={strings.SEARCH_COMPLAINTS}
                         onChangeText={text => setSearchValue(text)}
                         style={Styles.inputStyle}
                     />

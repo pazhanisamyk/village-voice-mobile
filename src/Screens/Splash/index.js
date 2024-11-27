@@ -2,22 +2,40 @@ import { Image, View } from "react-native"
 import Imagepaths from "../../Constants/Imagepaths"
 import Styles from "./styles"
 import { useEffect } from "react"
-import { getUserData } from "../../Utils/Utils"
+import { getProfileData } from "../../Utils/Utils"
+import { changeLaguage } from "../../Constants/languages"
 
 const SplashScreen = ({navigation}) => {
 
-    useEffect(()=>{
-        const UserData = async()=>{
-            await getUserData().then(res => {
-                console.log(res);
-                
-            }).catch(error =>{
-                console.log(error);
-                
-            })
-        }
-        UserData()
-    },[])
+    useEffect(() => {
+        const UserData = async () => {
+            navigation.navigate('WelcomeScreen');
+            // try {
+            //     const res = await getProfileData();
+            //     if (res?.language === 'en') {
+            //         changeLaguage('en');
+            //     }
+            //     else if (res?.language === 'ta') {
+            //         changeLaguage('ta');
+            //     }
+            //     if (res?.role === 'user') {
+            //         navigation.navigate('UserTabroutes');
+            //     } else if (res?.role === 'admin') {
+            //         navigation.navigate('AdminTabroutes');
+            //     } else {
+            //         navigation.navigate('WelcomeScreen');
+            //     }
+            // } catch (error) {
+            //     console.log(error);
+            // }
+        };
+        
+        setTimeout(() => {
+            UserData();            
+        }, 2000);
+        
+    }, []);
+    
     
     return(
         <View style={Styles.container}>

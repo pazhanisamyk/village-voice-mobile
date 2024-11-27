@@ -5,6 +5,7 @@ import Colors from "../../Styles/Colors";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import CustomSelect from "../../Components/CustomSelect";
 import Imagepaths from "../../Constants/Imagepaths";
+import strings from "../../Constants/languages";
 
 const Events = () => {
     const [isYearModalVisible, setIsYearModalVisible] = useState(false);
@@ -26,18 +27,18 @@ const Events = () => {
         return convertedYears
     }
     const months = [
-        { id: 1, label: 'January' },
-        { id: 2, label: 'February' },
-        { id: 3, label: 'March' },
-        { id: 4, label: 'April' },
-        { id: 5, label: 'May' },
-        { id: 6, label: 'June' },
-        { id: 7, label: 'July' },
-        { id: 8, label: 'August' },
-        { id: 9, label: 'September' },
-        { id: 10, label: 'October'},
-        { id: 11, label: 'November'},
-        { id: 12, label: 'December' },
+        { id: 1, label: strings.JANUARY },
+        { id: 2, label: strings.FEBRUARY },
+        { id: 3, label: strings.MARCH },
+        { id: 4, label: strings.APRIL },
+        { id: 5, label: strings.MAY },
+        { id: 6, label: strings.JUNE },
+        { id: 7, label: strings.JULY },
+        { id: 8, label: strings.AUGUST },
+        { id: 9, label: strings.SEPTEMBER },
+        { id: 10, label: strings.OCTOBER},
+        { id: 11, label: strings.NOVEMBER},
+        { id: 12, label: strings.DECEMBER },
     ];
 
     const eventsData = [
@@ -70,7 +71,7 @@ const Events = () => {
 
     const generateDateData = (year, month) => {
         const dateArray = [];
-        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const daysOfWeek = [strings.SUN, strings.MON, strings.TUE, strings.WED, strings.THU, strings.FRI, strings.SAT]; 
         const daysInMonth = new Date(year, month, 0).getDate();
 
         for (let i = 1; i <= daysInMonth; i++) {
@@ -131,8 +132,8 @@ const Events = () => {
             <View style={Styles.topview}>
                 <View style={Styles.eventTitle}>
                     <View>
-                        <Text style={Styles.eventText}>Event</Text>
-                        <Text style={Styles.eventText}>Schedule</Text>
+                        <Text style={Styles.eventText}>{strings.EVENT}</Text>
+                        <Text style={Styles.eventText}>{strings.SCHEDULE}</Text>
                     </View>
                     <View>
                         <TouchableOpacity onPress={() => setIsYearModalVisible(true)} style={Styles.pickerContainer}>
@@ -145,7 +146,7 @@ const Events = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <Text style={Styles.eventcount}>{`2`} events for today</Text>
+                <Text style={Styles.eventcount}>{`2`} {strings.EVENTS_FOR_TODAY}</Text>
                 <FlatList
                     horizontal
                     style={Styles.eventContainer}

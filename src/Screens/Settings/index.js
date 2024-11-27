@@ -9,6 +9,7 @@ import AlertPopup from "../../Components/AlertPopup";
 import { useSelector } from 'react-redux';
 import actions from "../../Redux/actions";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
+import strings, { changeLaguage } from "../../Constants/languages";
 
 const Settings = ({ navigation }) => {
     const [userData, setUserData] = useState()
@@ -68,7 +69,7 @@ const Settings = ({ navigation }) => {
     }
 
     const onPressLogout = () => {
-        setAlertMessage('Are you sure, You want to logout?');
+        setAlertMessage(strings.LOGOUT_MSG);
         setIsModalVisible(true)
     }
 
@@ -132,20 +133,20 @@ const Settings = ({ navigation }) => {
                     <Text style={Styles.email}>{userData?.email}</Text>
                     <Text style={Styles.email}>+91 {userData?.phoneNumber}</Text>
                     <TouchableOpacity style={Styles.editProfileBtn} onPress={onPressEditProfile}>
-                        <Text style={Styles.editProfileText}>Edit profile</Text>
+                        <Text style={Styles.editProfileText}>{strings.EDIT_PROFILE}</Text>
                     </TouchableOpacity>
                     <View style={Styles.generalContainer}>
-                        <Text style={Styles.general}>General</Text>
+                        <Text style={Styles.general}>{strings.GENERAL}</Text>
                         <View style={Styles.card} >
                             <TouchableOpacity onPress={onPressChangePassword} style={Styles.cardContainer}>
                                 <Image source={Imagepaths.face} style={Styles.icon} />
-                                <Text style={Styles.title}>Change Password</Text>
+                                <Text style={Styles.title}>{strings.CHANGE_PASSWORD}</Text>
                                 <Image source={Imagepaths.arrow_right} style={Styles.rightIcon} />
                             </TouchableOpacity>
 
                             <View style={[Styles.cardContainer, { marginTop: moderateScale(20) }]}>
                                 <Image source={Imagepaths.cloud} style={Styles.icon} />
-                                <Text style={Styles.title}>Dark Mode</Text>
+                                <Text style={Styles.title}>{strings.DARK_MODE}</Text>
                                 <Switch
                                     style={Styles.Switch}
                                     trackColor={{ false: Colors.card1, true: Colors.white }}
@@ -157,7 +158,7 @@ const Settings = ({ navigation }) => {
                             </View>
                             <View style={[Styles.cardContainer, { marginTop: moderateScale(20) }]}>
                                 <Image resizeMode="contain" source={Imagepaths.lang} tintColor={Colors.gray} style={Styles.icon} />
-                                <Text style={Styles.title}>Language</Text>
+                                <Text style={Styles.title}>{strings.LANGUAGE}</Text>
                                 <Switch
                                     style={Styles.Switch}
                                     trackColor={{ false: Colors.card1, true: Colors.white }}
@@ -170,21 +171,21 @@ const Settings = ({ navigation }) => {
                         </View>
                     </View>
                     <View style={Styles.generalContainer}>
-                        <Text style={Styles.general}>Help & Legal</Text>
+                        <Text style={Styles.general}>{strings.HELP_AND_LEGAL}</Text>
                         <View style={Styles.card} >
                             <TouchableOpacity onPress={onHelpPress} style={Styles.cardContainer}>
                                 <Image source={Imagepaths.help} style={Styles.icon} />
-                                <Text style={Styles.title}>Help</Text>
+                                <Text style={Styles.title}>{strings.HELP}</Text>
                                 <Image source={Imagepaths.arrow_right} style={Styles.rightIcon} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={onPressPolicies} style={[Styles.cardContainer, { marginTop: moderateScale(20) }]}>
                                 <Image source={Imagepaths.chart} style={Styles.icon} />
-                                <Text style={Styles.title}>Policies</Text>
+                                <Text style={Styles.title}>{strings.POLICIES}</Text>
                                 <Image source={Imagepaths.arrow_right} style={Styles.rightIcon} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={onPressReport} style={[Styles.cardContainer, { marginTop: moderateScale(20) }]}>
                                 <Image source={Imagepaths.money} style={Styles.icon} />
-                                <Text style={Styles.title}>Report Problem</Text>
+                                <Text style={Styles.title}>{strings.REPORT_PROBLEM}</Text>
                                 <Image source={Imagepaths.arrow_right} style={Styles.rightIcon} />
                             </TouchableOpacity>
                         </View>
@@ -193,7 +194,7 @@ const Settings = ({ navigation }) => {
                         <View style={[Styles.card, { marginTop: moderateScale(0) }]} >
                             <TouchableOpacity onPress={onPressLogout} style={Styles.cardContainer}>
                                 <Image source={Imagepaths.logout} style={Styles.icon} />
-                                <Text style={[Styles.title, { color: Colors.red1 }]}>Logout</Text>
+                                <Text style={[Styles.title, { color: Colors.red1 }]}>{strings.LOGOUT}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
