@@ -1,12 +1,11 @@
 import { StyleSheet } from "react-native";
 import { height, moderateScale, textScale, width } from "../../Styles/ResponsiveSizes";
-import Colors from "../../Styles/Colors";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         height: height,
         flex: 1,
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     topContainer: {
         marginTop: moderateScale(30),
@@ -18,7 +17,7 @@ const Styles = StyleSheet.create({
     headertext: {
         textAlign: 'center',
         fontSize: textScale(16),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '400'
     },
     backArrow:{
@@ -49,26 +48,26 @@ const Styles = StyleSheet.create({
     },
     helpContentView:{
         borderTopWidth: moderateScale(1),
-        borderTopColor: Colors.gray1,
+        borderTopColor: themes.gray1,
         marginTop:moderateScale(20),
         paddingTop: moderateScale(10)
     },
     card:{        
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
         borderRadius: moderateScale(16),
         padding: moderateScale(15),
         marginVertical: moderateScale(10)
     },
     cardTitle:{
         fontSize: textScale(14),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '600',
     },
     cardContent:{
         fontSize: textScale(12),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '600',
     },
     policySection:{
@@ -78,14 +77,14 @@ const Styles = StyleSheet.create({
         fontSize: textScale(18),
         fontWeight: '600',
         marginBottom: moderateScale(8),
-        color: Colors.gray2,
+        color: themes.gray2,
     },
     policyText: {
         fontSize: textScale(16),
         fontWeight: '400',
-        color: Colors.gray1,
+        color: themes.gray1,
         marginBottom: moderateScale(4),
     },
 });
 
-export default Styles;
+export default getStyles;

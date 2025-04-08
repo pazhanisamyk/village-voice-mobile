@@ -1,12 +1,14 @@
 import { FlatList, Image, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Styles from "./styles";
+import getStyles from "./styles";
 import { useRef, useState } from "react";
-import Colors from "../../../Styles/Colors";
 import Imagepaths from "../../../Constants/Imagepaths";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
 import strings from "../../../Constants/languages";
+import { useTheme } from "../../../Constants/themes";
 
 const Search = () => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [searchValue, setSearchValue] = useState('');
     const [showSearchHistory, setShowSearchHistory] = useState(false);
     const [searchHistory, setSearchHistory] = useState([
@@ -54,10 +56,10 @@ const Search = () => {
             <View style={Styles.outerContainer}>
                 <View style={Styles.searchContainer}>
                     <View style={Styles.searchIconOutline}>
-                        <Image source={Imagepaths.search1} style={Styles.searchIcon} />
+                        <Image tintColor={themes.white} source={Imagepaths.search1} style={Styles.searchIcon} />
                     </View>
                     <TextInput
-                        placeholderTextColor={Colors.gray4}
+                        placeholderTextColor={themes.gray}
                         ref={inputRef}
                         onFocus={()=> setShowSearchHistory(true)}
                         value={searchValue}
@@ -67,11 +69,11 @@ const Search = () => {
                     />
                     {searchValue ? (
                         <TouchableOpacity onPress={handleClearSearch} style={Styles.clearButton}>
-                            <Image tintColor={Colors.background} resizeMode="contain" source={Imagepaths.close} style={[Styles.close, {marginRight: moderateScale(10)}]} />
+                            <Image tintColor={themes.white} resizeMode="contain" source={Imagepaths.close} style={[Styles.close, {marginRight: moderateScale(10)}]} />
                         </TouchableOpacity>
                     ) : (
                         <TouchableOpacity onPress={() => {}} style={Styles.searchIconOutline}>
-                            <Image source={Imagepaths.mic} style={Styles.micIcon} />
+                            <Image tintColor={themes.white} source={Imagepaths.mic} style={Styles.micIcon} />
                         </TouchableOpacity>
                     )}
                 </View>

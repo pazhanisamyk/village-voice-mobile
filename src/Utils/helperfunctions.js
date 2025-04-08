@@ -1,11 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Actions from "../Redux/actions";
-import AlertPopup from "../Components/AlertPopup";
 import { showMessage } from "react-native-flash-message";
 import { moderateScale, textScale } from "../Styles/ResponsiveSizes";
-import { Alert, BackHandler } from "react-native";
-import { useState } from "react";
-import Colors from "../Styles/Colors";
 
 export const sessionHandler = (error) => {
     Actions.userLogout();
@@ -26,26 +22,26 @@ export const sessionHandler = (error) => {
     console.log(message, 'THIS IS MESSAGE');
     showMessage({
       type: 'danger',
-      // icon: 'danger',
+      icon: 'danger',
       message,
-      hideStatusBar: true,
+      hideStatusBar: false,
       duration: 2500,
-      position:'bottom',
-      titleStyle: {paddingTop:6},
-      style: {margin:moderateScale(20),alignItems:'center',justifyContent:'center',borderRadius:5}
+      position:'top',
+      titleStyle: {color: '#FFFFFF', fontSize: textScale(14), fontWeight: '500'},
+      style: { backgroundColor:'#dc3545',margin:moderateScale(20), borderRadius:moderateScale(16),alignItems:'center',justifyContent:'center',}
     });
   };
   
   const showSuccess = (message) => {
     showMessage({
       type: 'success',
-      // icon: 'success',
-      message: message,
-      hideStatusBar: true,
+      icon: 'success',
+      message: message, 
+      hideStatusBar: false,
       duration: 2500,
-      position:'bottom',
-       titleStyle: {paddingTop:moderateScale(6), color: Colors.background, fontSize: textScale(14), fontWeight: '500'},
-      style: { backgroundColor:Colors.white,margin:moderateScale(20), borderRadius:moderateScale(16),alignItems:'center',justifyContent:'center',}
+      position:'top',
+      titleStyle: { color: '#FFFFFF', fontSize: textScale(14), fontWeight: '500'},
+      style: { backgroundColor:'#28a745',margin:moderateScale(20), borderRadius:moderateScale(16),alignItems:'center',justifyContent:'center',}
   
   
     });
@@ -55,9 +51,10 @@ export const sessionHandler = (error) => {
       type: 'info',
       icon: 'info',
       message,
-      hideStatusBar: true,
+      hideStatusBar: false,
       duration: 2500,
-      style: {margin:moderateScale(20), borderRadius:5,alignItems:'center',justifyContent:'center',}
+      titleStyle: {color: '#FFFFFF', fontSize: textScale(14), fontWeight: '500'},
+      style: { backgroundColor:'#ffc107 ',margin:moderateScale(20), borderRadius:moderateScale(16),alignItems:'center',justifyContent:'center',}
     });
   };
 

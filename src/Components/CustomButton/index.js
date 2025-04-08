@@ -1,26 +1,31 @@
 import { Text, TouchableOpacity } from "react-native";
-import Styles from "./styles";
+import getStyles from "./styles";
 import LinearGradient from "react-native-linear-gradient";
-import Colors from "../../Styles/Colors";
+import { useTheme } from "../../Constants/themes";
 
 const CustomButton = ({
     title = '',
     onPress = () => { },
     ButtonStyles = {},
-    gradientColors = [Colors.white, Colors.white],
+    gradientColors = [themes.white, themes.white],
     gradientStart = { x: 0, y: 0 },
     gradientEnd = { x: 1, y: 1 },
-    textColor = Colors.black
+    textColor = themes.black
 }) => {
+    const { theme } = useTheme(); // ✅ use current theme
+    const Styles = getStyles(theme); // ✅ pass theme to styles
+  
+    const colors = gradientColors || [theme.white, theme.white]; // fallback
+    const txtColor = textColor || theme.black; // fallback
     return (
         <LinearGradient
-            colors={gradientColors}
+            colors={colors}
             start={gradientStart}
             end={gradientEnd}
             style={{ ...Styles.Container, ...ButtonStyles }}
         >
             <TouchableOpacity style={Styles.button} onPress={onPress}>
-                <Text style={{...Styles.title,color: textColor}}>{title}</Text>
+                <Text style={{...Styles.title,color: txtColor}}>{title}</Text>
             </TouchableOpacity>
         </LinearGradient>
     )

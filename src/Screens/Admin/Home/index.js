@@ -1,15 +1,15 @@
 import { BackHandler, FlatList, Image, Text, TouchableOpacity, View } from "react-native"
-import Styles from "./styles";
+import getStyles from "./styles";
 import Imagepaths from "../../../Constants/Imagepaths";
-import { useCallback, useEffect, useState } from "react";
-import Colors from "../../../Styles/Colors";
-// import { androidBackButtonHandler } from "../../../Utils/helperfunctions";
-import { useFocusEffect } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import AlertPopup from "../../../Components/AlertPopup";
-import { showSuccess } from "../../../Utils/helperfunctions";
 import strings from "../../../Constants/languages";
+import { useTheme } from "../../../Constants/themes";
+import { moderateScale } from "../../../Styles/ResponsiveSizes";
 
 const AdminHomeScreen = () => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [selectedTAb, setSelectedTab] = useState(1);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -45,7 +45,6 @@ const AdminHomeScreen = () => {
         { id: 4, title: 'Road', description: 'Damaged roads in North Street', status: 'solved' }
     ];
     const seleTab = (id) => {
-        showSuccess('setSelectedTab')
         setSelectedTab(id)
     }
     const filteredComplaints = sampleComplaints.filter(item => {
@@ -56,7 +55,7 @@ const AdminHomeScreen = () => {
             <TouchableOpacity
                 onPress={() => seleTab(item.id)}
                 style={item.id === selectedTAb ? Styles.selectedtabOutline : Styles.unselectedtabOutline}>
-                <Text style={[Styles.tabTitle, { color: item.id === selectedTAb ? Colors.white : Colors.gray }]}>
+                <Text style={[Styles.tabTitle, { color: item.id === selectedTAb ? themes.white : themes.black }]}>
                     {item.name}
                 </Text>
             </TouchableOpacity>
@@ -72,8 +71,8 @@ const AdminHomeScreen = () => {
                 <Text style={[Styles.complainText, { alignSelf: 'flex-start' }]}>{`Complaint regarding to ${item.title}`}</Text>
             </View>
             <View style={Styles.complainactionOutline}>
-                <TouchableOpacity>
-                    <Text style={Styles.complainText}>View</Text>
+                <TouchableOpacity style={Styles.viewOutline}>
+                    <Text style={[Styles.complainText, {color: themes.background}]}>View</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -88,17 +87,17 @@ const AdminHomeScreen = () => {
                 </View>
                 <View style={Styles.statusContainer}>
                     <View style={Styles.ComplaintBox}>
-                        <View style={[Styles.complainboxlilne, { backgroundColor: Colors.blue }]}></View>
+                        <View style={[Styles.complainboxlilne, { backgroundColor: themes.blue }]}></View>
                         <Text style={Styles.ComplaintText}>Complaint Box</Text>
                         <Text style={Styles.ComplaintcountText}>3</Text>
                     </View>
                     <View style={Styles.ComplaintBox}>
-                        <View style={[Styles.complainboxlilne, { backgroundColor: Colors.purple }]}></View>
+                        <View style={[Styles.complainboxlilne, { backgroundColor: themes.purple }]}></View>
                         <Text style={Styles.ComplaintText}>Compliants</Text>
                         <Text style={Styles.ComplaintcountText}>99</Text>
                     </View>
                     <View style={Styles.ComplaintBox}>
-                        <View style={[Styles.complainboxlilne, { backgroundColor: Colors.green }]}></View>
+                        <View style={[Styles.complainboxlilne, { backgroundColor: themes.green }]}></View>
                         <Text style={Styles.ComplaintText}>Resolved Complaints</Text>
                         <Text style={Styles.ComplaintcountText}>56</Text>
                     </View>
@@ -116,6 +115,7 @@ const AdminHomeScreen = () => {
                 </View>
                 <FlatList
                     data={filteredComplaints}
+                    contentContainerStyle={{paddingBottom: moderateScale(100)}}
                     renderItem={renderComplaints}
                     keyExtractor={item => item.id.toString()}
                     showsVerticalScrollIndicator={false}

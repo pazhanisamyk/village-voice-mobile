@@ -1,15 +1,5 @@
-import { UPDATE_PROFILE_API, CHANGE_PASSWORD_API, CHANGE_DARKMODE_API, CHANGE_LANGUAGE_API, REPORT_PROBLEM_API, POLICIES_API, HELP_API, VIEW_PROFILE_API } from "../../Config/Urls";
+import { UPDATE_PROFILE_API, CHANGE_PASSWORD_API, CHANGE_THEME_API, CHANGE_LANGUAGE_API, REPORT_PROBLEM_API, POLICIES_API, HELP_API, VIEW_PROFILE_API } from "../../Config/Urls";
 import { apiGet, apiPost } from "../../Utils/Utils";
-import store from '../store';
-import types from '../types';
-const { dispatch } = store;
-
-export const saveUserData = (data) => {
-  dispatch({
-    type: types.LOGIN,
-    payload: data,
-  });
-};
 
 export const updateProfile = (data, headers = {}) => {
   return new Promise((resolve, reject) => {
@@ -35,9 +25,9 @@ export const changePassword = (data, headers = {}) => {
   });
 };
 
-export const changeDarkmode = (data, headers = {}) => {
+export const changeTheme = (data, headers = {}) => {
   return new Promise((resolve, reject) => {
-    apiPost(CHANGE_DARKMODE_API, data, headers)
+    apiPost(CHANGE_THEME_API, data, headers)
       .then((res) => {
         resolve(res);
       })

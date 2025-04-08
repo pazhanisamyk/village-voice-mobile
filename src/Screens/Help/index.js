@@ -1,12 +1,15 @@
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native"
-import Styles from "./styles";
+import getStyles from "./styles";
 import Imagepaths from "../../Constants/Imagepaths";
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../Redux/actions";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
+import { useTheme } from "../../Constants/themes";
 
 const HelpScreen = ({ navigation }) => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [helpData, setHelpData] = useState([])
     const [currentIndex, setCurrentIndex] = useState(null)
     const isFocused = useIsFocused();

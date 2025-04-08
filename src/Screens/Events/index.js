@@ -1,13 +1,15 @@
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native"
-import Styles from "./styles";
+import getStyles from "./styles";
 import { useEffect, useState } from "react";
-import Colors from "../../Styles/Colors";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import CustomSelect from "../../Components/CustomSelect";
 import Imagepaths from "../../Constants/Imagepaths";
 import strings from "../../Constants/languages";
+import { useTheme } from "../../Constants/themes";
 
 const Events = () => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [isYearModalVisible, setIsYearModalVisible] = useState(false);
     const [isMonthModalVisible, setIsMonthModalVisible] = useState(false);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
@@ -106,7 +108,7 @@ const Events = () => {
         return (
             <TouchableOpacity
                 onPress={() => setDateAndDay(item)}
-                style={[Styles.eventDateList, { backgroundColor: isSelected ? Colors.card1 : Colors.card }]}
+                style={[Styles.eventDateList, { backgroundColor: isSelected ? themes.card1 : themes.card }]}
             >
                 <Text style={Styles.date}>{item.date}</Text>
                 <Text style={Styles.day}>{item.day}</Text>
@@ -138,11 +140,11 @@ const Events = () => {
                     <View>
                         <TouchableOpacity onPress={() => setIsYearModalVisible(true)} style={Styles.pickerContainer}>
                             <Text style={Styles.pickerText}>{selectedYear}</Text>
-                            <Image resizeMode="contain" source={isYearModalVisible ? Imagepaths.arrow_up : Imagepaths.arrow_down} style={Styles.arrowIcon} />
+                            <Image tintColor={themes.white} resizeMode="contain" source={isYearModalVisible ? Imagepaths.arrow_up : Imagepaths.arrow_down} style={Styles.arrowIcon} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setIsMonthModalVisible(true)} style={Styles.pickerContainer}>
                             <Text style={Styles.pickerText}>{months[selectedMonth -1 ]?.label}</Text>
-                            <Image resizeMode="contain" source={isMonthModalVisible ? Imagepaths.arrow_up : Imagepaths.arrow_down} style={Styles.arrowIcon} />
+                            <Image tintColor={themes.white} resizeMode="contain" source={isMonthModalVisible ? Imagepaths.arrow_up : Imagepaths.arrow_down} style={Styles.arrowIcon} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -161,6 +163,7 @@ const Events = () => {
                 <Text style={Styles.fullDate}>{selectedFullDate}</Text>
                 <FlatList
                     data={eventsData}
+                    contentContainerStyle={{paddingBottom: moderateScale(100)}}
                     style={[Styles.eventContainer, { marginTop: moderateScale(20) }]}
                     renderItem={renderEvents}
                     keyExtractor={(item) => item.id.toString()}

@@ -1,12 +1,11 @@
 import { StyleSheet } from "react-native";
-import Colors from "../../Styles/Colors";
 import { height, moderateScale, textScale, width } from "../../Styles/ResponsiveSizes";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
         height: height,
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     topContainer: {
         marginTop: moderateScale(30),
@@ -18,7 +17,7 @@ const Styles = StyleSheet.create({
     headertext: {
         textAlign: 'center',
         fontSize: textScale(16),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '400'
     },
     backArrow:{
@@ -57,20 +56,20 @@ const Styles = StyleSheet.create({
         marginTop: moderateScale(60),
         padding: moderateScale(20),
         borderRadius: moderateScale(16),
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1
+        borderColor: themes.gray1
     },
     title:{
         alignSelf: 'flex-start',
         fontSize: textScale(12),
-        color: Colors.gray,
+        color: themes.gray,
         fontWeight: '500'
     },
     inputStyle:{
-        color: Colors.white,
+        color: themes.white,
         borderWidth:moderateScale(1),
-        borderColor:Colors.gray,
+        borderColor:themes.gray,
         borderRadius: moderateScale(16),
         marginTop: moderateScale(5),
         paddingLeft: moderateScale(10),
@@ -91,9 +90,9 @@ const Styles = StyleSheet.create({
     eyeOutline:{
         zIndex: 1,
         position: 'absolute',
-        top: moderateScale(20),
+        top: moderateScale(15),
         right: moderateScale(20)
     }
 });
 
-export default Styles;
+export default getStyles;

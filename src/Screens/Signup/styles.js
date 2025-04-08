@@ -1,13 +1,12 @@
 import { StyleSheet } from "react-native";
 import { height, moderateScale, textScale, width } from "../../Styles/ResponsiveSizes";
-import Colors from "../../Styles/Colors";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     gradient: {
         zIndex: -1,
@@ -32,20 +31,20 @@ const Styles = StyleSheet.create({
     headertext: {
         textAlign: 'center',
         fontSize: textScale(18),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: 'bold'
     },
     title:{
         alignSelf: 'flex-start',
         fontSize: textScale(12),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '500'
     },
     inputStyle:{
         zIndex:1,
-        color: Colors.white,
+        color: themes.white,
         borderWidth:moderateScale(1),
-        borderColor:Colors.gray,
+        borderColor:themes.gray,
         borderRadius: moderateScale(16),
         marginTop: moderateScale(5),
         paddingLeft: moderateScale(10),
@@ -67,13 +66,13 @@ const Styles = StyleSheet.create({
     },
     passwordtext:{
         fontWeight: '500',
-        color: Colors.white,
+        color: themes.white,
         fontSize: textScale(12),
     },
     signintext:{
         fontSize: textScale(14),
         fontWeight: '400',
-        color: Colors.white,
+        color: themes.white,
         marginTop: moderateScale(50),
     },
     passwordContainer:{
@@ -88,9 +87,9 @@ const Styles = StyleSheet.create({
     eyeOutline:{
         zIndex: 1,
         position: 'absolute',
-        top: moderateScale(20),
+        top: moderateScale(15),
         right: moderateScale(20)
     }
 });
 
-export default Styles;
+export default getStyles;

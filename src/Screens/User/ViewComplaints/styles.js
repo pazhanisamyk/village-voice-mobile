@@ -1,12 +1,11 @@
 import { StyleSheet } from "react-native";
-import Colors from "../../../Styles/Colors";
 import { height, moderateScale, textScale, width } from "../../../Styles/ResponsiveSizes";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
         height: height,
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     topContainer: {
         marginTop: moderateScale(30),
@@ -17,14 +16,14 @@ const Styles = StyleSheet.create({
     headertext: {
         textAlign: 'center',
         fontSize: textScale(16),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '400'
     },
     createComplaint: {
         height: moderateScale(60),
         width: moderateScale(60),
         borderRadius: moderateScale(100),
-        backgroundColor: Colors.red,
+        backgroundColor: themes.red,
         position: 'absolute',
         right: moderateScale(30),
         bottom: moderateScale(60),
@@ -59,24 +58,24 @@ const Styles = StyleSheet.create({
     },
     desContainer: {
         width: '100%',
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
         borderRadius: moderateScale(16),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
         padding: moderateScale(15)
     },
     descriptionText:{
         fontSize: textScale(12),
-        color: Colors.gray2,
+        color: themes.gray2,
         fontWeight: '500',
         marginTop: moderateScale(40),
         marginBottom: moderateScale(10)
     },
     description:{
         fontSize: textScale(12),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '500',
     }    
 });
 
-export default Styles;
+export default getStyles;

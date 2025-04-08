@@ -1,15 +1,19 @@
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Imagepaths from "../../Constants/Imagepaths";
-import Styles from "./styles";
+import getStyles from "./styles";
 import { useRef, useState } from "react";
-import Colors from "../../Styles/Colors";
 import CustomButton from "../../Components/CustomButton";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import AlertPopup from "../../Components/AlertPopup";
 import actions from "../../Redux/actions";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
+import { useTheme } from "../../Constants/themes";
+import { setUserData } from "../../Utils/Utils";
+import { saveUserData } from "../../Redux/actions/auth";
 
 const LoginScreen = ({navigation}) => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -33,8 +37,14 @@ const LoginScreen = ({navigation}) => {
         await actions.login(data)
         .then((res) => {
             showSuccess(res?.message)
-            // navigation.navigate('AdminTabroutes')
-            navigation.navigate('UserTabroutes')
+            setUserData(res);
+            saveUserData(res?._doc);
+            if(res?._doc?.role == "user"){
+                navigation.navigate('UserTabroutes')
+            }
+            else{
+                navigation.navigate('AdminTabroutes')
+            }
         })
         .catch(errorMethod);
     }
@@ -82,13 +92,14 @@ const LoginScreen = ({navigation}) => {
             <Image source={Imagepaths.gradient} resizeMode="stretch" style={Styles.gradient} />
             <View style={Styles.topContainer}>
                 <Text style={Styles.headertext}>VCB</Text>
+            <Image source={Imagepaths.transparent_logo} style={{height:300, width: 300}} resizeMode='contain' />
             </View>
             <View style={Styles.bottomContainer}>
                 <Text style={Styles.title}>Phone Number </Text>
                 <TextInput
                     ref={inputRef}
                     value={phoneNumber}
-                    placeholderTextColor={Colors.gray}
+                    placeholderTextColor={themes.gray}
                     keyboardType={'phone-pad'}
                     placeholder="Enter Phone Number"
                     onChangeText={(text) => setPhoneNumber(text)}
@@ -99,7 +110,7 @@ const LoginScreen = ({navigation}) => {
                 <View style={Styles.passwordContainer}>
                 <TextInput
                     ref={inputRef}
-                    placeholderTextColor={Colors.gray}
+                    placeholderTextColor={themes.gray}
                     value={password}
                     placeholder="Enter Password"
                     secureTextEntry={!showPassword}
@@ -107,7 +118,7 @@ const LoginScreen = ({navigation}) => {
                     style={Styles.inputStyle}
                 />
                 <TouchableOpacity onPress={togglePassword} style={Styles.eyeOutline}>
-                 <Image source={showPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={Colors.gray} resizeMode="contain" style={Styles.eye} />
+                 <Image source={showPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
                  </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={Styles.forgotpassword} onPress={()=>{}}>
@@ -115,16 +126,16 @@ const LoginScreen = ({navigation}) => {
                 </TouchableOpacity>
                 <CustomButton
                     onPress={validateInput}
-                    gradientColors={[Colors.red, Colors.red]}
+                    gradientColors={[themes.red, themes.red]}
                     title="Sign In"
-                    textColor={Colors.white}
+                    textColor={themes.white}
                     ButtonStyles={{ marginTop: moderateScale(20) }} />
                 <Text style={Styles.signintext}>If you don't have an account yet?</Text>
                 <CustomButton
                     onPress={onPressSignUp}
-                    gradientColors={[Colors.blue, Colors.blue]}
+                    gradientColors={[themes.blue, themes.blue]}
                     title="Sign Up"
-                    textColor={Colors.white}
+                    textColor={themes.white}
                     ButtonStyles={{ marginTop: moderateScale(10) }} />
             </View>
             <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage}/>

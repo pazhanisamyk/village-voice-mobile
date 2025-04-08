@@ -1,19 +1,18 @@
 import { StyleSheet } from "react-native";
 import { height, moderateScale, textScale, width } from "../../../Styles/ResponsiveSizes";
-import Colors from "../../../Styles/Colors";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     outerContainer: {
         margin: moderateScale(20),
         alignItems: 'center'
     },
     inputStyle: {
-        color: Colors.background,
+        color: themes.white,
         width: '80%'
     },
     searchContainer: {
@@ -23,8 +22,10 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',
+        borderWidth: moderateScale(1),
+        borderColor: themes.gray1,
         paddingHorizontal: moderateScale(10),
-        backgroundColor: Colors.gray3
+        backgroundColor: themes.card
     },
     searchIcon: {
         height: moderateScale(20),
@@ -39,10 +40,10 @@ const Styles = StyleSheet.create({
     },
     recentSearchesOutline: {
         width: width-40,
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
         borderRadius: moderateScale(16),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
         padding: moderateScale(10),
         maxHeight: height/3.1,
         paddingBottom: moderateScale(20)
@@ -50,13 +51,13 @@ const Styles = StyleSheet.create({
     recentSearchesText: {
         textAlign: 'left',
         fontSize: textScale(16),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '600',
         paddingVertical: moderateScale(10)
     },
     searchHistoryText: {
         fontSize: textScale(16),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '600',
     },
     searchHistoryOutline: {
@@ -82,4 +83,4 @@ const Styles = StyleSheet.create({
         width: '90%',
     },
 })
-export default Styles;
+export default getStyles;

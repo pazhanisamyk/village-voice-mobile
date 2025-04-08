@@ -1,16 +1,15 @@
 import { StyleSheet } from "react-native";
-import { height, moderateScale, textScale, width } from "../../../Styles/ResponsiveSizes";
-import Colors from "../../../Styles/Colors";
+import { height, moderateScale, textScale } from "../../../Styles/ResponsiveSizes";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     createcomplainttext: {
         fontSize: textScale(14),
         fontWeight: '600',
-        color: Colors.white
+        color: themes.white
     },
     createcomplaintbtn: {
         height: moderateScale(60),
@@ -19,16 +18,16 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         borderWidth: moderateScale(1),
         borderRadius: moderateScale(16),
-        borderColor: Colors.card1,
+        borderColor: themes.card1,
         marginBottom: moderateScale(20),
         marginTop: moderateScale(10)
     },
     complaintlist: {
         height: moderateScale(85),
         borderRadius: moderateScale(16),
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
         marginBottom: moderateScale(10)
     },
     bottomcontainer: {
@@ -39,12 +38,12 @@ const Styles = StyleSheet.create({
         fontSize: textScale(12),
         fontWeight: '500',
         textAlign: 'center',
-        color: Colors.gray
+        color: themes.gray
     },
     complaintscount: {
         fontSize: textScale(24),
         fontWeight: '700',
-        color: Colors.white,
+        color: themes.white,
         textAlign: 'center'
     },
     chartouterview: {
@@ -79,17 +78,17 @@ const Styles = StyleSheet.create({
     complaintname: {
         fontSize: textScale(14),
         fontWeight: '600',
-        color: Colors.white,
+        color: themes.white,
     },
     compsolvecount: {
         fontSize: textScale(12),
         fontWeight: '500',
-        color: Colors.gray,
+        color: themes.gray,
     },
     progressoutline:{
         height: moderateScale(3),
         borderRadius: moderateScale(9),
-        backgroundColor: Colors.card1,
+        backgroundColor: themes.card1,
         width: '90%',
         marginLeft: '5%'
     },
@@ -99,4 +98,4 @@ const Styles = StyleSheet.create({
     }
 })
 
-export default Styles;
+export default getStyles;

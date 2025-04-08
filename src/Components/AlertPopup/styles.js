@@ -1,8 +1,7 @@
 import { StyleSheet } from "react-native";
-import Colors from "../../Styles/Colors";
 import { moderateScale, moderateScaleVertical, textScale } from "../../Styles/ResponsiveSizes";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -16,24 +15,24 @@ const Styles = StyleSheet.create({
     },
     modalContainer: {
         width: '90%',
-        backgroundColor: Colors.white,
+        backgroundColor: themes.white,
         padding: moderateScale(20),
         borderRadius: moderateScale(10),
     },
     messageText: {
         fontSize: textScale(14),
         fontWeight: '500',
-        color: Colors.background
+        color: themes.background
     },
     closeButton: {
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: moderateScale(16),
         paddingHorizontal: moderateScale(15),
-        backgroundColor: Colors.blue,
+        backgroundColor: themes.blue,
     },
     closeButtonText: {
-        color: Colors.white,
+        color: themes.white,
         fontSize: textScale(16),
         fontWeight: '500',
         paddingVertical: moderateScale(5)
@@ -44,7 +43,7 @@ const Styles = StyleSheet.create({
     headerText:{
         fontSize: textScale(16),
         fontWeight: '700',
-        color: Colors.red1,
+        color: themes.red1,
     },
     bodyContainer:{
         width: '100%',
@@ -59,4 +58,4 @@ const Styles = StyleSheet.create({
     }
 });
 
-export default Styles;
+export default getStyles;

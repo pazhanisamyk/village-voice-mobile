@@ -2,16 +2,17 @@ import { useNavigationState } from "@react-navigation/native";
 import AdminHomeScreen from "../Screens/Admin/Home";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View } from "react-native";
-import Colors from "../Styles/Colors";
 import AdminTabBar from "./AdminTabBar";
 import ComplaintBoxes from "../Screens/Admin/Complaintbox";
 import SettingsStack from "./SettingsStack";
 import CreateComplainStack from "./CreateComplainStack";
 import { hideBottomTab } from "../Utils/helperfunctions";
 import Events from "../Screens/Events";
+import { useTheme } from "../Constants/themes";
 
 
 const AdminTabroutes = () => {
+  const { themes } = useTheme();
   const Tab = createBottomTabNavigator();
   const state = useNavigationState((state) => state);
 
@@ -20,7 +21,7 @@ const AdminTabroutes = () => {
   const hideTabBar = hideBottomTab(state, hideBottomTabs);
   
   return (
-    <View style={{flex: 1, backgroundColor: Colors.background}}>
+    <View style={{flex: 1, backgroundColor: 'transparent'}}>
         <Tab.Navigator
           initialRouteName="Home"
           tabBar={(props) => (!hideTabBar ? <AdminTabBar {...props} /> : null)}

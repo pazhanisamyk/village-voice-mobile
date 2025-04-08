@@ -1,12 +1,14 @@
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import Imagepaths from "../../../Constants/Imagepaths";
-import Styles from "./styles";
-import Colors from "../../../Styles/Colors";
+import getStyles from "./styles";
 import { useRef, useState } from "react";
 import CustomButton from "../../../Components/CustomButton";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
+import { useTheme } from "../../../Constants/themes";
 
 const CreateComplainBox = ({navigation}) => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [complaintBoxName, setComplaintBoxName] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
@@ -37,7 +39,7 @@ const CreateComplainBox = ({navigation}) => {
                     <View style={Styles.editprofileContainer}>
                         <Text style={Styles.title}>Complaint Box Name</Text>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={complaintBoxName}
                             placeholder="Enter Complaint Box Name"
@@ -46,7 +48,7 @@ const CreateComplainBox = ({navigation}) => {
                         />
                         <Text style={Styles.title}>Description</Text>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={description}
                             placeholder="Enter Description"
@@ -57,7 +59,7 @@ const CreateComplainBox = ({navigation}) => {
                         />
                         <Text style={Styles.title}>Category</Text>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={category}
                             placeholder="Enter Category"
@@ -68,9 +70,9 @@ const CreateComplainBox = ({navigation}) => {
                     </View>
                     <CustomButton
                         onPress={validateInput}
-                        gradientColors={[Colors.red, Colors.red]}
+                        gradientColors={[themes.red, themes.red]}
                         title="Save"
-                        textColor={Colors.white}
+                        textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(40) }} />
                 </View>
                 </View>

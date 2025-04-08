@@ -1,12 +1,14 @@
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import Imagepaths from "../../../Constants/Imagepaths";
-import Styles from "./styles";
+import getStyles from "./styles";
 import { useRef, useState } from "react";
 import CustomButton from "../../../Components/CustomButton";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
-import Colors from "../../../Styles/Colors";
+import { useTheme } from "../../../Constants/themes";
 
 const AddComplaint = ({navigation}) => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [complaintTitle, setComplaintTitle] = useState('');
     const [description, setDescription] = useState('');
     const inputRef = useRef(null);
@@ -31,7 +33,7 @@ const AddComplaint = ({navigation}) => {
             <View style={Styles.editprofileContainer}>
                         <Text style={Styles.title}>Title of Complaint</Text>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={complaintTitle}
                             placeholder="Enter Title of Complaint"
@@ -40,7 +42,7 @@ const AddComplaint = ({navigation}) => {
                         />
                         <Text style={Styles.title}>Description</Text>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={description}
                             placeholder="Enter Description of Complaint"
@@ -59,9 +61,9 @@ const AddComplaint = ({navigation}) => {
                     </View>
                     <CustomButton
                         onPress={validateInput}
-                        gradientColors={[Colors.red, Colors.red]}
+                        gradientColors={[themes.red, themes.red]}
                         title="Submit Your Complaint"
-                        textColor={Colors.white}
+                        textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(40) }} />
                 </View>
                 </View>

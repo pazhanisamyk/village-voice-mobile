@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { moderateScale } from '../Styles/ResponsiveSizes'; // Import your scaling function
-import Colors from '../Styles/Colors'; // Import your color constants
 import Imagepaths from '../Constants/Imagepaths';
+import { useTheme } from '../Constants/themes';
 
 const AdminTabBar = ({ state, descriptors, navigation }) => {
+  const { themes } = useTheme();
+  const Styles = getStyles(themes);
   const renderIcon = (route, focused) => {
     const iconMap = {
       Home: Imagepaths.Home,
@@ -16,39 +18,30 @@ const AdminTabBar = ({ state, descriptors, navigation }) => {
     const icon = iconMap[route.name];
 
     return (
+      <>
       <Image 
         source={icon} 
+        resizeMode='contain'
         style={{ 
-          tintColor: focused ? Colors.white : Colors.gray, 
-          height: moderateScale(20), 
-          width: moderateScale(20) 
+          tintColor: focused ? themes.white : themes.gray, 
+          height: focused ? moderateScale(22) : moderateScale(20), 
+          width: focused ? moderateScale(22) : moderateScale(20) 
         }} 
       />
+      {focused && <View style={{height:moderateScale(3), width: moderateScale(40), borderRadius: moderateScale(8), backgroundColor: themes.white,marginTop: moderateScale(8)}} />}
+      </>
     );
   };
 
   return (
-    <View style={styles.tabContainer}>
+    <View style={Styles.tabContainer}>
       {state.routes.map((route, index) => {
         const isFocused = state.index === index;
-
-        // Center icon for the middle route (assuming it is the second one)
-        if (isFocused) {
-          return (
-            <TouchableOpacity
-              key={route.key}
-              style={styles.centerIcon}
-              onPress={() => navigation.navigate(route.name)}
-            >
-              {renderIcon(route, isFocused)}
-            </TouchableOpacity>
-          );
-        }
 
         return (
           <TouchableOpacity
             key={route.key}
-            style={styles.tabButton}
+            style={Styles.tabButton}
             onPress={() => navigation.navigate(route.name)}
           >
             {renderIcon(route, isFocused)}
@@ -59,19 +52,19 @@ const AdminTabBar = ({ state, descriptors, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
   tabContainer: {
+    position: 'absolute',
+    bottom: moderateScale(10),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.card1,
+    backgroundColor: themes.card1,
     borderWidth: 1,
-    borderColor: Colors.gray1,
-    height: moderateScale(50),
-    bottom: moderateScale(10),
+    borderColor: themes.gray1,
+    height: moderateScale(60),
     borderRadius: moderateScale(16),
     width: '90%',
-    marginTop: moderateScale(20),
     marginBottom: moderateScale(10),
     marginLeft: '5%',
     padding: moderateScale(10)
@@ -80,15 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  centerIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.red,
-    height: moderateScale(40),
-    width: moderateScale(40),
-    borderRadius: moderateScale(100),
-    marginBottom: moderateScale(30),  
-  }
 });
 
 export default AdminTabBar;

@@ -1,16 +1,19 @@
-import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
-import Styles from "./styles";
+import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
+import getStyles from "./styles";
 import Imagepaths from "../../Constants/Imagepaths";
 import { useEffect, useRef, useState } from "react";
-import Colors from "../../Styles/Colors";
 import CustomButton from "../../Components/CustomButton";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import AlertPopup from "../../Components/AlertPopup";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
 import strings from "../../Constants/languages";
+import { useTheme } from "../../Constants/themes";
+import { saveUserData } from "../../Redux/actions/auth";
 
 const EditProfile = ({ navigation, route }) => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -39,6 +42,9 @@ const EditProfile = ({ navigation, route }) => {
 
         await actions.updateProfile(data)
         .then((res) => {
+            console.log(res, 'resresres');
+            saveUserData(res?.user);
+            
             showSuccess(res?.message)
             navigation.goBack();
         })
@@ -97,7 +103,7 @@ const EditProfile = ({ navigation, route }) => {
                     <View style={Styles.editprofileContainer}>
                         <Text style={Styles.title}>{strings.USERNAME}</Text>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={username}
                             placeholder={strings.ENTER_USERNAME}
@@ -107,7 +113,7 @@ const EditProfile = ({ navigation, route }) => {
                         />
                         <Text style={Styles.title}>{strings.EMAIL}</Text>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={email}
                             placeholder={strings.ENTER_EMAIL}
@@ -117,21 +123,21 @@ const EditProfile = ({ navigation, route }) => {
                         />
                         <Text style={Styles.title}>{strings.PHONE_NUMBER} ( {strings.VIEW_ONLY} )</Text>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             editable={false}
                             ref={inputRef}
                             value={phoneNumber}
                             placeholder="Enter Phone Number"
                             onChangeText={(text) => setPhoneNumber(text)}
-                            style={[Styles.inputStyle,{backgroundColor: Colors.gray1}]}
+                            style={[Styles.inputStyle,{backgroundColor: themes.gray1}]}
                         />
 
                     </View>
                     <CustomButton
                         onPress={validateInput}
-                        gradientColors={[Colors.red, Colors.red]}
+                        gradientColors={[themes.red, themes.red]}
                         title={strings.UPDATE_PROFILE}
-                        textColor={Colors.white}
+                        textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(40) }} />
                 </View>
                 <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage}/>

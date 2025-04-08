@@ -1,28 +1,30 @@
 import React from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
-import styles from './styles';
+import { Modal, Text, View } from 'react-native';
+import getStyles from './styles';
 import CustomButton from '../CustomButton';
-import Colors from '../../Styles/Colors';
+import { useTheme } from '../../Constants/themes';
 
 const NoInternetPopup = ({
   show = false,
   onRetry = () => { }
 }) => {
+  const { themes } = useTheme();
+  const Styles = getStyles(themes);
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={show}>
-      <View style={styles.modalContainer}>
-        <Text style={styles.modalTitle}>Connection error</Text>
-        <Text style={styles.modalText}>
+      <View style={Styles.modalContainer}>
+        <Text style={Styles.modalTitle}>Connection error</Text>
+        <Text style={Styles.modalText}>
           Unable to connect with server. Check your internet connection and try again
         </Text>
         <CustomButton
           onPress={onRetry}
-          gradientColors={[Colors.lightgray, Colors.lightgray]}
+          gradientColors={[themes.lightgray, themes.lightgray]}
           title="Try again"
-          textColor={Colors.white} />
+          textColor={themes.white} />
       </View>
     </Modal>
   );

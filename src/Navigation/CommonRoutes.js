@@ -2,19 +2,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import WelcomeScreen from "../Screens/WelcomeScreen";
 import SignUpScreen from "../Screens/Signup";
 import LoginScreen from "../Screens/Login";
-import { SafeAreaView } from "react-native";
-import { height } from "../Styles/ResponsiveSizes";
-import Colors from "../Styles/Colors";
 import AdminTabroutes from "./AdminTabroutes";
 import UserTabroutes from "./UserTabroutes";
 import { NavigationContainer } from "@react-navigation/native";
 import SplashScreen from "../Screens/Splash";
+import { navigationRef } from "./NavigationService";
 
 const CommonRoutes = () => {
     const Stack = createStackNavigator();
 
     return (
-            <NavigationContainer>
+            <NavigationContainer ref={navigationRef}>
         <Stack.Navigator initialRouteName="SplashScreen">
             <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{ headerShown: false }} />
             <Stack.Screen

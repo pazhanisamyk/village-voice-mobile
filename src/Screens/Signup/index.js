@@ -1,15 +1,17 @@
-import { Alert, Image, Keyboard, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Imagepaths from "../../Constants/Imagepaths";
-import Styles from "./styles";
-import { useEffect, useRef, useState } from "react";
-import Colors from "../../Styles/Colors";
+import getStyles from "./styles";
+import { useRef, useState } from "react";
 import CustomButton from "../../Components/CustomButton";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import AlertPopup from "../../Components/AlertPopup";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
+import { useTheme } from "../../Constants/themes";
 
 const SignUpScreen = ({ navigation }) => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -38,8 +40,7 @@ const SignUpScreen = ({ navigation }) => {
         await actions.signUpApi(data)
             .then((res) => {
                 showSuccess(res?.message)
-                // navigation.navigate('AdminTabroutes')
-                navigation.navigate('UserTabroutes')
+                navigation.navigate('LoginScreen')
             })
             .catch(errorMethod);
     }
@@ -123,7 +124,7 @@ const SignUpScreen = ({ navigation }) => {
                 <View style={Styles.bottomContainer}>
                     <Text style={Styles.title}>Username</Text>
                     <TextInput
-                        placeholderTextColor={Colors.gray}
+                        placeholderTextColor={themes.gray}
                         ref={inputRef}
                         value={username}
                         keyboardType={'default'}
@@ -133,7 +134,7 @@ const SignUpScreen = ({ navigation }) => {
                     />
                     <Text style={Styles.title}>E-mail</Text>
                     <TextInput
-                        placeholderTextColor={Colors.gray}
+                        placeholderTextColor={themes.gray}
                         ref={inputRef}
                         value={email}
                         keyboardType={'email-address'}
@@ -143,7 +144,7 @@ const SignUpScreen = ({ navigation }) => {
                     />
                     <Text style={Styles.title}>Phone Number</Text>
                     <TextInput
-                        placeholderTextColor={Colors.gray}
+                        placeholderTextColor={themes.gray}
                         ref={inputRef}
                         value={phoneNumber}
                         keyboardType={'phone-pad'}
@@ -155,7 +156,7 @@ const SignUpScreen = ({ navigation }) => {
                     <Text style={Styles.title}>Password</Text>
                     <View style={Styles.passwordContainer}>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={password}
                             placeholder="Enter Password"
@@ -164,14 +165,14 @@ const SignUpScreen = ({ navigation }) => {
                             style={Styles.inputStyle}
                         />
                         <TouchableOpacity onPress={togglePassword} style={Styles.eyeOutline}>
-                            <Image source={showPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={Colors.gray} resizeMode="contain" style={Styles.eye} />
+                            <Image source={showPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
                         </TouchableOpacity>
                     </View>
 
                     <Text style={Styles.title}>Enter Password Again</Text>
                     <View style={Styles.passwordContainer}>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={confirmPassword}
                             placeholder="Confirm Your Password"
@@ -180,22 +181,22 @@ const SignUpScreen = ({ navigation }) => {
                             style={Styles.inputStyle}
                         />
                         <TouchableOpacity onPress={toggleConfirmPassword} style={Styles.eyeOutline}>
-                            <Image source={showConfirmPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={Colors.gray} resizeMode="contain" style={Styles.eye} />
+                            <Image source={showConfirmPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
                         </TouchableOpacity>
                     </View>
                     <Text style={Styles.passwordtext}>Use 8 or more characters with a mix of letters, numbers & symbols.</Text>
                     <CustomButton
                         onPress={validateInput}
-                        gradientColors={[Colors.red, Colors.red]}
-                        title="Get started"
-                        textColor={Colors.white}
+                        gradientColors={[themes.red, themes.red]}
+                        title="Sign Up"
+                        textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(20) }} />
                     <Text style={Styles.signintext}>Do you have already an account?</Text>
                     <CustomButton
                         onPress={onPressLogin}
-                        gradientColors={[Colors.blue, Colors.blue]}
+                        gradientColors={[themes.blue, themes.blue]}
                         title="Sign In"
-                        textColor={Colors.white}
+                        textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(10) }} />
                 </View>
                 <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage} />

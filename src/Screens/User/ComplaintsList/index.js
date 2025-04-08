@@ -1,8 +1,11 @@
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native"
-import Styles from "./styles"
+import getStyles from "./styles"
 import Imagepaths from "../../../Constants/Imagepaths";
+import { useTheme } from "../../../Constants/themes";
 
 const ComplaintsList = () => {
+    const {themes } = useTheme();
+    const Styles = getStyles(themes);
 
     const sampleData = [
         {

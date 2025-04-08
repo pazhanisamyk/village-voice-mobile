@@ -1,19 +1,18 @@
 import { StyleSheet } from "react-native";
-import Colors from "../../../Styles/Colors";
-import { height, moderateScale, textScale, width } from "../../../Styles/ResponsiveSizes";
+import { moderateScale, textScale } from "../../../Styles/ResponsiveSizes";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     complaints:{
         height: moderateScale(180),
         width: '45%',
         borderRadius: moderateScale(16),
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1,
-        backgroundColor: Colors.card,
+        borderColor: themes.gray1,
+        backgroundColor: themes.card,
         margin: moderateScale(10),
         alignItems: 'center',
         justifyContent: 'center',
@@ -22,14 +21,10 @@ const Styles = StyleSheet.create({
     image:{
         height: moderateScale(75),
         width: moderateScale(75),
-        borderRadius: moderateScale(100),
-        borderWidth: moderateScale(1),
-        borderColor: Colors.black2,
-        backgroundColor: Colors.white
     },
     complaintText:{
         fontSize: textScale(14),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '600',
         marginVertical: moderateScale(10)
     },
@@ -43,10 +38,10 @@ const Styles = StyleSheet.create({
         height: moderateScale(60),
         width: moderateScale(60),
         borderRadius: moderateScale(100),
-        backgroundColor: Colors.red,
+        backgroundColor: themes.red,
         position: 'absolute',
         right: moderateScale(20),
-        bottom: moderateScale(40),
+        bottom: moderateScale(100),
     },
     plusIcon:{
         height: moderateScale(20),
@@ -60,4 +55,4 @@ const Styles = StyleSheet.create({
     }
 });
 
-export default Styles;
+export default getStyles;

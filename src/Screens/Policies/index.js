@@ -1,12 +1,16 @@
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native"
-import Styles from "./styles";
+import getStyles from "./styles";
 import Imagepaths from "../../Constants/Imagepaths";
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../Redux/actions";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
+import { useTheme } from "../../Constants/themes";
+import { moderateScale } from "../../Styles/ResponsiveSizes";
 
 const PoliciesScreen = ({ navigation }) => {
+    const {themes } = useTheme();
+    const Styles = getStyles(themes);
     const [policiesData, setPoliciesData] = useState({})
     const isFocused = useIsFocused();
 
@@ -47,7 +51,7 @@ const PoliciesScreen = ({ navigation }) => {
                     <Text style={Styles.headertext}>Policies</Text>
                 </View>
                 <View style={Styles.outerContainer}>
-                    <ScrollView showsVerticalScrollIndicator = {false}>
+                    <ScrollView contentContainerStyle={{paddingBottom:moderateScale(80)}} showsVerticalScrollIndicator = {false}>
                 {Object.values(policiesData).map((policy, index) => (
                 <View key={index} style={Styles.policySection}>
                     <Text style={Styles.policyTitle}>{policy.title}</Text>

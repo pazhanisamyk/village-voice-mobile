@@ -1,8 +1,7 @@
 import { StyleSheet } from "react-native";
-import Colors from "../../Styles/Colors";
 import { height, moderateScale, moderateScaleVertical, textScale } from "../../Styles/ResponsiveSizes";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -17,16 +16,16 @@ const Styles = StyleSheet.create({
     modalContainer: {
         width: '90%',
         maxHeight: height/1.5,
-        backgroundColor: Colors.white,
+        backgroundColor: themes.white,
         padding: moderateScale(10),
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray2,
+        borderColor: themes.gray2,
         borderRadius: moderateScale(10),
     },
     messageText: {
         fontSize: textScale(14),
         fontWeight: '500',
-        color: Colors.background
+        color: themes.background
     },
     headerOutline:{
         width: '100%',
@@ -34,7 +33,7 @@ const Styles = StyleSheet.create({
     headerText:{
         fontSize: textScale(16),
         fontWeight: '700',
-        color: Colors.red1,
+        color: themes.red1,
     },
     bodyContainer:{
         width: '100%',
@@ -47,12 +46,12 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: moderateScale(16),
-        backgroundColor: Colors.red1,
+        backgroundColor: themes.red1,
         marginTop: moderateScale(10),
         marginBottom: moderateScale(10)
     },
     closeButtonText: {
-        color: Colors.white,
+        color: themes.white,
         fontSize: textScale(16),
         fontWeight: '600',
         paddingVertical: moderateScale(7)
@@ -65,18 +64,18 @@ const Styles = StyleSheet.create({
     },
     options:{
         width: '100%',
-        backgroundColor: Colors.card1,
+        backgroundColor: themes.card1,
         marginVertical: moderateScale(5),
         padding: moderateScale(10),
-        borderColor: Colors.gray,
+        borderColor: themes.gray,
         borderWidth: moderateScale(1),
         borderRadius: moderateScale(16)
     },
     optionsText:{
         fontSize: textScale(14),
         fontWeight: '700',
-        color: Colors.white
+        color: themes.white
     }
 });
 
-export default Styles;
+export default getStyles;

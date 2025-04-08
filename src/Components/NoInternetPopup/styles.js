@@ -1,10 +1,9 @@
 import { StyleSheet } from "react-native";
-import Colors from "../../Styles/Colors";
 import { moderateScale, textScale, width } from "../../Styles/ResponsiveSizes";
 
-const styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     modalContainer: {
-      backgroundColor: Colors.white,
+      backgroundColor: themes.white,
       paddingHorizontal: moderateScale(18),
       paddingTop: moderateScale(20),
       borderTopLeftRadius: moderateScale(16),
@@ -18,11 +17,11 @@ const styles = StyleSheet.create({
     modalTitle: {
       fontSize: textScale(22),
       fontWeight: '700',
-      color: Colors.lightgray
+      color: themes.lightgray
     },
     modalText: {
       fontSize: textScale(18),
-      color: Colors.background,
+      color: themes.background,
       fontWeight: '400',
       marginTop: moderateScale(14),
       textAlign: 'center',
@@ -30,4 +29,4 @@ const styles = StyleSheet.create({
     },
   });
 
-  export default styles;
+  export default getStyles;

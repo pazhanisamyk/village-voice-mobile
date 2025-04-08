@@ -1,8 +1,7 @@
 import { StyleSheet } from "react-native";
 import { moderateScale, textScale } from "../../Styles/ResponsiveSizes";
-import Colors from "../../Styles/Colors";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     Container:{
         alignItems: 'center',
         justifyContent: 'center',
@@ -22,4 +21,4 @@ const Styles = StyleSheet.create({
          justifyContent: 'center'
         }
 })
-export default Styles;
+export default getStyles;

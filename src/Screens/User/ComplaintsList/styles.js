@@ -1,26 +1,26 @@
 import { StyleSheet } from "react-native";
-import { height, moderateScale, textScale, width } from "../../../Styles/ResponsiveSizes";
-import Colors from "../../../Styles/Colors";
+import { moderateScale, textScale, width } from "../../../Styles/ResponsiveSizes";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     editprofileContainer:{ 
         margin: moderateScale(20),
         paddingVertical: moderateScale(20),
         paddingHorizontal: moderateScale(10),
         borderRadius: moderateScale(16),
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
+        marginBottom: moderateScale(100)
     },
     ComplaintsList:{
         width: width-moderateScale(60),
         borderRadius: moderateScale(10),
-        backgroundColor: Colors.black3,
+        backgroundColor: themes.card1,
         padding: moderateScale(10),
         flexDirection: 'row',
         alignItems: 'center',        
@@ -28,12 +28,12 @@ const Styles = StyleSheet.create({
     },
     complaintId:{
         fontSize: textScale(16),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '500'
     },
     complaintTitle:{
         fontSize: textScale(14),
-        color: Colors.gray,
+        color: themes.gray,
         fontWeight: '400'
     },
     ComplaintsText:{
@@ -41,12 +41,8 @@ const Styles = StyleSheet.create({
     },
     image:{
         height: moderateScale(55),
-        width: moderateScale(95),
-        borderRadius: moderateScale(5),
-        backgroundColor: Colors.white,
-        borderWidth: moderateScale(1),
-        borderColor: Colors.gray
+        width: moderateScale(95)
     }
 })
 
-export default Styles
+export default getStyles

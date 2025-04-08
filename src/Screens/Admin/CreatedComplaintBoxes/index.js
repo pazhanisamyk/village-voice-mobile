@@ -1,8 +1,12 @@
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native"
 import Imagepaths from "../../../Constants/Imagepaths";
-import Styles from "./styles";
+import getStyles from "./styles";
+import { useTheme } from "../../../Constants/themes";
+import { moderateScale } from "../../../Styles/ResponsiveSizes";
 
 const CreatedComplaintBoxes = ({navigation}) => {
+    const {themes } = useTheme();
+    const Styles = getStyles(themes);
     const sampleData = [
         {
             id: 1,
@@ -52,7 +56,7 @@ const CreatedComplaintBoxes = ({navigation}) => {
             <TouchableOpacity onPress={() => { }} style={Styles.complaints}>
                 <Image source={item.image} resizeMode="contain" style={Styles.image} />
                 <Text style={Styles.complaintText}>{item.title}</Text>
-                <Image source={Imagepaths.double_right} style={Styles.arrowRight} />
+                {/* <Image source={Imagepaths.double_right} style={Styles.arrowRight} /> */}
             </TouchableOpacity>
         )
     }
@@ -61,6 +65,7 @@ const CreatedComplaintBoxes = ({navigation}) => {
                 <FlatList
                     numColumns={2}
                     data={sampleData}
+                    contentContainerStyle={{paddingBottom: moderateScale(100)}}
                     keyExtractor={item => item.id.toString()}
                     renderItem={renderComplaintBoxes}
                     showsVerticalScrollIndicator={false} />

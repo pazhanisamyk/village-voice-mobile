@@ -1,27 +1,31 @@
 import { Image, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 import { useIsFocused } from '@react-navigation/native';
-import Styles from "./styles";
+import getStyles from "./styles";
 import Imagepaths from "../../Constants/Imagepaths";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import { useEffect, useState } from "react";
-import Colors from "../../Styles/Colors";
 import AlertPopup from "../../Components/AlertPopup";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import actions from "../../Redux/actions";
-import { showError, showSuccess } from "../../Utils/helperfunctions";
+import { showError, showInfo, showSuccess } from "../../Utils/helperfunctions";
 import strings, { changeLaguage } from "../../Constants/languages";
+import types from "../../Redux/types";
+import { useTheme } from "../../Constants/themes";
 
 const Settings = ({ navigation }) => {
-    const [userData, setUserData] = useState()
+    const { themes, changeTheme } = useTheme();
+    const Styles = getStyles(themes);
     const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
     const [isLangEnabled, setIsLangEnabled] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isVisibleReport, setIsVisibleReport] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [reportMessage, setReportMessage] = useState('');
-    // const userData = useSelector((state) => state?.auth?.userData);
+    const userData = useSelector((state) => state?.auth?.userData);
+    
 
     const isFocused = useIsFocused();
+    const dispatch = useDispatch();
 
     const errorMethod = (error) => {
         console.log(error?.message || error?.error);
@@ -30,29 +34,24 @@ const Settings = ({ navigation }) => {
 
     useEffect(() => {
         if (isFocused) {
-            const viewProfile = async () => {
-                await actions.viewProfile()
-                    .then((res) => {
-                        setUserData(res?.data);
-                        setIsDarkModeEnabled(res?.data?.darkMode);
-                        setIsLangEnabled(res?.data?.language !== 'en');
-                        showSuccess(res?.message)
-                    })
-                    .catch(errorMethod);
-            }
-
-            viewProfile();
+            setIsDarkModeEnabled(userData?.theme !== 'light');
+            setIsLangEnabled(userData?.language !== 'en');
         }
 
     }, [isFocused])
 
     const switchTheme = async () => {
-        const data = { isDarkModeEnabled: !isDarkModeEnabled }
+        const data = { theme: isDarkModeEnabled ? 'light' : 'dark' }
 
-        await actions.changeDarkmode(data)
+        await actions.changeTheme(data)
             .then((res) => {
                 showSuccess(res?.message)
                 setIsDarkModeEnabled(previousState => !previousState);
+                  dispatch({
+                    type: types.LOGIN,
+                    payload: {...userData, theme: isDarkModeEnabled ? 'light' : 'dark'},
+                  });
+                  changeTheme(isDarkModeEnabled ? 'light' : 'dark')
             })
             .catch(errorMethod);
     }
@@ -64,6 +63,11 @@ const Settings = ({ navigation }) => {
              .then((res) => {
                  showSuccess(res?.message)
                  setIsLangEnabled(previousState => !previousState);
+                  dispatch({
+                    type: types.LOGIN,
+                    payload: {...userData, language: isLangEnabled ? 'en' : 'ta'},
+                  });
+                  changeLaguage(isLangEnabled ? 'en' : 'ta')
              })
              .catch(errorMethod);
     }
@@ -125,7 +129,7 @@ const Settings = ({ navigation }) => {
     }
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={{paddingBottom: moderateScale(140), backgroundColor: themes.background}} showsVerticalScrollIndicator={false}>
             <View style={Styles.container}>
                 <View style={Styles.outerContainer}>
                     <Image source={Imagepaths.logo} style={Styles.image} />
@@ -149,20 +153,20 @@ const Settings = ({ navigation }) => {
                                 <Text style={Styles.title}>{strings.DARK_MODE}</Text>
                                 <Switch
                                     style={Styles.Switch}
-                                    trackColor={{ false: Colors.card1, true: Colors.white }}
-                                    thumbColor={isDarkModeEnabled ? Colors.card1 : Colors.white}
+                                    trackColor={{ false: themes.card1, true: themes.white }}
+                                    thumbColor={isDarkModeEnabled ? themes.card1 : themes.white}
                                     onValueChange={switchTheme}
                                     value={isDarkModeEnabled}
 
                                 />
                             </View>
                             <View style={[Styles.cardContainer, { marginTop: moderateScale(20) }]}>
-                                <Image resizeMode="contain" source={Imagepaths.lang} tintColor={Colors.gray} style={Styles.icon} />
+                                <Image resizeMode="contain" source={Imagepaths.lang} tintColor={themes.gray} style={Styles.icon} />
                                 <Text style={Styles.title}>{strings.LANGUAGE}</Text>
                                 <Switch
                                     style={Styles.Switch}
-                                    trackColor={{ false: Colors.card1, true: Colors.white }}
-                                    thumbColor={isLangEnabled ? Colors.card1 : Colors.white}
+                                    trackColor={{ false: themes.card1, true: themes.white }}
+                                    thumbColor={isLangEnabled ? themes.card1 : themes.white}
                                     onValueChange={switchLanguage}
                                     value={isLangEnabled}
 
@@ -174,7 +178,7 @@ const Settings = ({ navigation }) => {
                         <Text style={Styles.general}>{strings.HELP_AND_LEGAL}</Text>
                         <View style={Styles.card} >
                             <TouchableOpacity onPress={onHelpPress} style={Styles.cardContainer}>
-                                <Image source={Imagepaths.help} style={Styles.icon} />
+                                <Image tintColor={themes.gray} source={Imagepaths.help} style={Styles.icon} />
                                 <Text style={Styles.title}>{strings.HELP}</Text>
                                 <Image source={Imagepaths.arrow_right} style={Styles.rightIcon} />
                             </TouchableOpacity>
@@ -194,7 +198,7 @@ const Settings = ({ navigation }) => {
                         <View style={[Styles.card, { marginTop: moderateScale(0) }]} >
                             <TouchableOpacity onPress={onPressLogout} style={Styles.cardContainer}>
                                 <Image source={Imagepaths.logout} style={Styles.icon} />
-                                <Text style={[Styles.title, { color: Colors.red1 }]}>{strings.LOGOUT}</Text>
+                                <Text style={[Styles.title, { color: themes.red1 }]}>{strings.LOGOUT}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

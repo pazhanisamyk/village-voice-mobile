@@ -1,12 +1,11 @@
 import { StyleSheet } from "react-native";
-import { height, moderateScale, textScale, width } from "../../Styles/ResponsiveSizes";
-import Colors from "../../Styles/Colors";
+import { height, moderateScale, textScale } from "../../Styles/ResponsiveSizes";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container: {
         height: height,
         flex: 1,
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     outerContainer:{
         marginHorizontal: moderateScale(20),
@@ -20,26 +19,26 @@ const Styles = StyleSheet.create({
     },
     userName:{
         fontSize: textScale(20),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '700'
     },
     email:{
         fontSize: textScale(12),
-        color: Colors.gray,
+        color: themes.gray,
         fontWeight: '500'
     },
     editProfileText:{
         fontSize: textScale(12),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '600'
     },
     editProfileBtn:{
         alignItems:'center',
         justifyContent: 'center',
         borderRadius: moderateScale(50),
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
         paddingVertical: moderateScale(10),
         paddingHorizontal: moderateScale(20),
         marginTop: moderateScale(10)
@@ -50,13 +49,13 @@ const Styles = StyleSheet.create({
     },
     general:{
         fontSize: textScale(14),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '600'
     },
     card:{
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
         borderRadius: moderateScale(16),
         padding: moderateScale(20),
         marginTop: moderateScale(5)
@@ -72,7 +71,7 @@ const Styles = StyleSheet.create({
     },    
     title:{
         fontSize: textScale(14),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: '600',
     },
     rightIcon:{
@@ -87,4 +86,4 @@ const Styles = StyleSheet.create({
     }
 });
 
-export default Styles;
+export default getStyles;

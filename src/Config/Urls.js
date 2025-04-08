@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://192.168.24.119:3000/api/villagevoice';
+export const API_BASE_URL = 'http://192.168.1.38:3000/api/villagevoice';
 
 export const getApiUrl = (endpoint) => API_BASE_URL + endpoint;
 
@@ -7,7 +7,7 @@ export const SIGN_UP_API = getApiUrl('/auth/register');
 export const LOGOUT_API = getApiUrl('/auth/logout');
 export const UPDATE_PROFILE_API = getApiUrl('/profile/update');
 export const CHANGE_PASSWORD_API = getApiUrl('/profile/changePassword');
-export const CHANGE_DARKMODE_API = getApiUrl('/profile/changeDarkmode');
+export const CHANGE_THEME_API = getApiUrl('/profile/changeTheme');
 export const HELP_API = getApiUrl('/help');
 export const POLICIES_API = getApiUrl('/policies');
 export const REPORT_PROBLEM_API = getApiUrl('/reportProblem');

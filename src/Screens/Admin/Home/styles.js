@@ -1,24 +1,23 @@
 import { StyleSheet } from "react-native";
 import { height, moderateScale, moderateScaleVertical, textScale, width } from "../../../Styles/ResponsiveSizes";
-import Colors from "../../../Styles/Colors";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     userNmae:{
         marginTop: moderateScale(10),
         fontSize: textScale(14),
         fontWeight: '600',
-        color: Colors.white
+        color: themes.white
     },
     topview:{
         height: height/2.4,
         width: width,
         borderBottomLeftRadius: moderateScale(24),
         borderBottomRightRadius: moderateScale(24),
-        backgroundColor: Colors.lightgray,
+        backgroundColor: themes.lightgray,
     },
     profileView:{
         height: moderateScale(height/5),        
@@ -40,9 +39,9 @@ const Styles = StyleSheet.create({
     },
     ComplaintBox:{
         width: '30%',
-        backgroundColor: Colors.card,
+        backgroundColor: themes.card,
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
         borderRadius: moderateScale(16),
         height: moderateScale(90),
         alignItems: 'center',
@@ -52,32 +51,32 @@ const Styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: textScale(12),
         fontWeight: '600',
-        color: Colors.white,
+        color: themes.white,
     },
     ComplaintcountText:{
         fontSize: textScale(14),
         fontWeight: '600',
-        color: Colors.white,
+        color: themes.white,
     },
     bottomContainer:{
         paddingBottom: moderateScaleVertical(10),
-        height: height/2.1,
+        height: height/1.7,
         width: '90%',
         marginLeft: '5%',
         backgroundColor: 'transparent',
     },
     tabContainer: {
         borderRadius: moderateScale(16),
-        backgroundColor: Colors.black1,
+        backgroundColor: themes.gray,
         height: moderateScale(50),
         marginVertical: moderateScaleVertical(20),
         flexDirection: 'row',
         alignItems: 'center',
     },    
     selectedtabOutline: {
-        backgroundColor: Colors.card,     
+        backgroundColor: themes.black,     
         borderWidth: moderateScale(1),
-        borderColor: Colors.gray1,
+        borderColor: themes.gray1,
         borderRadius: moderateScale(16),
         alignItems: 'center',
         justifyContent: 'center',
@@ -86,11 +85,14 @@ const Styles = StyleSheet.create({
     },
     
     unselectedtabOutline: {
-        backgroundColor: Colors.black1,
+        backgroundColor: themes.gray,     
+        borderWidth: moderateScale(1),
+        borderColor: themes.gray1,
+        borderRadius: moderateScale(16),
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: moderateScale(6),
-        margin: moderateScale(5), 
+        paddingHorizontal: moderateScale(6), 
+        margin: moderateScale(5),
     },
     tabTitle:{
         fontSize: textScale(12),
@@ -101,7 +103,7 @@ const Styles = StyleSheet.create({
         width: '100%',
         minHeight: moderateScale(65),
         borderWidth: moderateScale(1),
-        borderColor: Colors.lightgray,
+        borderColor: themes.lightgray,
         borderRadius: moderateScale(16),
         padding: moderateScale(10),
         flexDirection: 'row',
@@ -127,16 +129,23 @@ const Styles = StyleSheet.create({
     complainText:{
         fontSize: textScale(14),
         fontWeight: '600',
-        color: Colors.white
+        color: themes.white
     },
     complainboxlilne:{        
          height: moderateScale(1),
          borderRadius: moderateScale(10),
          width: '50%',
-         marginLeft: '25%',
          position: 'absolute',
         top: moderateScale(0)
+    },
+    viewOutline:{
+        borderWidth: moderateScale(1),
+         borderColor: themes.white,
+         borderRadius: moderateScale(4),
+         backgroundColor: themes.white,
+         paddingVertical: moderateScale(4),
+         paddingHorizontal: moderateScale(10)
     }
 })
 
-export default Styles;
+export default getStyles;

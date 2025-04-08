@@ -1,46 +1,73 @@
 import { Image, View } from "react-native"
 import Imagepaths from "../../Constants/Imagepaths"
-import Styles from "./styles"
-import { useEffect } from "react"
-import { getProfileData } from "../../Utils/Utils"
+import getStyles from "./styles"
+import { useEffect, useState } from "react"
+import { getUserData } from "../../Utils/Utils"
 import { changeLaguage } from "../../Constants/languages"
+import { useTheme } from "../../Constants/themes"
+import types from "../../Redux/types"
+import { useDispatch } from "react-redux"
+import actions from "../../Redux/actions"
 
 const SplashScreen = ({navigation}) => {
+    const {themes, changeTheme } = useTheme();
+    const Styles = getStyles(themes);
+    const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        const UserData = async () => {
-            navigation.navigate('WelcomeScreen');
-            // try {
-            //     const res = await getProfileData();
-            //     if (res?.language === 'en') {
-            //         changeLaguage('en');
-            //     }
-            //     else if (res?.language === 'ta') {
-            //         changeLaguage('ta');
-            //     }
-            //     if (res?.role === 'user') {
-            //         navigation.navigate('UserTabroutes');
-            //     } else if (res?.role === 'admin') {
-            //         navigation.navigate('AdminTabroutes');
-            //     } else {
-            //         navigation.navigate('WelcomeScreen');
-            //     }
-            // } catch (error) {
-            //     console.log(error);
-            // }
-        };
-        
-        setTimeout(() => {
-            UserData();            
-        }, 2000);
-        
+        viewProfile();  
     }, []);
+
+    const viewProfile = async () => {
+        setIsLoading(true);
+        let userData = await getUserData();
+        console.log(userData,'userData');
+        
+        
+
+        if(!userData?.token){
+            navigation.navigate('WelcomeScreen');
+            setIsLoading(false);
+        }
+        else{
+    
+        try {
+            const res = await actions.viewProfile();
+            
+            changeTheme(res?.data?.theme);
+            changeLaguage(res?.data?.language);
+            
+            dispatch({
+                type: types.LOGIN,
+                payload: res?.data,
+            });
+    
+            if (res?.data?.role === 'user') {
+                navigation.navigate('UserTabroutes');
+            } else if (res?.data?.role === 'admin') {
+                navigation.navigate('AdminTabroutes');
+            } else {
+                navigation.navigate('WelcomeScreen');
+            }
+        } catch (error) {
+            console.log('errrrrrr', error);
+            navigation.navigate('WelcomeScreen');
+        } finally {
+            setIsLoading(false);
+        }
+
+    }
+    };    
     
     
     return(
-        <View style={Styles.container}>
-            <Image source={Imagepaths.Launcher} style={Styles.image} />
+        <>
+        {isLoading ? <View style={Styles.container}>
+            <Image source={Imagepaths.transparent_logo} style={Styles.image} />
         </View>
+         : null}
+         </>
     )
 }
 

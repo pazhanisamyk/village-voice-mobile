@@ -1,11 +1,13 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import Styles from "./Styles";
+import { Image, Text, View } from "react-native";
+import getStyles from "./Styles";
 import CustomButton from "../../Components/CustomButton";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
-import Colors from "../../Styles/Colors";
 import Imagepaths from "../../Constants/Imagepaths";
+import { useTheme } from "../../Constants/themes";
 
 const WelcomeScreen = ({navigation}) => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
 
     const onPressNewUser = () => {
         navigation.navigate('SignUpScreen')
@@ -27,15 +29,15 @@ const WelcomeScreen = ({navigation}) => {
                 <Text style={Styles.description}>“Village Complain Box”</Text>
                 <CustomButton
                     onPress={onPressNewUser}
-                    gradientColors={[Colors.blue, Colors.blue]}
+                    gradientColors={[themes.blue, themes.blue]}
                     title="Get started"
-                    textColor={Colors.white}
+                    textColor={themes.white}
                     ButtonStyles={{ marginTop: moderateScale(30)}} />
                 <CustomButton
                     onPress={onPressOldUser}
-                    gradientColors={[Colors.red, Colors.red]}
+                    gradientColors={[themes.red, themes.red]}
                     title="I have an account"
-                    textColor={Colors.white}
+                    textColor={themes.white}
                     ButtonStyles={{ marginTop: moderateScale(20) }} />
             </View>
         </View>

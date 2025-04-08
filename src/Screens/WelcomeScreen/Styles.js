@@ -1,12 +1,12 @@
 import { StyleSheet } from "react-native";
 import { height, moderateScale, textScale, width } from "../../Styles/ResponsiveSizes";
-import Colors from "../../Styles/Colors";
-const Styles = StyleSheet.create({
+
+const getStyles = (themes) => StyleSheet.create({
     container:{
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: Colors.background
+        backgroundColor: themes.background
     },
     image:{
         position: 'absolute',
@@ -31,7 +31,7 @@ const Styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: textScale(14),
         fontWeight: '400',
-        color: Colors.white
+        color: themes.white
     },
     topContainer:{
         position: 'absolute',
@@ -43,9 +43,9 @@ const Styles = StyleSheet.create({
     headertext:{
         textAlign: 'center',
         fontSize: textScale(18),
-        color: Colors.white,
+        color: themes.white,
         fontWeight: 'bold'
     },
 })
 
-export default Styles;
+export default getStyles;

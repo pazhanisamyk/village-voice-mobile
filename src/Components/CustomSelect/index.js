@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, View, Text, FlatList, TouchableOpacity } from 'react-native';
-import Styles from './styles';
+import getStyles from './styles';
+import { useTheme } from '../../Constants/themes';
 
 const CustomSelect = ({
     data = [{id: 1, label: 'Apple'},{id: 2, label: 'Orange'},{id: 3, label: 'Mango'}],
@@ -9,6 +10,8 @@ const CustomSelect = ({
     onSubmit = () => { },
     closeModal = () => { },
 }) => {
+    const {themes } = useTheme();
+    const Styles = getStyles(themes);
 
     const onSelect = (data) => {
         onSubmit(data);

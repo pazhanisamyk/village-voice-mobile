@@ -7,7 +7,6 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
   View,
 } from 'react-native';
 
@@ -18,7 +17,7 @@ import FlashMessage from 'react-native-flash-message';
 import CommonRoutes from './src/Navigation/CommonRoutes';
 import Store from './src/Redux/store';
 import NoInternetPopup from './src/Components/NoInternetPopup';
-import SplashScreen from './src/Screens/Splash';
+import { ThemeProvider } from './src/Constants/themes';
 
 function App(): React.JSX.Element {
   const [internetConnection, setInternet] = useState(true);
@@ -40,10 +39,12 @@ function App(): React.JSX.Element {
   return (
     <View style={{flex: 1}}>
       <Provider store={Store}>
+      <ThemeProvider>
         <CommonRoutes />
-        </Provider>
         <FlashMessage position="top" />        
         <NoInternetPopup show={!internetConnection} onRetry={onRetryInternenet} />
+        </ThemeProvider>
+        </Provider>
     </View>
   );
 }

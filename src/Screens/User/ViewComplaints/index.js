@@ -1,10 +1,13 @@
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Imagepaths from "../../../Constants/Imagepaths";
-import Styles from "./styles";
+import getStyles from "./styles";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
 import strings from "../../../Constants/languages";
+import { useTheme } from "../../../Constants/themes";
 
 const ViewComplaints = ({ navigation, route }) => {
+    const {themes } = useTheme();
+    const Styles = getStyles(themes);
     const Header = route?.params?.Header || "Default Header";
     const onPressBack = () => {
         navigation.goBack();

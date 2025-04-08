@@ -1,11 +1,15 @@
 import { BackHandler, FlatList, Image, Text, TouchableOpacity, View } from "react-native"
 import Imagepaths from "../../../Constants/Imagepaths";
-import Styles from "./styles";
-import { useEffect, useState } from "react";
+import getStyles from "./styles";
+import { useState } from "react";
 import AlertPopup from "../../../Components/AlertPopup";
 import strings from "../../../Constants/languages";
+import { useTheme } from "../../../Constants/themes";
+import { moderateScale } from "../../../Styles/ResponsiveSizes";
 
 const UserHomeScreen = ({ navigation }) => {
+    const {themes } = useTheme();
+    const Styles = getStyles(themes);
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -80,9 +84,9 @@ const UserHomeScreen = ({ navigation }) => {
     const renderComplaintBoxes = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => navigation.navigate('Viewcomplaints', { Header: item.title })} style={Styles.complaints}>
-                <Image source={item.image} style={Styles.image} />
+                <Image resizeMode="contain" source={item.image} style={Styles.image} />
                 <Text style={Styles.complaintText}>{item.title}</Text>
-                <Image source={Imagepaths.double_right} style={Styles.arrowRight} />
+                {/* <Image resizeMode="contain" tintColor={themes.white} source={Imagepaths.double_right} style={Styles.arrowRight} /> */}
             </TouchableOpacity>
         )
     }
@@ -90,6 +94,7 @@ const UserHomeScreen = ({ navigation }) => {
         <View style={Styles.container}>
                 <FlatList
                     numColumns={2}
+                    contentContainerStyle={{paddingBottom: moderateScale(100)}}
                     data={sampleData}
                     keyExtractor={item => item.id.toString()}
                     renderItem={renderComplaintBoxes}

@@ -1,5 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
+import { navigationRef } from "../Navigation/NavigationService";
+import { userLogout } from "../Redux/actions/auth";
+import { showError } from "./helperfunctions";
 
 export async function getHeaders() {
     let userData = await AsyncStorage.getItem('userData');
@@ -12,17 +15,23 @@ export async function getHeaders() {
     return {};
   }
 
-  export function setUserData(data) {
-    return AsyncStorage.setItem('userData', JSON.stringify(data));
-  }
-
-  export async function getUserData() {
-    return new Promise((resolve, reject) => {
-      AsyncStorage.getItem('userData').then((data) => {
-        resolve(JSON.parse(data));
-      }).catch(error => reject(error));
-    });
-  }
+  export const setUserData = async (data) => {
+    try {
+      await AsyncStorage.setItem('userData', JSON.stringify(data));
+    } catch (error) {
+      console.error('Failed to save user data:', error);
+    }
+  };
+  
+  export const getUserData = async () => {
+    try {
+      const data = await AsyncStorage.getItem('userData');
+      return data ? JSON.parse(data) : null;
+    } catch (error) {
+      console.error('Failed to load user data:', error);
+      return null;
+    }
+  };
 
   export function setItem(key, data) {
     data = JSON.stringify(data);
@@ -80,8 +89,22 @@ export async function getHeaders() {
   
           return res(data);
         })
-        .catch((error) => { 
-          console.log(error, 'error from api request')
+        .catch(async (error) => {
+          console.log('API error:', error?.response?.status);
+        
+          if (error?.response?.status === 401) {
+            await clearUserData();
+            userLogout();
+            showError('Session expired. Please login again.')
+        
+            // Reset the entire stack and navigate to Login
+            navigationRef.current?.reset({
+              index: 0,
+              routes: [{ name: "WelcomeScreen" }],
+            });
+          }
+        
+          return rej(error);
         });
     });
   }

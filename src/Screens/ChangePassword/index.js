@@ -1,15 +1,17 @@
-import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
-import Styles from "./styles";
+import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
+import getStyles from "./styles";
 import Imagepaths from "../../Constants/Imagepaths";
-import { useEffect, useRef, useState } from "react";
-import Colors from "../../Styles/Colors";
+import { useRef, useState } from "react";
 import CustomButton from "../../Components/CustomButton";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import AlertPopup from "../../Components/AlertPopup";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
+import { useTheme } from "../../Constants/themes";
 
 const ChangePassword = ({ navigation }) => {
+    const { themes } = useTheme();
+    const Styles = getStyles(themes);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -104,7 +106,7 @@ const ChangePassword = ({ navigation }) => {
                         <Text style={Styles.title}>Old Password</Text>
                         <View style={Styles.passwordContainer}>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={currentPassword}
                             placeholder="Enter Old Password"
@@ -114,13 +116,13 @@ const ChangePassword = ({ navigation }) => {
                             style={Styles.inputStyle}
                         />
                                                <TouchableOpacity onPress={togglecurrentPassword} style={Styles.eyeOutline}>
-                            <Image source={showCurrentPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={Colors.gray} resizeMode="contain" style={Styles.eye} />
+                            <Image source={showCurrentPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
                         </TouchableOpacity>
                     </View>
                         <Text style={Styles.title}>New Password</Text>
                         <View style={Styles.passwordContainer}>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={newPassword}
                             placeholder="Enter New Password"
@@ -129,13 +131,13 @@ const ChangePassword = ({ navigation }) => {
                             style={Styles.inputStyle}
                         />
                                                 <TouchableOpacity onPress={toggleNewPassword} style={Styles.eyeOutline}>
-                            <Image source={showNewPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={Colors.gray} resizeMode="contain" style={Styles.eye} />
+                            <Image source={showNewPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
                         </TouchableOpacity>
                     </View>
                         <Text style={Styles.title}>Enter Password Again</Text>
                         <View style={Styles.passwordContainer}>
                         <TextInput
-                            placeholderTextColor={Colors.gray}
+                            placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={confirmPassword}
                             secureTextEntry={!showConfirmPassword}
@@ -144,16 +146,16 @@ const ChangePassword = ({ navigation }) => {
                             style={Styles.inputStyle}
                         />
                                                 <TouchableOpacity onPress={toggleConfirmPassword} style={Styles.eyeOutline}>
-                            <Image source={showConfirmPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={Colors.gray} resizeMode="contain" style={Styles.eye} />
+                            <Image source={showConfirmPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
                         </TouchableOpacity>
                     </View>
 
                     </View>
                     <CustomButton
                         onPress={validateInput}
-                        gradientColors={[Colors.red, Colors.red]}
+                        gradientColors={[themes.red, themes.red]}
                         title="Update password"
-                        textColor={Colors.white}
+                        textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(40) }} />
                 </View>
                 <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage}/>

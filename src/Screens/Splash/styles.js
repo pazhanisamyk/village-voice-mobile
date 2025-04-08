@@ -1,19 +1,18 @@
 import { StyleSheet } from "react-native";
 import { height, moderateScale, width } from "../../Styles/ResponsiveSizes";
-import Colors from "../../Styles/Colors";
 
-const Styles = StyleSheet.create({
+const getStyles = (themes) => StyleSheet.create({
     container:{
         height: height,
         width: width,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: Colors.white
+        backgroundColor: themes.white
     },
     image:{
-        height: moderateScale(200),
-        width: moderateScale(200),
+        height: moderateScale(500),
+        width: moderateScale(500),
     }
 })
 
-export default Styles;
+export default getStyles;
