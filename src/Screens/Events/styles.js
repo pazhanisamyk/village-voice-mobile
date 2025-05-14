@@ -46,6 +46,10 @@ const getStyles = (themes) => StyleSheet.create({
         height:moderateScale(12),
         width:moderateScale(12),
     },
+    deleteIcon:{
+        height:moderateScale(18),
+        width:moderateScale(18),
+    },
     eventcount:{
         fontSize: textScale(14),
         fontWeight: '600',
@@ -89,19 +93,15 @@ const getStyles = (themes) => StyleSheet.create({
     },
     month:{
         fontSize: textScale(20),
-        paddingLeft: moderateScale(20),
-        marginTop: moderateScale(20),
         color: themes.white,
         fontWeight: '700'
     },
     fullDate:{
         fontSize: textScale(12),
-        paddingLeft: moderateScale(20),
         color: themes.gray,
         fontWeight: '500'
     },
     events:{
-        height: moderateScale(150),
         borderRadius: moderateScale(16),
         borderWidth: moderateScale(1),
         backgroundColor: themes.card,
@@ -126,13 +126,25 @@ const getStyles = (themes) => StyleSheet.create({
         fontSize: textScale(14),
         color: themes.white,
         fontWeight: '600',
-        marginTop: moderateScale(10)
+        marginTop: moderateScale(5)
     },
     eventTime:{
-        fontSize: textScale(20),
+        fontSize: textScale(18),
         color: themes.white,
         marginTop: moderateScale(5),
         fontWeight: '700',
+    },
+    addEventOutline:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: moderateScale(20),
+        paddingHorizontal: moderateScale(20)
+    },
+    remoEventOutile:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     }
 });
 

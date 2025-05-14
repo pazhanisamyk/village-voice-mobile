@@ -5,12 +5,12 @@ import Imagepaths from "../../Constants/Imagepaths";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import { useEffect, useState } from "react";
 import AlertPopup from "../../Components/AlertPopup";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import actions from "../../Redux/actions";
-import { showError, showInfo, showSuccess } from "../../Utils/helperfunctions";
+import { showError, showSuccess } from "../../Utils/helperfunctions";
 import strings, { changeLaguage } from "../../Constants/languages";
-import types from "../../Redux/types";
 import { useTheme } from "../../Constants/themes";
+import { saveUserData } from "../../Redux/actions/auth";
 
 const Settings = ({ navigation }) => {
     const { themes, changeTheme } = useTheme();
@@ -25,7 +25,6 @@ const Settings = ({ navigation }) => {
     
 
     const isFocused = useIsFocused();
-    const dispatch = useDispatch();
 
     const errorMethod = (error) => {
         console.log(error?.message || error?.error);
@@ -47,11 +46,8 @@ const Settings = ({ navigation }) => {
             .then((res) => {
                 showSuccess(res?.message)
                 setIsDarkModeEnabled(previousState => !previousState);
-                  dispatch({
-                    type: types.LOGIN,
-                    payload: {...userData, theme: isDarkModeEnabled ? 'light' : 'dark'},
-                  });
-                  changeTheme(isDarkModeEnabled ? 'light' : 'dark')
+                saveUserData({...userData, theme: isDarkModeEnabled ? 'light' : 'dark'});
+                changeTheme(isDarkModeEnabled ? 'light' : 'dark');
             })
             .catch(errorMethod);
     }
@@ -63,11 +59,8 @@ const Settings = ({ navigation }) => {
              .then((res) => {
                  showSuccess(res?.message)
                  setIsLangEnabled(previousState => !previousState);
-                  dispatch({
-                    type: types.LOGIN,
-                    payload: {...userData, language: isLangEnabled ? 'en' : 'ta'},
-                  });
-                  changeLaguage(isLangEnabled ? 'en' : 'ta')
+                 saveUserData({...userData, language: isLangEnabled ? 'en' : 'ta'});
+                 changeLaguage(isLangEnabled ? 'en' : 'ta')
              })
              .catch(errorMethod);
     }
@@ -132,7 +125,7 @@ const Settings = ({ navigation }) => {
         <ScrollView contentContainerStyle={{paddingBottom: moderateScale(140), backgroundColor: themes.background}} showsVerticalScrollIndicator={false}>
             <View style={Styles.container}>
                 <View style={Styles.outerContainer}>
-                    <Image source={Imagepaths.logo} style={Styles.image} />
+                    {userData?.profileImage ? <Image source={{uri:userData?.profileImage}} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
                     <Text style={Styles.userName}>{userData?.username}</Text>
                     <Text style={Styles.email}>{userData?.email}</Text>
                     <Text style={Styles.email}>+91 {userData?.phoneNumber}</Text>

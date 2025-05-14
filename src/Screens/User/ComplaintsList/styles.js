@@ -41,7 +41,8 @@ const getStyles = (themes) => StyleSheet.create({
     },
     image:{
         height: moderateScale(55),
-        width: moderateScale(95)
+        width: moderateScale(95),
+        borderRadius: moderateScale(8)
     }
 })
 

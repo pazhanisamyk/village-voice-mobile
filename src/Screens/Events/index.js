@@ -6,8 +6,14 @@ import CustomSelect from "../../Components/CustomSelect";
 import Imagepaths from "../../Constants/Imagepaths";
 import strings from "../../Constants/languages";
 import { useTheme } from "../../Constants/themes";
+import CustomButton from "../../Components/CustomButton";
+import { useSelector } from "react-redux";
+import AlertPopup from "../../Components/AlertPopup";
+import { useIsFocused } from "@react-navigation/native";
+import actions from "../../Redux/actions";
+import { showSuccess } from "../../Utils/helperfunctions";
 
-const Events = () => {
+const Events = ({navigation}) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const [isYearModalVisible, setIsYearModalVisible] = useState(false);
@@ -17,6 +23,31 @@ const Events = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedFullDate, setSelectedFullDate] = useState(null);
     const [dateData, setDateData] = useState([]);
+    const [eventsData, setEventsData] = useState([]);
+    const [isModalVisible, setIsModalVisible] = useState({status: false, deleteId: 0});
+    const [alertMessage, setAlertMessage] = useState('');
+    const userData = useSelector((state) => state?.auth?.userData);
+    const isFocused = useIsFocused();
+
+    const colorArray = [themes.blue, themes.red, themes.purple, themes.green, themes.blue1];
+
+    useEffect(()=>{
+        if (isFocused) {
+            getAllEventsData();
+        }
+    },[isFocused, selectedFullDate, isModalVisible])
+
+    const getAllEventsData = async() => {
+        const [day, month, year] = selectedFullDate.split('-');
+        try {
+                    const res = await actions.getallEvents(`?year=${year}&month=${month}&day=${day}`); // remove the callback, assume it returns a Promise
+                    console.log(res);
+                    
+                    setEventsData(res)
+                } catch (error) {
+                    console.log(error, '❌ Error while fetching complaint boxes');
+                }
+    }
 
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - 2000 + 1 }, (_, i) => (2000 + i).toString());
@@ -27,6 +58,12 @@ const Events = () => {
             convertedYears.push({ id: year, label: year })
         })
         return convertedYears
+    }
+    const onpressAddEvent = () => {
+        let data = {
+            date: selectedFullDate,
+        }
+        navigation.navigate('AddEvent', {data: data})
     }
     const months = [
         { id: 1, label: strings.JANUARY },
@@ -43,33 +80,38 @@ const Events = () => {
         { id: 12, label: strings.DECEMBER },
     ];
 
-    const eventsData = [
-        {
-            id: 1,
-            event: 'Guest Lecture on Rising Technologies By Dr. D. S. Bhosale',
-            time: '9:00 AM'
-        },
-        {
-            id: 2,
-            event: 'Guest Lecture on Rising Technologies By Dr. D. S. Bhosale',
-            time: '9:00 AM'
-        },
-        {
-            id: 3,
-            event: 'Guest Lecture on Rising Technologies By Dr. D. S. Bhosale',
-            time: '9:00 AM'
-        },
-        {
-            id: 4,
-            event: 'Guest Lecture on Rising Technologies By Dr. D. S. Bhosale',
-            time: '9:00 AM'
-        },
-        {
-            id: 5,
-            event: 'Guest Lecture on Rising Technologies By Dr. D. S. Bhosale',
-            time: '9:00 AM'
-        },
-    ];
+    const onPressDelete = (id, event) => {
+        setAlertMessage(`Are you sure, You want to delete ${event}`)
+        setIsModalVisible({status: true, deleteId: id});                
+    }
+
+    const onConfirmDelete = async() => {
+        try {
+            const res = await actions.deletedEvent(isModalVisible.deleteId); // remove the callback, assume it returns a Promise
+            console.log(res);
+            setIsModalVisible({status: false, deleteId: 0})
+            showSuccess(res?.message);
+        } catch (error) {
+            console.log(error, '❌ Error while deleting event');
+        }
+
+
+        
+        console.log('delete event id: ',isModalVisible.deleteId);
+
+    }
+
+    const isFutureOrToday  = (dateStr) => {
+        const [day, month, year] = dateStr.split('-');
+        const inputDate = new Date(`${year}-${month}-${day}`);
+        const today = new Date();
+      
+        // Zero out time for accurate comparison
+        inputDate.setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
+      
+        return inputDate >= today;
+      };
 
     const generateDateData = (year, month) => {
         const dateArray = [];
@@ -88,7 +130,7 @@ const Events = () => {
         setDateData(dateArray);
         setSelectedDate(dateArray[0].id);
         const date = new Date(dateArray[0].fulldate);
-        const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
         setSelectedFullDate(formattedDate)
     };
 
@@ -99,7 +141,7 @@ const Events = () => {
     const setDateAndDay = (item) => {
         setSelectedDate(item.id);
         const date = new Date(item.fulldate);
-        const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
         setSelectedFullDate(formattedDate)
     }
 
@@ -117,13 +159,41 @@ const Events = () => {
         );
     };
 
-    const renderEvents = ({ item }) => {
+    const emptyEvents = () => {
+        return(
+            <View style={[Styles.events, {alignItems: 'center', justifyContent: 'center', height: moderateScale(200)}]}>
+                <Text style={Styles.eventTime}>Events not found</Text>
+            </View>
+        )
+    }
+
+    const renderEvents = ({ item, index }) => {
+
+        const usedColors = new Set();    
+                    // Assign color
+                    let color;
+                    if (index < colorArray.length) {
+                        color = colorArray[index];
+                        usedColors.add(color);
+                    } else {
+                        // Pick a random color from array if exceeded
+                        const unusedColors = colorArray.filter(c => !usedColors.has(c));
+                        color = unusedColors.length > 0
+                            ? unusedColors[Math.floor(Math.random() * unusedColors.length)]
+                            : colorArray[Math.floor(Math.random() * colorArray.length)];
+                    }
         return (
-            <View style={Styles.events}>
-                <View style={Styles.eventnumber}>
-                    <Text style={Styles.eventnum}>{item.id}</Text>
+            <View key={item?._id} style={Styles.events}>
+                <View style={Styles.remoEventOutile}>
+                <View style={[Styles.eventnumber, {backgroundColor: color}]}>
+                    <Text style={Styles.eventnum}>{index +1 }</Text>
                 </View>
-                <Text style={Styles.eventdetail}>{item.event}</Text>
+                {userData?.role === 'admin' && <TouchableOpacity onPress={()=>onPressDelete(item?._id, item?.event)} style={Styles.eventnumber}>
+                <Image tintColor={themes.white} resizeMode="contain" source={Imagepaths.delete} style={Styles.deleteIcon} />
+                </TouchableOpacity>}
+                </View>
+                <Text style={Styles.eventTime}>{item.event}</Text>
+                <Text style={Styles.eventdetail}>{item.eventDescription}</Text>
                 <Text style={Styles.eventTime}>{item.time}</Text>
 
             </View>
@@ -148,7 +218,7 @@ const Events = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <Text style={Styles.eventcount}>{`2`} {strings.EVENTS_FOR_TODAY}</Text>
+                <Text style={Styles.eventcount}>{eventsData?.length} {strings.EVENTS_FOR_TODAY}</Text>
                 <FlatList
                     horizontal
                     style={Styles.eventContainer}
@@ -158,15 +228,26 @@ const Events = () => {
                     showsHorizontalScrollIndicator={false}
                 />
             </View>
-            <View style={Styles.bottomview}>
+            <View style={Styles.bottomview}> 
+                <View style={Styles.addEventOutline}>
+                <View>
                 <Text style={Styles.month}>{months[selectedMonth -1 ]?.label}</Text>
                 <Text style={Styles.fullDate}>{selectedFullDate}</Text>
+                </View>
+                {userData?.role === 'admin' && selectedFullDate && isFutureOrToday (selectedFullDate) && <CustomButton
+          onPress={onpressAddEvent}
+          ButtonStyles={{width: '50%'}}
+          gradientColors={[themes.red, themes.red]}
+          title="Add new event"
+          textColor={themes.white} />}
+                </View>
                 <FlatList
                     data={eventsData}
                     contentContainerStyle={{paddingBottom: moderateScale(100)}}
                     style={[Styles.eventContainer, { marginTop: moderateScale(20) }]}
                     renderItem={renderEvents}
-                    keyExtractor={(item) => item.id.toString()}
+                    ListEmptyComponent={emptyEvents}
+                    keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                 />
 
@@ -183,6 +264,7 @@ const Events = () => {
                 isModalVisible={isMonthModalVisible}
                 closeModal={(data) => setIsMonthModalVisible(data)}
                 onSubmit={(itemValue) => setSelectedMonth(itemValue)} />
+                <AlertPopup isModalVisible={isModalVisible.status} isCancelVisible={isModalVisible.status} onPressCancel={()=>setIsModalVisible({status: false, deleteId: 0})} onPressSubmit={onConfirmDelete} message={alertMessage}/>
         </View>
     )
 }

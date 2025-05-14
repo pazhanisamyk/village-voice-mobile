@@ -91,6 +91,7 @@ export async function getHeaders() {
         })
         .catch(async (error) => {
           console.log('API error:', error?.response?.status);
+          console.log('API error:', error);
         
           if (error?.response?.status === 401) {
             await clearUserData();

@@ -5,23 +5,26 @@ import { useEffect, useRef, useState } from "react";
 import CustomButton from "../../Components/CustomButton";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import AlertPopup from "../../Components/AlertPopup";
+import {launchImageLibrary} from 'react-native-image-picker';
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
 import strings from "../../Constants/languages";
 import { useTheme } from "../../Constants/themes";
 import { saveUserData } from "../../Redux/actions/auth";
+import { useSelector } from "react-redux";
 
 const EditProfile = ({ navigation, route }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const [username, setUsername] = useState('');
+    const [selectedImage, setSelectedImage] = useState(null);
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
     const inputRef = useRef(null);
-    const userData = route?.params?.userData || {};
+    const userData = useSelector((state) => state?.auth?.userData);
 
     useEffect(()=>{
         setUsername(userData?.username);
@@ -29,10 +32,61 @@ const EditProfile = ({ navigation, route }) => {
         setPhoneNumber(userData?.phoneNumber);
     },[])
 
+    const selectImage = () => {
+        const options = {
+          mediaType: 'photo',
+          quality: 1,
+        };
+
+    launchImageLibrary(options, response => {
+        if (response.didCancel) {
+            console.log('User cancelled image picker');
+        } else if (response.errorCode) {
+            console.log('Image Picker Error: ', response.errorMessage);
+        } else {
+            const uri = response.assets[0].uri;
+            setSelectedImage(uri);
+            updateProfileImage();
+        }
+        });
+    };
+
     const errorMethod = (error) => {
         console.log(error?.message || error?.error);
         showError(error?.message || error?.error);
       };
+
+      const updateProfileImage = async () => {
+        
+        const formData = new FormData();
+      
+        const fileName = selectedImage.split('/').pop();
+        const fileType = fileName.split('.').pop();
+      
+        formData.append('image', {
+          uri: selectedImage,
+          name: String(userData?.phoneNumber),
+          type: `image/${fileType}`,
+        });
+      
+        // Optional: if user ID or token is needed
+        let  headers = {
+            'Content-Type': 'multipart/form-data',
+          }
+      
+        try {
+            await actions.updateProfileImage(formData, headers)  // ✅ send formData instead of data object
+          .then((res) => {
+            console.log(res, 'resresres');
+            saveUserData(res?.user);
+            showSuccess(res?.message)
+          })
+          .catch(errorMethod);
+        } catch (error) {
+          console.error('Upload error:', error);
+        }
+      };      
+      
 
     const updateProfile = async () => {
         const data = {
@@ -96,8 +150,8 @@ const EditProfile = ({ navigation, route }) => {
                     <Text style={Styles.headertext}>{strings.EDIT_PROFILE}</Text>
                 </View>
                 <View style={Styles.outerContainer}>
-                    <TouchableOpacity onPress={() => { }} style={Styles.profileOutline}>
-                        <Image source={Imagepaths.logo} style={Styles.image} />
+                    <TouchableOpacity onPress={selectImage} style={Styles.profileOutline}>
+                        {userData?.profileImage ? <Image source={{uri: userData?.profileImage}} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
                         <Image source={Imagepaths.camera} style={Styles.camera} />
                     </TouchableOpacity>
                     <View style={Styles.editprofileContainer}>

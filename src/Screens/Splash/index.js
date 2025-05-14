@@ -5,14 +5,12 @@ import { useEffect, useState } from "react"
 import { getUserData } from "../../Utils/Utils"
 import { changeLaguage } from "../../Constants/languages"
 import { useTheme } from "../../Constants/themes"
-import types from "../../Redux/types"
-import { useDispatch } from "react-redux"
 import actions from "../../Redux/actions"
+import { saveUserData } from "../../Redux/actions/auth"
 
 const SplashScreen = ({navigation}) => {
     const {themes, changeTheme } = useTheme();
     const Styles = getStyles(themes);
-    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
@@ -37,11 +35,7 @@ const SplashScreen = ({navigation}) => {
             
             changeTheme(res?.data?.theme);
             changeLaguage(res?.data?.language);
-            
-            dispatch({
-                type: types.LOGIN,
-                payload: res?.data,
-            });
+            saveUserData(res?.data);
     
             if (res?.data?.role === 'user') {
                 navigation.navigate('UserTabroutes');

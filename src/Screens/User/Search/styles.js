@@ -82,5 +82,37 @@ const getStyles = (themes) => StyleSheet.create({
         flexDirection: 'row',
         width: '90%',
     },
+    ComplaintsList:{
+        width: width-moderateScale(60),
+        borderRadius: moderateScale(10),
+        backgroundColor: themes.card1,
+        padding: moderateScale(10),
+        flexDirection: 'row',
+        alignItems: 'center',        
+        marginVertical: moderateScale(10),
+    },
+    complaintId:{
+        fontSize: textScale(16),
+        color: themes.white,
+        fontWeight: '500'
+    },
+    complaintTitle:{
+        fontSize: textScale(14),
+        color: themes.gray,
+        fontWeight: '400'
+    },
+    ComplaintsText:{
+        width: '65%'
+    },
+    image:{
+        height: moderateScale(55),
+        width: moderateScale(95),
+        borderRadius:moderateScale(8)
+    },
+    noResultText:{
+        fontSize: textScale(12),
+        color: themes.gray,
+        fontWeight: '500'
+    }
 })
 export default getStyles;

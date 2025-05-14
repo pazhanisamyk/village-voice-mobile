@@ -1,26 +1,46 @@
 import { BackHandler, FlatList, Image, Text, TouchableOpacity, View } from "react-native"
 import Imagepaths from "../../../Constants/Imagepaths";
 import getStyles from "./styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AlertPopup from "../../../Components/AlertPopup";
 import strings from "../../../Constants/languages";
 import { useTheme } from "../../../Constants/themes";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
+import { useIsFocused } from "@react-navigation/native";
+import actions from "../../../Redux/actions";
 
 const UserHomeScreen = ({ navigation }) => {
     const {themes } = useTheme();
     const Styles = getStyles(themes);
 
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [complaintBoxData, setComplaintBoxData] = useState([])
+    const isFocused = useIsFocused();
 
 
-    // useEffect(() => {
-    //     // Add the back button event listener
-    //     const backHandler = BackHandler.addEventListener('hardwareBackPress', androidBackButtonHandler);
+    useEffect(() => {
+        // Add the back button event listener
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', androidBackButtonHandler);
 
-    //     // Cleanup the event listener on component unmount
-    //     return () => backHandler.remove();
-    // }, []);
+        // Cleanup the event listener on component unmount
+        return () => backHandler.remove();
+    }, []);
+
+        useEffect(() => {
+            if (isFocused) {
+                getAllComplaintBoxes();
+            }
+        }, [isFocused]);
+    
+        const getAllComplaintBoxes = async () => {
+            try {
+                const res = await actions.getAllComplaintBox(); // remove the callback, assume it returns a Promise
+                console.log(res, '📦 All Complaint Boxes');
+                setComplaintBoxData(res)
+            } catch (error) {
+                console.log(error, '❌ Error while fetching complaint boxes');
+            }
+        };
 
     const onPressCancel = () => {
         setIsModalVisible(false);
@@ -83,9 +103,9 @@ const UserHomeScreen = ({ navigation }) => {
 
     const renderComplaintBoxes = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('Viewcomplaints', { Header: item.title })} style={Styles.complaints}>
-                <Image resizeMode="contain" source={item.image} style={Styles.image} />
-                <Text style={Styles.complaintText}>{item.title}</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Viewcomplaints', { data: item })} style={Styles.complaints}>
+                {item.imageUrl ? <Image resizeMode="cover" source={{uri: item.imageUrl}} style={Styles.image} /> : <Image resizeMode="contain" source={Imagepaths.transparent_logo} style={Styles.image} />}
+                <Text style={Styles.complaintText}>{item.category}</Text>
                 {/* <Image resizeMode="contain" tintColor={themes.white} source={Imagepaths.double_right} style={Styles.arrowRight} /> */}
             </TouchableOpacity>
         )
@@ -95,8 +115,8 @@ const UserHomeScreen = ({ navigation }) => {
                 <FlatList
                     numColumns={2}
                     contentContainerStyle={{paddingBottom: moderateScale(100)}}
-                    data={sampleData}
-                    keyExtractor={item => item.id.toString()}
+                    data={complaintBoxData}
+                    keyExtractor={item => item.id}
                     renderItem={renderComplaintBoxes}
                     showsVerticalScrollIndicator={false} />
             <AlertPopup

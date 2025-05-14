@@ -74,6 +74,7 @@ const getStyles = (themes) => StyleSheet.create({
         alignItems: 'center',
     },    
     selectedtabOutline: {
+        width: width/3.6,
         backgroundColor: themes.black,     
         borderWidth: moderateScale(1),
         borderColor: themes.gray1,
@@ -85,6 +86,7 @@ const getStyles = (themes) => StyleSheet.create({
     },
     
     unselectedtabOutline: {
+        width: width/3.6,
         backgroundColor: themes.gray,     
         borderWidth: moderateScale(1),
         borderColor: themes.gray1,

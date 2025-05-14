@@ -9,10 +9,10 @@ const AdminTabBar = ({ state, descriptors, navigation }) => {
   const Styles = getStyles(themes);
   const renderIcon = (route, focused) => {
     const iconMap = {
-      Home: Imagepaths.Home,
+      AdminHomeScreenStack: Imagepaths.Home,
       ComplaintBox: Imagepaths.Budgets,
       CreateComplainStack: Imagepaths.file,
-      Events: Imagepaths.Calendar,
+      CreateEventStack: Imagepaths.Calendar,
       SettingsStack: Imagepaths.Settings,
     };
     const icon = iconMap[route.name];

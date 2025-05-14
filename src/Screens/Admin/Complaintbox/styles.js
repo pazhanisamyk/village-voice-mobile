@@ -66,7 +66,8 @@ const getStyles = (themes) => StyleSheet.create({
     },
     image: {
         height: moderateScale(40),
-        width: moderateScale(40)
+        width: moderateScale(40),
+        borderRadius: moderateScale(8)
     },
     detailtxtoutline: {
         alignItems: 'center',

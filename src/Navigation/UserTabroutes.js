@@ -5,10 +5,10 @@ import SettingsStack from "./SettingsStack";
 import UserTabBar from "./UserTabBar";
 import Search from "../Screens/User/Search";
 import UserHomeScreenStack from "./UserHomeScreenStack";
-import ComplaintsList from "../Screens/User/ComplaintsList";
 import { hideBottomTab } from "../Utils/helperfunctions";
-import Events from "../Screens/Events";
 import { useTheme } from "../Constants/themes";
+import CreateEventStack from "./CreateEventStack";
+import ComplaintsListStack from "./ComplaintsListStack";
 
 
 const UserTabroutes = () => {
@@ -16,7 +16,7 @@ const UserTabroutes = () => {
   const Tab = createBottomTabNavigator();
   const state = useNavigationState((state) => state);
 
-  const hideBottomTabs = ['EditProfile', 'CreateComplainBox', 'Viewcomplaints', 'AddComplaint', 'HelpScreen', 'PoliciesScreen', 'ChangePassword']
+  const hideBottomTabs = ['EditProfile', 'ComplaintDetail', 'CreateComplainBox', 'Viewcomplaints', 'AddComplaint', 'HelpScreen', 'PoliciesScreen', 'ChangePassword']
   
   const hideTabBar = hideBottomTab(state, hideBottomTabs);  
   
@@ -27,9 +27,9 @@ const UserTabroutes = () => {
           tabBar={(props) => (!hideTabBar ? <UserTabBar {...props} /> : null)}
         >
           <Tab.Screen name="UserHomeScreenSTack" component={UserHomeScreenStack} options={{ headerShown: false }} />
-          <Tab.Screen name="ComplaintsList" component={ComplaintsList} options={{ headerShown: false }} />
+          <Tab.Screen name="ComplaintsListStack" component={ComplaintsListStack} options={{ headerShown: false }} />
           <Tab.Screen name="Search" component={Search} options={{ headerShown: false }} />
-          <Tab.Screen name="Events" component={Events} options={{ headerShown: false }} />
+          <Tab.Screen name="CreateEventStack" component={CreateEventStack} options={{ headerShown: false }} />
           <Tab.Screen name="SettingsStack" component={SettingsStack} options={{ headerShown: false }} />
         </Tab.Navigator>
         </View>

@@ -11,8 +11,8 @@ const UserTabBar = ({ state, descriptors, navigation }) => {
     const iconMap = {
       UserHomeScreenSTack: Imagepaths.Home,
       Search: Imagepaths.Search,
-      ComplaintsList: Imagepaths.file,
-      Events: Imagepaths.Calendar,
+      ComplaintsListStack: Imagepaths.file,
+      CreateEventStack: Imagepaths.Calendar,
       SettingsStack: Imagepaths.Settings,
     };
     const icon = iconMap[route.name];

@@ -10,9 +10,10 @@ import { showError, showSuccess } from "../../Utils/helperfunctions";
 import { useTheme } from "../../Constants/themes";
 import { setUserData } from "../../Utils/Utils";
 import { saveUserData } from "../../Redux/actions/auth";
+import { changeLaguage } from "../../Constants/languages";
 
 const LoginScreen = ({navigation}) => {
-    const { themes } = useTheme();
+    const { themes, changeTheme } = useTheme();
     const Styles = getStyles(themes);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
@@ -37,8 +38,10 @@ const LoginScreen = ({navigation}) => {
         await actions.login(data)
         .then((res) => {
             showSuccess(res?.message)
-            setUserData(res);
+            setUserData(res);            
             saveUserData(res?._doc);
+            changeTheme(res?._doc?.theme);
+            changeLaguage(res?._doc?.language);
             if(res?._doc?.role == "user"){
                 navigation.navigate('UserTabroutes')
             }

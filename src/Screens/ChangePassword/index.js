@@ -8,6 +8,7 @@ import AlertPopup from "../../Components/AlertPopup";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
 import { useTheme } from "../../Constants/themes";
+import { useSelector } from "react-redux";
 
 const ChangePassword = ({ navigation }) => {
     const { themes } = useTheme();
@@ -20,6 +21,7 @@ const ChangePassword = ({ navigation }) => {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const userData = useSelector((state) => state?.auth?.userData);
 
     const inputRef = useRef(null);
 
@@ -100,7 +102,7 @@ const ChangePassword = ({ navigation }) => {
                 </View>
                 <View style={Styles.outerContainer}>
                     <View style={Styles.profileOutline}>
-                        <Image source={Imagepaths.logo} style={Styles.image} />
+                        {userData?.profileImage ? <Image source={{uri: userData?.profileImage}} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
                     </View>
                     <View style={Styles.editprofileContainer}>
                         <Text style={Styles.title}>Old Password</Text>

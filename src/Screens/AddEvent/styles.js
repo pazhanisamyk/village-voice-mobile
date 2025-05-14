@@ -1,16 +1,16 @@
 import { StyleSheet } from "react-native";
-import { height, moderateScale, textScale, width } from "../../../Styles/ResponsiveSizes";
+import { height, moderateScale, textScale, width } from "../../Styles/ResponsiveSizes";
 
 const getStyles = (themes) => StyleSheet.create({
     container: {
-        flex: 1,
-        height: height,
-        backgroundColor: themes.background
+        backgroundColor: themes.background,
+        height: height
     },
     topContainer: {
         marginTop: moderateScale(30),
         width: width,
         alignItems: 'center',
+        flexDirection: 'row',
         justifyContent: 'center'
     },
     headertext: {
@@ -19,21 +19,21 @@ const getStyles = (themes) => StyleSheet.create({
         color: themes.white,
         fontWeight: '400'
     },
-    backArrow: {
+    backArrow:{
         position: 'absolute',
         left: moderateScale(20),
     },
-    outerContainer: {
-        marginHorizontal: moderateScale(20),
-        alignItems: 'center'
-    },
-    backIcon: {
+    backIcon:{
         height: moderateScale(20),
         width: moderateScale(20),
-    },
+    },    
+    outerContainer:{
+        marginHorizontal: moderateScale(20),
+        alignItems: 'center'
+    },    
     editprofileContainer:{
         width: '100%',
-        marginTop: moderateScale(40),
+        marginTop: moderateScale(60),
         padding: moderateScale(20),
         borderRadius: moderateScale(16),
         backgroundColor: themes.card,
@@ -58,27 +58,11 @@ const getStyles = (themes) => StyleSheet.create({
         fontWeight: '600',
         fontSize: textScale(12)
     },
-    imageOutline:{
-        alignItems: 'center',
-        justifyContent: 'center',
-        height:moderateScale(150),
-        borderWidth:moderateScale(1),
-        borderColor:themes.gray,
-        borderRadius: moderateScale(16),
-        marginTop: moderateScale(5),
-        paddingLeft: moderateScale(10),
-        marginBottom: moderateScale(15),
+    passwordContainer:{
         width: '100%',
+        justifyContent: 'center',
+        flexDirection: 'row'
     },
-    cameraIcon:{
-        height: moderateScale(60),
-        width: moderateScale(60),
-    },
-    selectedImage:{
-        height: moderateScale(120),
-        width: moderateScale(120),
-        borderRadius: moderateScale(8)
-    }
 });
 
 export default getStyles;

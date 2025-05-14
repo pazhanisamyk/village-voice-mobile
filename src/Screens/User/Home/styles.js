@@ -21,6 +21,7 @@ const getStyles = (themes) => StyleSheet.create({
     image:{
         height: moderateScale(75),
         width: moderateScale(75),
+        borderRadius: moderateScale(8)
     },
     complaintText:{
         fontSize: textScale(14),

@@ -1,10 +1,8 @@
 import { StyleSheet } from "react-native";
-import { height, moderateScale, textScale, width } from "../../../Styles/ResponsiveSizes";
+import { height, moderateScale, moderateScaleVertical, textScale, width } from "../../../Styles/ResponsiveSizes";
 
 const getStyles = (themes) => StyleSheet.create({
     container: {
-        flex: 1,
-        height: height,
         backgroundColor: themes.background
     },
     topContainer: {
@@ -78,6 +76,40 @@ const getStyles = (themes) => StyleSheet.create({
         fontWeight: '600',
         fontSize: textScale(12)
     },
+    selectedtabOutline: {
+        backgroundColor: themes.black,     
+        borderWidth: moderateScale(1),
+        borderColor: themes.gray1,
+        borderRadius: moderateScale(16),
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: moderateScale(6), 
+        margin: moderateScale(5),
+    },
+    
+    unselectedtabOutline: {
+        backgroundColor: themes.gray,     
+        borderWidth: moderateScale(1),
+        borderColor: themes.gray1,
+        borderRadius: moderateScale(16),
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: moderateScale(6), 
+        margin: moderateScale(5),
+    },
+    tabTitle:{
+        fontSize: textScale(12),
+        padding: moderateScaleVertical(8),
+        fontWeight: '600',
+    },
+    tabContainer: {
+        borderRadius: moderateScale(16),
+        backgroundColor: themes.gray,
+        height: moderateScale(50),
+        marginVertical: moderateScaleVertical(20),
+        flexDirection: 'row',
+        alignItems: 'center',
+    },  
 });
 
 export default getStyles;

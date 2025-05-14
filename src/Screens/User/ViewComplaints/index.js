@@ -8,7 +8,7 @@ import { useTheme } from "../../../Constants/themes";
 const ViewComplaints = ({ navigation, route }) => {
     const {themes } = useTheme();
     const Styles = getStyles(themes);
-    const Header = route?.params?.Header || "Default Header";
+    const complaintData = route?.params?.data || {};
     const onPressBack = () => {
         navigation.goBack();
     }
@@ -19,13 +19,13 @@ const ViewComplaints = ({ navigation, route }) => {
                     <TouchableOpacity style={Styles.backArrow} onPress={onPressBack}>
                         <Image source={Imagepaths.arrow_left} style={Styles.backIcon} />
                     </TouchableOpacity>
-                    <Text style={Styles.headertext}>{Header}</Text>
+                    <Text style={Styles.headertext}>{complaintData?.category}</Text>
                 </View>
                 <View style={Styles.outerContainer}>
-                    <Image source={Imagepaths.logo} style={Styles.image} />
+                    {complaintData?.imageUrl ? <Image source={{uri:complaintData?.imageUrl}} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
                     <Text style={Styles.descriptionText}>{strings.DESCRIPTION}</Text>
                     <View style={Styles.desContainer}>
-                        <Text style={Styles.description}>SETI Complaint Box provides an accessible, user-friendly, and secure platform for students to submit complaints and voice their concerns. By using the SETI Complaint Box, students can contribute to the ongoing improvement of SETI's academic and non-academic environment, ensuring a positive and productive learning experience for all.</Text>
+                        <Text style={Styles.description}>{complaintData?.description}</Text>
                     </View>
                     <Text style={[Styles.descriptionText, {marginTop: moderateScale(20)}]}>{strings.RULES_TO_FOLOW}</Text>
                     <View style={Styles.desContainer}>
@@ -36,7 +36,7 @@ const ViewComplaints = ({ navigation, route }) => {
                     </View>
                 </View>
                 <View style={Styles.createComplaint}>
-                    <TouchableOpacity style={Styles.plusBtn} onPress={() => navigation.navigate('AddComplaint')}>
+                    <TouchableOpacity style={Styles.plusBtn} onPress={() => navigation.navigate('AddComplaint', {data: complaintData})}>
                         <Image source={Imagepaths.Plus} style={Styles.plusIcon} />
                     </TouchableOpacity>
                 </View>
