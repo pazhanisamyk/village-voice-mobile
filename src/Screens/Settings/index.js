@@ -27,8 +27,8 @@ const Settings = ({ navigation }) => {
     const isFocused = useIsFocused();
 
     const errorMethod = (error) => {
-        console.log(error?.message || error?.error);
-        showError(error?.message || error?.error);
+        console.log(error?.response?.data?.message);
+        showError(error?.response?.data?.message);
     };
 
     useEffect(() => {

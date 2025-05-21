@@ -6,6 +6,7 @@ import { useIsFocused } from "@react-navigation/native";
 import actions from "../../Redux/actions";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import { useTheme } from "../../Constants/themes";
+import { ListEmptyComponent } from "../../Components/ListEmptyComponent";
 
 const HelpScreen = ({ navigation }) => {
     const { themes } = useTheme();
@@ -15,8 +16,8 @@ const HelpScreen = ({ navigation }) => {
     const isFocused = useIsFocused();
 
     const errorMethod = (error) => {
-        console.log(error?.message || error?.error);
-        showError(error?.message || error?.error);
+        console.log(error?.response?.data?.message);
+        showError(error?.response?.data?.message);
     };
 
     useEffect(() => {
@@ -50,7 +51,7 @@ const HelpScreen = ({ navigation }) => {
 
     const renderHelp = ({item, index}) => {
         return(
-            <View style={Styles.card}>
+            <View key={index} style={Styles.card}>
                 <TouchableOpacity onPress={() => onPressHelp(index)} style={Styles.helpTitleView}>
                 <Text style={Styles.cardTitle}>{item.title}</Text>
                 <Image resizeMode="contain" style={Styles.toggleIcon} source={currentIndex === index ? Imagepaths.arrow_up : Imagepaths.arrow_down} />
@@ -78,6 +79,7 @@ const HelpScreen = ({ navigation }) => {
                     data={helpData}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={renderHelp}
+                    ListEmptyComponent={ListEmptyComponent}
                     showsVerticalScrollIndicator = {false}
                     />
 

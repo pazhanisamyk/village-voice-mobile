@@ -14,7 +14,9 @@ const ComplaintDetail = ({ navigation, route }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const [isModalVisible, setIsModalVisible] = useState({enable: false, status: '' });
+    const [deletePopup, setDeletePopup] = useState({visible: false, deleteId: 0 });
     const [alertMessage, setAlertMessage] = useState('');
+    const [deleteMessage, setDeleteMessage] = useState('');
     const complaintData = route?.params?.data || {};
     const userData = useSelector((state) => state?.auth?.userData);
     
@@ -36,8 +38,24 @@ const ComplaintDetail = ({ navigation, route }) => {
     }
 
     const errorMethod = (error) => {
-        console.log(error?.message || error?.error);
-        showError(error?.message || error?.error);
+        console.log(error?.response?.data?.message);
+        showError(error?.response?.data?.message);
+      };
+
+      const deleteComplaint = async() => {
+        await actions.deletedComplaint(deletePopup.deleteId)
+            .then((res) => {
+                showSuccess(res?.message);
+                setDeletePopup({ visible: false, deleteId: 0 });
+                onPressBack();
+            })
+            .catch(errorMethod);
+        
+      };
+
+      const openDeletePopup = (deleteId) => {
+        setDeleteMessage('This action cannot be undone. Are you sure you want to delete this complaint?');
+        setDeletePopup({visible: true, deleteId: deleteId});        
       };
 
       const updateStatus = async () => {
@@ -156,6 +174,13 @@ const ComplaintDetail = ({ navigation, route }) => {
                         textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(60) }} />
                     }
+                    {userData?.role === 'user' &&  <CustomButton
+                        onPress={() => openDeletePopup(complaintData?._id)}
+                        gradientColors={[themes.red, themes.red]}
+                        title={'Delete this complaint'}
+                        textColor={themes.white}
+                        ButtonStyles={{ marginTop: moderateScale(40) }} />
+                    }
                     {complaintData?.status !== "resolved" && userData?.role === 'admin' && <CustomButton
                         onPress={() => onPressChangeStatus(complaintData?.status !=="rejected" ? 'reject' : "rejected")}
                         gradientColors={[themes.purple, themes.purple]}
@@ -164,6 +189,7 @@ const ComplaintDetail = ({ navigation, route }) => {
                         ButtonStyles={{ marginTop: moderateScale(40)}} />}
                 </View>
                 <AlertPopup isCancelVisible={isModalVisible?.enable && complaintData?.status !== "resolved" && complaintData?.status !== "rejected"} isModalVisible={isModalVisible?.enable} onPressCancel={() => setIsModalVisible({enable: false, status: '' })} onPressSubmit={updateStatus} message={alertMessage}/>
+                <AlertPopup isCancelVisible={deletePopup?.visible} isModalVisible={deletePopup?.visible} onPressCancel={() => setDeletePopup({visible: false, deleteId: 0 })} onPressSubmit={deleteComplaint} message={deleteMessage}/>
             </View>
         </ScrollView>
 

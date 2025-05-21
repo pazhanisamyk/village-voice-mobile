@@ -1,19 +1,19 @@
-import { FlatList, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
 import Imagepaths from "../../../Constants/Imagepaths";
 import getStyles from "./styles";
 import { useEffect, useRef, useState } from "react";
 import CustomButton from "../../../Components/CustomButton";
-import { moderateScale, textScale } from "../../../Styles/ResponsiveSizes";
+import { moderateScale } from "../../../Styles/ResponsiveSizes";
 import { useTheme } from "../../../Constants/themes";
 import { launchImageLibrary } from "react-native-image-picker";
-import RNPickerSelect from 'react-native-picker-select';
 import AlertPopup from "../../../Components/AlertPopup";
 import { showError, showSuccess } from "../../../Utils/helperfunctions";
 import actions from "../../../Redux/actions";
 import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 
-const CreateComplainBox = ({ navigation }) => {
+const CreateComplainBox = ({ navigation, route }) => {
+    const complaintData = route?.params?.data || {};    
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const [complaintBoxName, setComplaintBoxName] = useState('');
@@ -23,34 +23,21 @@ const CreateComplainBox = ({ navigation }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedTAb, setSelectedTab] = useState(1);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [updateComplaintBox, setUpdateComplaintBox] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
-    const [isWarningVisible, setIsWarningVisible] = useState(false);
-    const [warningMessage, setWarningMessage] = useState('');
-    const [categoryList, setCategoryList] = useState([])
     const userData = useSelector((state) => state?.auth?.userData);
     const isFocused = useIsFocused();
 
-    const TAbs = [{ id: 1, name: 'Add new category' }, { id: 2, name: 'Use old category' }];
-
     useEffect(() => {
-        if (isFocused) {
-            getAllComplaintBoxes();
+        if (isFocused && complaintData?.complaintBoxName) {
+            setComplaintBoxName(complaintData?.complaintBoxName);
+            setDescription(complaintData?.description);
+            setCategory(complaintData?.category);
+            setUpdateComplaintBox(true);
+            setSelectedImage(complaintData?.imageUrl);
+            
         }
     }, [isFocused]);
-
-    const getAllComplaintBoxes = async () => {
-        try {
-            const res = await actions.getAllComplaintBox(); // remove the callback, assume it returns a Promise
-            console.log(res, '📦 All Complaint Boxes');
-            let category = [];
-            res?.map(item => {
-                category.push({ label: item.category, value: item.category })
-            })
-            setCategoryList(category)
-        } catch (error) {
-            console.log(error, '❌ Error while fetching complaint boxes');
-        }
-    };
 
     const onPressBack = () => {
         navigation.goBack();
@@ -69,29 +56,18 @@ const CreateComplainBox = ({ navigation }) => {
         } else if (!selectedImage) {
             setAlertMessage("Validation Error, Please select an image.");
             setIsModalVisible(true);
-        } else if (categoryList.length > 0) {
-            
-            const existingCategory = categoryList.find(item => item.label == category);
-        
-            if (existingCategory) {
-                setIsWarningVisible(true);
-                setWarningMessage(
-                    `A complaint box for the '${category}' category already exists. This action won't create a new one but will update the existing '${category}' complaint box. Would you like to proceed with the update?`
-                );
-            } else {                
-                createComplaintBox();
-            }
-        } else {
+        } else {                
             createComplaintBox();
         }
     };
     const errorMethod = (error) => {
-        console.log(error?.message || error?.error);
-        showError(error?.message || error?.error);
+        setIsModalVisible(true);
+        setAlertMessage(error?.response?.data?.message);
+        console.log(error?.response?.data?.message);
+        showError(error?.response?.data?.message);
     };
 
     const createComplaintBox = async () => {
-        setIsWarningVisible('');
         const fileName = selectedImage.split('/').pop();
         const fileType = fileName.split('.').pop();
         const formData = new FormData();
@@ -108,8 +84,22 @@ const CreateComplainBox = ({ navigation }) => {
             'Content-Type': 'multipart/form-data',
         }
 
+        if(updateComplaintBox){
+            
         try {
-            await actions.createComplaintBox(formData, headers)  // ✅ send formData instead of data object
+            await actions.updateComplaintBox(formData, headers)
+                .then((res) => {
+                    navigation.navigate('CreatedComplaintBoxes');
+                    showSuccess(res?.message);
+                })
+                .catch(errorMethod);
+        } catch (error) {
+            console.error('Upload error:', error);
+        }
+    }
+    else{
+        try {
+            await actions.createComplaintBox(formData, headers)
                 .then((res) => {
                     onPressBack();
                     showSuccess(res?.message);
@@ -117,7 +107,9 @@ const CreateComplainBox = ({ navigation }) => {
                 .catch(errorMethod);
         } catch (error) {
             console.error('Upload error:', error);
-        }
+        }        
+
+    }
     };
 
     const selectImage = () => {
@@ -161,7 +153,7 @@ const CreateComplainBox = ({ navigation }) => {
                     <TouchableOpacity style={Styles.backArrow} onPress={onPressBack}>
                         <Image source={Imagepaths.arrow_left} style={Styles.backIcon} />
                     </TouchableOpacity>
-                    <Text style={Styles.headertext}>Create Complain Box</Text>
+                    <Text style={Styles.headertext}>{updateComplaintBox ? 'Update Complain Box' : 'Create Complain Box'}</Text>
                 </View>
                 <View style={Styles.outerContainer}>
                     <TouchableOpacity onPress={selectImage} style={Styles.profileOutline}>
@@ -201,70 +193,16 @@ const CreateComplainBox = ({ navigation }) => {
                             multiline={true}
                             textAlignVertical="top"
                         />
-                        <Text style={Styles.title}>Category</Text>
-                        {categoryList.length > 0 ?
-                            <>
-                                <View style={Styles.tabContainer}>
-                                    <FlatList
-                                        data={TAbs}
-                                        renderItem={rendertabs}
-                                        keyExtractor={item => item.id.toString()}
-                                        horizontal={true}
-                                        showsHorizontalScrollIndicator={false}
-                                    />
-                                </View>
-                                {selectedTAb == 1 ? <TextInput
-                                    placeholderTextColor={themes.gray}
-                                    ref={inputRef}
-                                    value={category}
-                                    placeholder="Enter Category"
-                                    onChangeText={(text) => setCategory(text)}
-                                    style={Styles.inputStyle}
-                                /> : <RNPickerSelect
-                                    onValueChange={(value) => setCategory(value)}
-                                    value={category}
-                                    items={categoryList}
-                                    placeholder={{
-                                        label: 'Select a category',
-                                        value: null,
-                                        color: themes.gray,
-                                    }}
-                                    style={{
-                                        inputIOS: {
-                                            color: themes.white,
-                                            fontWeight: '600',
-                                            fontSize: textScale(12),
-                                            paddingLeft: moderateScale(10),
-                                            paddingVertical: moderateScale(10), // for iOS padding
-                                        },
-                                        inputAndroid: {
-                                            color: themes.white,
-                                            fontWeight: '600',
-                                            fontSize: textScale(12),
-                                            paddingLeft: moderateScale(10),
-                                        },
-                                        placeholder: {
-                                            color: themes.gray,
-                                        },
-                                        viewContainer: {
-                                            borderWidth: moderateScale(1),
-                                            borderColor: themes.gray,
-                                            borderRadius: moderateScale(16),
-                                            marginTop: moderateScale(5),
-                                            marginBottom: moderateScale(15),
-                                            width: '100%',
-                                        },
-                                    }}
-                                />}
-                            </> :
+                        <Text style={Styles.title}>{updateComplaintBox ? 'Category ( view only )' : 'Category'}</Text>
                             <TextInput
                                 placeholderTextColor={themes.gray}
+                                editable={!updateComplaintBox}
                                 ref={inputRef}
                                 value={category}
                                 placeholder="Enter Category"
                                 onChangeText={(text) => setCategory(text)}
                                 style={Styles.inputStyle}
-                            />}
+                            />
 
 
 
@@ -278,7 +216,6 @@ const CreateComplainBox = ({ navigation }) => {
                 </View>
             </View>
             <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage} />
-            <AlertPopup isCancelVisible={isWarningVisible} isModalVisible={isWarningVisible} onPressCancel={() => setIsWarningVisible(false)} onPressSubmit={createComplaintBox} message={warningMessage} />
         </ScrollView>
     )
 }

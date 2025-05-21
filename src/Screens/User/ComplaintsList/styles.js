@@ -8,6 +8,7 @@ const getStyles = (themes) => StyleSheet.create({
         backgroundColor: themes.background
     },
     editprofileContainer:{ 
+        width: '90%',
         margin: moderateScale(20),
         paddingVertical: moderateScale(20),
         paddingHorizontal: moderateScale(10),

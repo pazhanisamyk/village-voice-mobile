@@ -7,8 +7,9 @@ import strings from "../../../Constants/languages";
 import { useTheme } from "../../../Constants/themes";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
+import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 
-const Search = () => {
+const Search = ({navigation}) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const isFocused = useIsFocused();
@@ -76,7 +77,7 @@ const Search = () => {
 
     const renderComplaintCategory = ({ item }) => {
         return (
-            <View style={Styles.searchHistoryOutline}>
+            <View key={item?._id} style={Styles.searchHistoryOutline}>
                 <TouchableOpacity onPress={() => onPressSearchText(item)} style={Styles.searchText}>
                     <Image resizeMode="contain" source={Imagepaths.search_new} style={Styles.search} />
                     <Text style={Styles.searchHistoryText}>{item.title}</Text>
@@ -87,7 +88,7 @@ const Search = () => {
 
     const renderComplaintsList = ({ item }) => {
         return (
-            <TouchableOpacity key={item?._id} style={Styles.ComplaintsList}>
+            <TouchableOpacity key={item?._id} style={Styles.ComplaintsList} onPress={()=>navigation.navigate('ComplaintDetail', {data: item})}>
                 <View style={Styles.ComplaintsText}>
                     <Text style={Styles.complaintId}>{item.complaintId}</Text>
                     <Text style={Styles.complaintTitle}>{`Title : ${item.title}`}</Text>
@@ -135,9 +136,10 @@ const Search = () => {
                         {filteredData.length > 0 ? (
                             <FlatList
                                 data={filteredData}
-                                keyExtractor={item => item.id}
+                                keyExtractor={item => item._id}
                                 renderItem={renderComplaintCategory}
                                 showsVerticalScrollIndicator={false}
+                                ListEmptyComponent={ListEmptyComponent}
                             />
                         ) : (
                             <Text style={Styles.noResultText}>No categories found.</Text>
@@ -156,6 +158,7 @@ const Search = () => {
                                 data={filteredComplaints}
                                 keyExtractor={item => item.id}
                                 renderItem={renderComplaintsList}
+                                ListEmptyComponent={ListEmptyComponent}
                                 showsVerticalScrollIndicator={false}
                             />
                         ) : (

@@ -16,7 +16,7 @@ const UserTabroutes = () => {
   const Tab = createBottomTabNavigator();
   const state = useNavigationState((state) => state);
 
-  const hideBottomTabs = ['EditProfile', 'ComplaintDetail', 'CreateComplainBox', 'Viewcomplaints', 'AddComplaint', 'HelpScreen', 'PoliciesScreen', 'ChangePassword']
+  const hideBottomTabs = ['EditProfile', 'ComplaintDetail', 'Viewcomplaints', 'AddComplaint', 'HelpScreen', 'PoliciesScreen', 'ChangePassword']
   
   const hideTabBar = hideBottomTab(state, hideBottomTabs);  
   

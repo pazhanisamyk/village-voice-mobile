@@ -5,6 +5,7 @@ import { useTheme } from "../../../Constants/themes";
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
+import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 
 const ComplaintsList = ({navigation}) => {
     const {themes } = useTheme();
@@ -47,6 +48,7 @@ const ComplaintsList = ({navigation}) => {
             data={complaintList}
             keyExtractor={item => item._id}
             renderItem={renderComplaintsList}
+            ListEmptyComponent={ListEmptyComponent}
             showsVerticalScrollIndicator={false}/>
             </View>
             </View>

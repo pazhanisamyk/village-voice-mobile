@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import AlertPopup from "../../../Components/AlertPopup";
 import strings from "../../../Constants/languages";
 import { useTheme } from "../../../Constants/themes";
-import { moderateScale } from "../../../Styles/ResponsiveSizes";
+import { height, moderateScale } from "../../../Styles/ResponsiveSizes";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
+import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 
 const UserHomeScreen = ({ navigation }) => {
     const {themes } = useTheme();
@@ -103,11 +104,18 @@ const UserHomeScreen = ({ navigation }) => {
 
     const renderComplaintBoxes = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('Viewcomplaints', { data: item })} style={Styles.complaints}>
+            <TouchableOpacity key={item?._id} onPress={() => navigation.navigate('Viewcomplaints', { data: item })} style={Styles.complaints}>
                 {item.imageUrl ? <Image resizeMode="cover" source={{uri: item.imageUrl}} style={Styles.image} /> : <Image resizeMode="contain" source={Imagepaths.transparent_logo} style={Styles.image} />}
                 <Text style={Styles.complaintText}>{item.category}</Text>
                 {/* <Image resizeMode="contain" tintColor={themes.white} source={Imagepaths.double_right} style={Styles.arrowRight} /> */}
             </TouchableOpacity>
+        )
+    }
+
+    const renderEmpty = () => {
+        return(
+            <ListEmptyComponent
+            containerStyle={{height: moderateScale(height-80)}} />
         )
     }
     return (
@@ -116,8 +124,9 @@ const UserHomeScreen = ({ navigation }) => {
                     numColumns={2}
                     contentContainerStyle={{paddingBottom: moderateScale(100)}}
                     data={complaintBoxData}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item?._id}
                     renderItem={renderComplaintBoxes}
+                    ListEmptyComponent={renderEmpty}
                     showsVerticalScrollIndicator={false} />
             <AlertPopup
                 header="Hold On"

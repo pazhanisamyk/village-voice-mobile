@@ -9,6 +9,7 @@ import { moderateScale } from "../../../Styles/ResponsiveSizes";
 import { useSelector } from "react-redux";
 import actions from "../../../Redux/actions";
 import { useIsFocused } from "@react-navigation/native";
+import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 
 const AdminHomeScreen = ({navigation}) => {
     const { themes } = useTheme();
@@ -144,7 +145,8 @@ const AdminHomeScreen = ({navigation}) => {
                     data={filteredComplaints}
                     contentContainerStyle={{paddingBottom: moderateScale(100)}}
                     renderItem={renderComplaints}
-                    keyExtractor={item => item.id}
+                    ListEmptyComponent={ListEmptyComponent}
+                    keyExtractor={item => item?._id}
                     showsVerticalScrollIndicator={false}
                 />
             </View>

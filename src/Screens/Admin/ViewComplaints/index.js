@@ -6,6 +6,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import actions from "../../../Redux/actions";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
+import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
+import CustomButton from "../../../Components/CustomButton";
 
 const ViewComplaints = ({ navigation, route }) => {
     const { themes } = useTheme();
@@ -14,7 +16,7 @@ const ViewComplaints = ({ navigation, route }) => {
     const [complaintsData, setComplaintsData] = useState([])
     const isFocused = useIsFocused();
 
-      useEffect(() => {
+    useEffect(() => {
         if (isFocused) {
             getAllComplaints()
         }
@@ -23,25 +25,25 @@ const ViewComplaints = ({ navigation, route }) => {
     const getAllComplaints = async () => {
         try {
             const res = await actions.getAllUserComplaint(); // API response   
-            const complaintBoxes = await actions.getAllComplaintBox();     
+            const complaintBoxes = await actions.getAllComplaintBox();
             console.log(res, '📦 All Complaint Data');
-            
+
             let filteredData = [];
             let filteredCategoryData = [];
-    
+
             if (res.length > 0) {
                 filteredData = res.filter(item => item?.category === complaintDetails?.category);
             }
             if (complaintBoxes.length > 0) {
                 filteredCategoryData = complaintBoxes.filter(item => item?.category === complaintDetails?.category);
             }
-    
+
             setComplaintsData(filteredData);
         } catch (error) {
             console.log(error, '❌ Error while fetching complaint boxes');
         }
     }
-    
+
 
 
 
@@ -63,7 +65,7 @@ const ViewComplaints = ({ navigation, route }) => {
 
     const renderComplaintsList = ({ item }) => {
         return (
-            <TouchableOpacity onPress={()=>navigation.navigate('ComplaintDetail', {data: item})} key={item?._id} style={Styles.ComplaintsList}>
+            <TouchableOpacity onPress={() => navigation.navigate('ComplaintDetail', { data: item })} key={item?._id} style={Styles.ComplaintsList}>
                 <View style={Styles.ComplaintsText}>
                     <Text style={Styles.complaintId}>{item.complaintId}</Text>
                     <Text style={Styles.complaintTitle}>{`Title : ${item.title}`}</Text>
@@ -78,8 +80,9 @@ const ViewComplaints = ({ navigation, route }) => {
             data={complaintsData}
             keyExtractor={item => item._id}
             renderItem={renderComplaintsList}
+            ListEmptyComponent={ListEmptyComponent}
             style={Styles.container}
-            contentContainerStyle={{paddingBottom: moderateScale(100)}}
+            contentContainerStyle={{ paddingBottom: moderateScale(100) }}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={
                 <>
@@ -98,6 +101,11 @@ const ViewComplaints = ({ navigation, route }) => {
                                     <Image source={Imagepaths.Launcher} style={Styles.image} />
                                 )}
                             </View>
+                            <CustomButton
+                                onPress={() => navigation.navigate('CreateComplainBox', { data: complaintDetails })}
+                                gradientColors={[themes.red, themes.red]}
+                                title="Edit complaint box"
+                                textColor={themes.white} />
                             <View style={Styles.editprofileContainer}>
                                 <Text style={Styles.complaintBoxDetails}>
                                     <Text style={{ fontWeight: '600', color: themes.white }}>Complaint Box : </Text>
@@ -114,9 +122,9 @@ const ViewComplaints = ({ navigation, route }) => {
                             </View>
                         </View>
                     </View>
-                    <Text style={[Styles.complaintBoxDetails, { fontWeight: '600', color: themes.white, marginLeft:'5%', marginTop: moderateScale(15) }]}>{complaintDetails?.category} Complaints
-                                    
-                                </Text>
+                    <Text style={[Styles.complaintBoxDetails, { fontWeight: '600', color: themes.white, marginLeft: '5%', marginTop: moderateScale(15) }]}>{complaintDetails?.category} Complaints
+
+                    </Text>
                 </>
             }
         />

@@ -7,6 +7,7 @@ import { useTheme } from "../../../Constants/themes";
 import { useEffect, useState } from "react";
 import actions from "../../../Redux/actions";
 import { useIsFocused } from "@react-navigation/native";
+import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 
 const ComplaintBoxes = () => {
     const { themes } = useTheme();
@@ -164,6 +165,7 @@ const ComplaintBoxes = () => {
                     contentContainerStyle={{ paddingBottom: moderateScale(100) }}
                     data={complaintsData}
                     renderItem={renderComplaints}
+                    ListEmptyComponent={ListEmptyComponent}
                     keyExtractor={item => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                 />

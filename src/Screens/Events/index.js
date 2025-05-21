@@ -12,6 +12,7 @@ import AlertPopup from "../../Components/AlertPopup";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../Redux/actions";
 import { showSuccess } from "../../Utils/helperfunctions";
+import { ListEmptyComponent } from "../../Components/ListEmptyComponent";
 
 const Events = ({navigation}) => {
     const { themes } = useTheme();
@@ -45,7 +46,7 @@ const Events = ({navigation}) => {
                     
                     setEventsData(res)
                 } catch (error) {
-                    console.log(error, '❌ Error while fetching complaint boxes');
+                    console.log(error.message, '❌ Error while fetching complaint boxes');
                 }
     }
 
@@ -92,7 +93,7 @@ const Events = ({navigation}) => {
             setIsModalVisible({status: false, deleteId: 0})
             showSuccess(res?.message);
         } catch (error) {
-            console.log(error, '❌ Error while deleting event');
+            console.log(error.message, '❌ Error while deleting event');
         }
 
 
@@ -149,6 +150,7 @@ const Events = ({navigation}) => {
         const isSelected = selectedDate === item.id;
         return (
             <TouchableOpacity
+            key={item?.id}
                 onPress={() => setDateAndDay(item)}
                 style={[Styles.eventDateList, { backgroundColor: isSelected ? themes.card1 : themes.card }]}
             >
@@ -158,14 +160,6 @@ const Events = ({navigation}) => {
             </TouchableOpacity>
         );
     };
-
-    const emptyEvents = () => {
-        return(
-            <View style={[Styles.events, {alignItems: 'center', justifyContent: 'center', height: moderateScale(200)}]}>
-                <Text style={Styles.eventTime}>Events not found</Text>
-            </View>
-        )
-    }
 
     const renderEvents = ({ item, index }) => {
 
@@ -246,8 +240,8 @@ const Events = ({navigation}) => {
                     contentContainerStyle={{paddingBottom: moderateScale(100)}}
                     style={[Styles.eventContainer, { marginTop: moderateScale(20) }]}
                     renderItem={renderEvents}
-                    ListEmptyComponent={emptyEvents}
-                    keyExtractor={(item) => item.id}
+                    ListEmptyComponent={ListEmptyComponent}
+                    keyExtractor={(item) => item?._id}
                     showsVerticalScrollIndicator={false}
                 />
 
