@@ -10,7 +10,8 @@ import { showError, showSuccess } from "../../Utils/helperfunctions";
 import { useTheme } from "../../Constants/themes";
 import { setUserData } from "../../Utils/Utils";
 import { saveUserData } from "../../Redux/actions/auth";
-import { changeLaguage } from "../../Constants/languages";
+import strings, { changeLaguage } from "../../Constants/languages";
+import CustomLoader from "../../Components/Loaders";
 
 const LoginScreen = ({navigation}) => {
     const { themes, changeTheme } = useTheme();
@@ -19,6 +20,7 @@ const LoginScreen = ({navigation}) => {
     const [password, setPassword] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
     const inputRef = useRef(null);
@@ -30,13 +32,15 @@ const LoginScreen = ({navigation}) => {
       
 
     const onPressLogin = async () => {
+        setIsLoading(true);
         const data = {
             phoneNumber,
             password
         }
 
-        await actions.login(data)
-        .then((res) => {
+        try{
+
+        const res = await actions.login(data)
             showSuccess(res?.message)
             setUserData(res);            
             saveUserData(res?._doc);
@@ -48,8 +52,13 @@ const LoginScreen = ({navigation}) => {
             else{
                 navigation.navigate('AdminTabroutes')
             }
-        })
-        .catch(errorMethod);
+        }
+        catch(error){
+            errorMethod(error);
+        }
+        finally{
+            setIsLoading(false);
+        }
     }
 
     const onPressSignUp = () => {
@@ -69,16 +78,16 @@ const LoginScreen = ({navigation}) => {
 
     const validateInput = () => {
         if (!phoneNumber) {
-            setAlertMessage('Phone number is required');
+            setAlertMessage(`${strings.PHONE_NUMBER} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else if (!isPhoneNumber(phoneNumber)) {
-            setAlertMessage('Enter a valid phone number');
+            setAlertMessage(strings.VALID_PHONE_NUMBER_ERROR);
             setIsModalVisible(true);
         } else if (!password) {
-            setAlertMessage('Password is required');
+            setAlertMessage(`${strings.PASSWORD} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else if (!isValidPassword(password)) {
-            setAlertMessage('Enter a valid password');
+            setAlertMessage(strings.VALID_PASSWORD_ERROR);
             setIsModalVisible(true);
         }else {
             onPressLogin();
@@ -98,24 +107,24 @@ const LoginScreen = ({navigation}) => {
             <Image source={Imagepaths.transparent_logo} style={{height:300, width: 300}} resizeMode='contain' />
             </View>
             <View style={Styles.bottomContainer}>
-                <Text style={Styles.title}>Phone Number </Text>
+                <Text style={Styles.title}>{strings.PHONE_NUMBER} </Text>
                 <TextInput
                     ref={inputRef}
                     value={phoneNumber}
                     placeholderTextColor={themes.gray}
                     keyboardType={'phone-pad'}
-                    placeholder="Enter Phone Number"
+                    placeholder={`${strings.ENTER} ${strings.PHONE_NUMBER}`}
                     onChangeText={(text) => setPhoneNumber(text)}
                     style={Styles.inputStyle}
                 />
 
-                <Text style={Styles.title}>Password</Text>
+                <Text style={Styles.title}>{strings.PASSWORD}</Text>
                 <View style={Styles.passwordContainer}>
                 <TextInput
                     ref={inputRef}
                     placeholderTextColor={themes.gray}
                     value={password}
-                    placeholder="Enter Password"
+                    placeholder={`${strings.ENTER} ${strings.PASSWORD}`}
                     secureTextEntry={!showPassword}
                     onChangeText={(text) => setPassword(text)}
                     style={Styles.inputStyle}
@@ -125,23 +134,24 @@ const LoginScreen = ({navigation}) => {
                  </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={Styles.forgotpassword} onPress={()=>{}}>
-                    <Text style={Styles.forgottext}>Forgot passoword?</Text>
+                    <Text style={Styles.forgottext}>{strings.FORGET} {strings.PASSWORD}?</Text>
                 </TouchableOpacity>
                 <CustomButton
                     onPress={validateInput}
                     gradientColors={[themes.red, themes.red]}
-                    title="Sign In"
+                    title={strings.SIGN_IN}
                     textColor={themes.white}
                     ButtonStyles={{ marginTop: moderateScale(20) }} />
-                <Text style={Styles.signintext}>If you don't have an account yet?</Text>
+                <Text style={Styles.signintext}>{strings.NEW_USER}</Text>
                 <CustomButton
                     onPress={onPressSignUp}
                     gradientColors={[themes.blue, themes.blue]}
-                    title="Sign Up"
+                    title={strings.SIGN_UP}
                     textColor={themes.white}
                     ButtonStyles={{ marginTop: moderateScale(10) }} />
             </View>
             <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage}/>
+            <CustomLoader visible={isLoading} />
         </View>
         </ScrollView>
     );

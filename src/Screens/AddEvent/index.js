@@ -9,6 +9,8 @@ import { useRef, useState } from "react";
 import AlertPopup from "../../Components/AlertPopup";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
+import CustomLoader from "../../Components/Loaders";
+import strings from "../../Constants/languages";
 
 const AddEvent = ({ navigation, route }) => {
     const { themes } = useTheme();
@@ -19,6 +21,7 @@ const AddEvent = ({ navigation, route }) => {
     const [eventDescription, setEventDescription] = useState('');
     const [eventTime, setEventTime] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
     const inputRef = useRef(null);
@@ -54,45 +57,48 @@ const AddEvent = ({ navigation, route }) => {
         { label: '7:30 PM', value: '7:30 PM' },
         { label: '8:00 PM', value: '8:00 PM' },
         { label: '8:30 PM', value: '8:30 PM' }
-      ];
+    ];
 
-      const errorMethod = (error) => {
+    const errorMethod = (error) => {
         console.log(error?.response?.data?.message);
         showError(error?.response?.data?.message);
-      };
-      
+    };
 
-    const createEvent = async() => {
-        const data = { 
+
+    const createEvent = async () => {
+        setIsLoading(true);
+        const data = {
             date: eventDate,
             event: eventName,
             eventDescription: eventDescription,
             time: eventTime
-         }
+        };
 
-        await actions.createEvent(data)
-        .then((res) => {
-            console.log(res);
-            
+        try {
+            const res = await actions.createEvent(data);
             showSuccess(res?.message);
             onPressBack();
-        })
-        .catch(errorMethod);
-        
-    }
+        } catch (error) {
+            errorMethod(error);
+            console.log('Error on creating event:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    const validateInput = () => { 
+
+    const validateInput = () => {
         if (!eventDate) {
-            setAlertMessage('Event date is required');
+            setAlertMessage(`${strings.EVENT_DATE} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
-        }  else if (!eventName?.trim()) {
-            setAlertMessage('Event name is required');
+        } else if (!eventName?.trim()) {
+            setAlertMessage(`${strings.EVENT_NAME} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else if (!eventDescription?.trim()) {
-            setAlertMessage('Event description is required');
+            setAlertMessage(`${strings.EVENT_DESCRIPTION} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else if (!eventTime?.trim) {
-            setAlertMessage('Event time is required');
+            setAlertMessage(`${strings.EVENT_TIME} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else {
             createEvent();
@@ -106,92 +112,93 @@ const AddEvent = ({ navigation, route }) => {
                     <TouchableOpacity style={Styles.backArrow} onPress={onPressBack}>
                         <Image source={Imagepaths.arrow_left} style={Styles.backIcon} />
                     </TouchableOpacity>
-                    <Text style={Styles.headertext}>Create Event</Text>
+                    <Text style={Styles.headertext}>{strings.CREATE_EVENT}</Text>
                 </View>
                 <View style={Styles.outerContainer}>
                     <View style={Styles.editprofileContainer}>
-                        <Text style={Styles.title}>Event date</Text>
+                        <Text style={Styles.title}>{strings.EVENT_DATE}</Text>
                         <View style={Styles.passwordContainer}>
-                        <TextInput
-                        editable={false}
-                            placeholderTextColor={themes.gray}
-                            ref={inputRef}
-                            value={eventDate}
-                            placeholder="Enter Event date"
-                            keyboardType={'default'}
-                            onChangeText={(text) => setEventDate(text)}
-                            style={Styles.inputStyle}
-                        />
-                    </View>
-                        <Text style={Styles.title}>Event name</Text>
+                            <TextInput
+                                editable={false}
+                                placeholderTextColor={themes.gray}
+                                ref={inputRef}
+                                value={eventDate}
+                                placeholder={`${strings.ENTER} ${strings.EVENT_DATE}`}
+                                keyboardType={'default'}
+                                onChangeText={(text) => setEventDate(text)}
+                                style={Styles.inputStyle}
+                            />
+                        </View>
+                        <Text style={Styles.title}>{strings.EVENT_NAME}</Text>
                         <View style={Styles.passwordContainer}>
-                        <TextInput
-                            placeholderTextColor={themes.gray}
-                            ref={inputRef}
-                            value={eventName}
-                            placeholder="Enter Event name"
-                            onChangeText={(text) => setEventName(text)}
-                            style={Styles.inputStyle}
-                        />
-                    </View>
-                    <Text style={Styles.title}>Event description</Text>
+                            <TextInput
+                                placeholderTextColor={themes.gray}
+                                ref={inputRef}
+                                value={eventName}
+                                placeholder={`${strings.ENTER} ${strings.EVENT_NAME}`}
+                                onChangeText={(text) => setEventName(text)}
+                                style={Styles.inputStyle}
+                            />
+                        </View>
+                        <Text style={Styles.title}>{strings.EVENT_DESCRIPTION}</Text>
                         <View style={Styles.passwordContainer}>
-                        <TextInput
-                            placeholderTextColor={themes.gray}
-                            ref={inputRef}
-                            value={eventDescription}
-                            placeholder="Enter Event description"
-                            onChangeText={(text) => setEventDescription(text)}
-                            style={Styles.inputStyle}
-                        />
-                    </View>
-                        <Text style={Styles.title}>Event time</Text>
+                            <TextInput
+                                placeholderTextColor={themes.gray}
+                                ref={inputRef}
+                                value={eventDescription}
+                                placeholder={`${strings.ENTER} ${strings.EVENT_DESCRIPTION}`}
+                                onChangeText={(text) => setEventDescription(text)}
+                                style={Styles.inputStyle}
+                            />
+                        </View>
+                        <Text style={Styles.title}>{strings.EVENT_TIME}</Text>
                         <RNPickerSelect
-                                    onValueChange={(value) => setEventTime(value)}
-                                    value={eventTime}
-                                    items={eventTimeList}
-                                    placeholder={{
-                                        label: 'Select a time',
-                                        value: null,
-                                        color: themes.gray,
-                                    }}
-                                    style={{
-                                        inputIOS: {
-                                            color: themes.white,
-                                            fontWeight: '600',
-                                            fontSize: textScale(12),
-                                            paddingLeft: moderateScale(10),
-                                            paddingVertical: moderateScale(10), // for iOS padding
-                                        },
-                                        inputAndroid: {
-                                            color: themes.white,
-                                            fontWeight: '600',
-                                            fontSize: textScale(12),
-                                            paddingLeft: moderateScale(10),
-                                        },
-                                        placeholder: {
-                                            color: themes.gray,
-                                        },
-                                        viewContainer: {
-                                            borderWidth: moderateScale(1),
-                                            borderColor: themes.gray,
-                                            borderRadius: moderateScale(16),
-                                            marginTop: moderateScale(5),
-                                            marginBottom: moderateScale(15),
-                                            width: '100%',
-                                        },
-                                    }}
-                                />
+                            onValueChange={(value) => setEventTime(value)}
+                            value={eventTime}
+                            items={eventTimeList}
+                            placeholder={{
+                                label: `${strings.SELECT} ${strings.EVENT_TIME}`,
+                                value: null,
+                                color: themes.gray,
+                            }}
+                            style={{
+                                inputIOS: {
+                                    color: themes.white,
+                                    fontWeight: '600',
+                                    fontSize: textScale(12),
+                                    paddingLeft: moderateScale(10),
+                                    paddingVertical: moderateScale(10), // for iOS padding
+                                },
+                                inputAndroid: {
+                                    color: themes.white,
+                                    fontWeight: '600',
+                                    fontSize: textScale(12),
+                                    paddingLeft: moderateScale(10),
+                                },
+                                placeholder: {
+                                    color: themes.gray,
+                                },
+                                viewContainer: {
+                                    borderWidth: moderateScale(1),
+                                    borderColor: themes.gray,
+                                    borderRadius: moderateScale(16),
+                                    marginTop: moderateScale(5),
+                                    marginBottom: moderateScale(15),
+                                    width: '100%',
+                                },
+                            }}
+                        />
 
                     </View>
                     <CustomButton
                         onPress={validateInput}
                         gradientColors={[themes.red, themes.red]}
-                        title="Add event"
+                        title={strings.ADD_EVENT}
                         textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(40) }} />
                 </View>
-                <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage}/>
+                <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage} />
+                <CustomLoader visible={isLoading} />
             </View>
         </ScrollView>
     )

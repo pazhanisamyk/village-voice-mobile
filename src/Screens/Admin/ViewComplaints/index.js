@@ -8,12 +8,15 @@ import actions from "../../../Redux/actions";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 import CustomButton from "../../../Components/CustomButton";
+import CustomLoader from "../../../Components/Loaders";
+import strings from "../../../Constants/languages";
 
 const ViewComplaints = ({ navigation, route }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const complaintDetails = route?.params?.data || {};
-    const [complaintsData, setComplaintsData] = useState([])
+    const [complaintsData, setComplaintsData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const isFocused = useIsFocused();
 
     useEffect(() => {
@@ -23,10 +26,10 @@ const ViewComplaints = ({ navigation, route }) => {
     }, [isFocused]);
 
     const getAllComplaints = async () => {
+        setIsLoading(true);
         try {
             const res = await actions.getAllUserComplaint(); // API response   
             const complaintBoxes = await actions.getAllComplaintBox();
-            console.log(res, '📦 All Complaint Data');
 
             let filteredData = [];
             let filteredCategoryData = [];
@@ -41,6 +44,9 @@ const ViewComplaints = ({ navigation, route }) => {
             setComplaintsData(filteredData);
         } catch (error) {
             console.log(error, '❌ Error while fetching complaint boxes');
+        }
+        finally{
+            setIsLoading(false);
         }
     }
 
@@ -68,7 +74,7 @@ const ViewComplaints = ({ navigation, route }) => {
             <TouchableOpacity onPress={() => navigation.navigate('ComplaintDetail', { data: item })} key={item?._id} style={Styles.ComplaintsList}>
                 <View style={Styles.ComplaintsText}>
                     <Text style={Styles.complaintId}>{item.complaintId}</Text>
-                    <Text style={Styles.complaintTitle}>{`Title : ${item.title}`}</Text>
+                    <Text style={Styles.complaintTitle}>{`${strings.TITLE} : ${item.title}`}</Text>
                 </View>
                 {item?.imageUrl ? <Image source={{ uri: item?.imageUrl }} resizeMode="cover" style={Styles.complaintimage} /> : <Image source={Imagepaths.transparent_logo} resizeMode="contain" style={Styles.complaintimage} />}
             </TouchableOpacity>
@@ -76,6 +82,7 @@ const ViewComplaints = ({ navigation, route }) => {
     }
 
     return (
+        <>
         <FlatList
             data={complaintsData}
             keyExtractor={item => item._id}
@@ -104,30 +111,30 @@ const ViewComplaints = ({ navigation, route }) => {
                             <CustomButton
                                 onPress={() => navigation.navigate('CreateComplainBox', { data: complaintDetails })}
                                 gradientColors={[themes.red, themes.red]}
-                                title="Edit complaint box"
+                                title={`${strings.EDIT} ${strings.COMPLAINT_BOX}`}
                                 textColor={themes.white} />
                             <View style={Styles.editprofileContainer}>
                                 <Text style={Styles.complaintBoxDetails}>
-                                    <Text style={{ fontWeight: '600', color: themes.white }}>Complaint Box : </Text>
+                                    <Text style={{ fontWeight: '600', color: themes.white }}>{strings.COMPLAINT_BOX} : </Text>
                                     {complaintDetails?.complaintBoxName}
                                 </Text>
                                 <Text style={Styles.complaintBoxDetails}>
-                                    <Text style={{ fontWeight: '600', color: themes.white }}>Created on : </Text>
+                                    <Text style={{ fontWeight: '600', color: themes.white }}>{strings.CREATED_ON} : </Text>
                                     {ConvertDateFormat()}
                                 </Text>
                                 <Text style={Styles.complaintBoxDetails}>
-                                    <Text style={{ fontWeight: '600', color: themes.white }}>Description : </Text>
+                                    <Text style={{ fontWeight: '600', color: themes.white }}>{strings.DESCRIPTION} : </Text>
                                     {complaintDetails?.description}
                                 </Text>
                             </View>
                         </View>
                     </View>
-                    <Text style={[Styles.complaintBoxDetails, { fontWeight: '600', color: themes.white, marginLeft: '5%', marginTop: moderateScale(15) }]}>{complaintDetails?.category} Complaints
-
-                    </Text>
+                    <Text style={[Styles.complaintBoxDetails, { fontWeight: '600', color: themes.white, marginLeft: '5%', marginTop: moderateScale(15) }]}>{complaintDetails?.category} {strings.COMPLAINTS}</Text>
                 </>
             }
         />
+        <CustomLoader visible={isLoading} />
+        </>
 
     )
 }

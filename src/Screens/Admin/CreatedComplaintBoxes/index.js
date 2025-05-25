@@ -7,27 +7,32 @@ import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
+import CustomLoader from "../../../Components/Loaders";
 
 const CreatedComplaintBoxes = ({navigation}) => {
     const {themes } = useTheme();
     const Styles = getStyles(themes);
-    const [complaintBoxData, setComplaintBoxData] = useState([])
+    const [complaintBoxData, setComplaintBoxData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const isFocused = useIsFocused();
 
     useEffect(() => {
         if(isFocused)
-            {
+        {
         getAllComplaintBoxes();
         }
     }, [isFocused]);
     
     const getAllComplaintBoxes = async () => {
+        setIsLoading(true);
         try {
-            const res = await actions.getAllComplaintBox(); // remove the callback, assume it returns a Promise
-            console.log(res, '📦 All Complaint Boxes');
+            const res = await actions.getAllComplaintBox();
             setComplaintBoxData(res)
         } catch (error) {
             console.log(error, '❌ Error while fetching complaint boxes');
+        }
+        finally{
+            setIsLoading(false);
         }
     };
 
@@ -36,7 +41,6 @@ const CreatedComplaintBoxes = ({navigation}) => {
             <TouchableOpacity key={item?._id} onPress={() => navigation.navigate('ViewComplaints',{data: item})} style={Styles.complaints}>
                 {item.imageUrl ? <Image source={{uri: item.imageUrl}} resizeMode="cover" style={Styles.image} /> : <Image source={Imagepaths.transparent_logo} resizeMode="contain" style={Styles.image} />}
                 <Text style={Styles.complaintText}>{item.category}</Text>
-                {/* <Image source={Imagepaths.double_right} style={Styles.arrowRight} /> */}
             </TouchableOpacity>
         )
     }
@@ -63,6 +67,7 @@ const CreatedComplaintBoxes = ({navigation}) => {
                         <Image source={Imagepaths.Plus} style={Styles.plusIcon} />
                     </TouchableOpacity>
                 </View>
+                <CustomLoader visible={isLoading} />
             </View>
     )
 }

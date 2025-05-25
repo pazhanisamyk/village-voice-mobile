@@ -8,12 +8,15 @@ import { useEffect, useState } from "react";
 import actions from "../../../Redux/actions";
 import { useIsFocused } from "@react-navigation/native";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
+import CustomLoader from "../../../Components/Loaders";
+import strings from "../../../Constants/languages";
 
 const ComplaintBoxes = () => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const isFocused = useIsFocused();
     const [complaintsData, setComplaintsData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (isFocused) {
@@ -24,14 +27,10 @@ const ComplaintBoxes = () => {
     const colorArray = [themes.blue, themes.red, themes.purple, themes.green, themes.blue1];
 
     const getAllComplaints = async () => {
+        setIsLoading(true);
         try {
-            const res = await actions.getAllUserComplaint(); // API response
-            const complaintBoxes = await actions.getAllComplaintBox(); // Assuming you fetch this too
-
-            console.log(res, '📦 All Complaint Data');
-            console.log(complaintBoxes, '📦 Complaint Box Configs');
-
-            // Step 1: Group complaints by category
+            const res = await actions.getAllUserComplaint();
+            const complaintBoxes = await actions.getAllComplaintBox(); 
             const grouped = res.reduce((acc, complaint) => {
                 const category = complaint.category;
 
@@ -51,13 +50,11 @@ const ComplaintBoxes = () => {
                 return acc;
             }, {});
 
-            // Step 2: Build final array
             const usedColors = new Set();
             const formatted = Object.entries(grouped).map(([category, counts], index) => {
                 const box = complaintBoxes.find(cb => cb.category === category);
                 const imageUrl = box?.imageUrl || Imagepaths.transparent_logo;
 
-                // Assign color
                 let color;
                 if (index < colorArray.length) {
                     color = colorArray[index];
@@ -85,6 +82,9 @@ const ComplaintBoxes = () => {
         } catch (error) {
             console.log(error, '❌ Error while fetching complaint boxes');
         }
+        finally{
+            setIsLoading(false);
+        }
     };
 
     const renderComplaints = ({ item }) => {
@@ -100,13 +100,13 @@ const ComplaintBoxes = () => {
                         <View>
                             <Text style={Styles.complaintname}>{item.complaint_type}</Text>
                             <Text style={Styles.compsolvecount}>
-                                {item.total_complaints - item.solved - item.rejected} left to solve
+                                {item.total_complaints - item.solved - item.rejected} {strings.LEFT_TO_SOLVE}
                             </Text>
                         </View>
                         <View>
                             <Text style={Styles.complaintname}>{item.total_complaints}</Text>
-                            <Text style={Styles.compsolvecount}>{item.solved} Solved</Text>
-                            <Text style={[Styles.compsolvecount, { color: themes.red }]}>{item.rejected} Rejected</Text>
+                            <Text style={Styles.compsolvecount}>{item.solved} {strings.SOLVED}</Text>
+                            <Text style={[Styles.compsolvecount, { color: themes.red }]}>{item.rejected} {strings.REJECTED}</Text>
                         </View>
                     </View>
                 </View>
@@ -147,9 +147,9 @@ const ComplaintBoxes = () => {
                         return (
                             <View style={{ alignItems: 'center' }}>
                                 <Text style={Styles.complaintscount}>{resolved}/{total}</Text>
-                                <Text style={Styles.totalcomplaints}>Resolved</Text>
+                                <Text style={Styles.totalcomplaints}>{strings.RESOLVED}</Text>
                                 <Text style={[Styles.totalcomplaints, { fontSize: 12, color: 'gray' }]}>
-                                    {resolutionRate}% Resolved
+                                    {resolutionRate}% {strings.RESOLVED}
                                 </Text>
                             </View>
                         );
@@ -158,7 +158,7 @@ const ComplaintBoxes = () => {
             </View>
             <View style={Styles.bottomcontainer}>
                 <View style={Styles.createcomplaintbtn}>
-                    <Text style={Styles.createcomplainttext}>Created Complaint Boxes</Text>
+                    <Text style={Styles.createcomplainttext}>{strings.CREATED_COMPLAINT_BOXES}</Text>
                 </View>
                 <FlatList
                     style={{ height: height / 1.9 }}
@@ -170,6 +170,7 @@ const ComplaintBoxes = () => {
                     showsVerticalScrollIndicator={false}
                 />
             </View>
+            <CustomLoader visible={isLoading} />
         </View>
     );
 };

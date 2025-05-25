@@ -6,11 +6,14 @@ import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
+import CustomLoader from "../../../Components/Loaders";
+import strings from "../../../Constants/languages";
 
 const ComplaintsList = ({navigation}) => {
     const {themes } = useTheme();
     const Styles = getStyles(themes);
-    const [complaintList, setComplaintList] = useState([])
+    const [complaintList, setComplaintList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const isFocused = useIsFocused();
 
         useEffect(() => {
@@ -20,12 +23,15 @@ const ComplaintsList = ({navigation}) => {
         }, [isFocused]);
     
         const getSingleUserComplaints = async () => {
+            setIsLoading(true);
             try {
-                const res = await actions.getSingleUserComplaint(); // remove the callback, assume it returns a Promise
-                console.log(res, '📦 All Complaint Boxes');
+                const res = await actions.getSingleUserComplaint();
                 setComplaintList(res)
             } catch (error) {
                 console.log(error, '❌ Error while fetching complaint boxes');
+            }
+            finally{
+                setIsLoading(false);
             }
         };
 
@@ -34,7 +40,7 @@ const ComplaintsList = ({navigation}) => {
             <TouchableOpacity onPress={()=>navigation.navigate('ComplaintDetail', {data: item})} key={item?._id} style={Styles.ComplaintsList}>
                 <View style={Styles.ComplaintsText}>
                 <Text style={Styles.complaintId}>{item.complaintId}</Text>
-                <Text style={Styles.complaintTitle}>{`Title : ${item.title}`}</Text>
+                <Text style={Styles.complaintTitle}>{`${strings.TITLE} : ${item.title}`}</Text>
                 </View>
                 {item?.imageUrl ? <Image source={{uri: item?.imageUrl}} resizeMode="cover" style={Styles.image} /> : <Image source={Imagepaths.transparent_logo} resizeMode="contain" style={Styles.image} />}
             </TouchableOpacity>
@@ -51,6 +57,7 @@ const ComplaintsList = ({navigation}) => {
             ListEmptyComponent={ListEmptyComponent}
             showsVerticalScrollIndicator={false}/>
             </View>
+            <CustomLoader visible={isLoading} />
             </View>
     )
 }

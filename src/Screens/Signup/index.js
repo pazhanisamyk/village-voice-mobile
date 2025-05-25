@@ -8,6 +8,8 @@ import AlertPopup from "../../Components/AlertPopup";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
 import { useTheme } from "../../Constants/themes";
+import CustomLoader from "../../Components/Loaders";
+import strings from "../../Constants/languages";
 
 const SignUpScreen = ({ navigation }) => {
     const { themes } = useTheme();
@@ -20,6 +22,7 @@ const SignUpScreen = ({ navigation }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
     const inputRef = useRef(null);
@@ -30,6 +33,7 @@ const SignUpScreen = ({ navigation }) => {
     };
 
     const onPressSignUp = async () => {
+        setIsLoading(true);
         const data = {
             username,
             email,
@@ -37,12 +41,17 @@ const SignUpScreen = ({ navigation }) => {
             password
         }
 
-        await actions.signUpApi(data)
-            .then((res) => {
+        try{
+       const res = await actions.signUpApi(data)
                 showSuccess(res?.message)
                 navigation.navigate('LoginScreen')
-            })
-            .catch(errorMethod);
+            }
+            catch(error){
+                errorMethod(error);
+            }
+            finally{
+                setIsLoading(false);
+            }
     }
 
     const onPressLogin = () => {
@@ -71,34 +80,34 @@ const SignUpScreen = ({ navigation }) => {
 
     const validateInput = () => {
         if (!username) {
-            setAlertMessage('User name is required');
+            setAlertMessage(`${strings.USERNAME} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else if (username.length < 4) {
-            setAlertMessage('Enter a username with at least 4 letters');
+            setAlertMessage(strings.USERNAME_VALIDATION_LESS);
             setIsModalVisible(true);
         } else if (!isUsername(username)) {
-            setAlertMessage('Enter a valid username (only letters and spaces)');
+            setAlertMessage(strings.USERNAME_VALIDATION_LETTERS_ONLY);
             setIsModalVisible(true);
         } else if (username.length > 15) {
-            setAlertMessage('Username should not be more than 15 characters');
+            setAlertMessage(strings.USERNAME_VALIDATION_MORE);
             setIsModalVisible(true);
         } else if (!isEmail(email)) {
-            setAlertMessage('Enter a valid email address');
+            setAlertMessage(strings.EMAIL_VALIDATION);
             setIsModalVisible(true);
         } else if (!isPhoneNumber(phoneNumber)) {
-            setAlertMessage('Enter a valid phone number');
+            setAlertMessage(strings.VALID_PHONE_NUMBER_ERROR);
             setIsModalVisible(true);
         } else if (!password) {
-            setAlertMessage('Password is required');
+            setAlertMessage(`${strings.PASSWORD} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else if (!isValidPassword(password)) {
-            setAlertMessage('Password must be at least 8 characters, including letters, numbers, and symbols');
+            setAlertMessage(strings.PASSWORD_ERROR);
             setIsModalVisible(true);
         } else if (!confirmPassword) {
-            setAlertMessage('Confirm password is required');
+            setAlertMessage(`${strings.CONFIRM} ${strings.PASSWORD} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else if (password !== confirmPassword) {
-            setAlertMessage('Password and Confirm password do not match');
+            setAlertMessage(strings.SIGN_UP_PASSWORD_MATCH_ERROR);
             setIsModalVisible(true);
         } else {
             onPressSignUp();
@@ -122,44 +131,44 @@ const SignUpScreen = ({ navigation }) => {
                     <Text style={Styles.headertext}>VCB</Text>
                 </View>
                 <View style={Styles.bottomContainer}>
-                    <Text style={Styles.title}>Username</Text>
+                    <Text style={Styles.title}>{strings.USERNAME}</Text>
                     <TextInput
                         placeholderTextColor={themes.gray}
                         ref={inputRef}
                         value={username}
                         keyboardType={'default'}
-                        placeholder="Enter Username"
+                        placeholder={`${strings.ENTER} ${strings.USERNAME}`}
                         onChangeText={(text) => setUsername(text)}
                         style={Styles.inputStyle}
                     />
-                    <Text style={Styles.title}>E-mail</Text>
+                    <Text style={Styles.title}>{strings.EMAIL}</Text>
                     <TextInput
                         placeholderTextColor={themes.gray}
                         ref={inputRef}
                         value={email}
                         keyboardType={'email-address'}
-                        placeholder="Enter E-mail"
+                        placeholder={`${strings.ENTER} ${strings.EMAIL}`}
                         onChangeText={(text) => setEmail(text)}
                         style={Styles.inputStyle}
                     />
-                    <Text style={Styles.title}>Phone Number</Text>
+                    <Text style={Styles.title}>{strings.PHONE_NUMBER}</Text>
                     <TextInput
                         placeholderTextColor={themes.gray}
                         ref={inputRef}
                         value={phoneNumber}
                         keyboardType={'phone-pad'}
-                        placeholder="Phone Number"
+                        placeholder={`${strings.ENTER} ${strings.PHONE_NUMBER}`}
                         onChangeText={(text) => setPhoneNumber(text)}
                         style={Styles.inputStyle}
                     />
 
-                    <Text style={Styles.title}>Password</Text>
+                    <Text style={Styles.title}>{strings.PASSWORD}</Text>
                     <View style={Styles.passwordContainer}>
                         <TextInput
                             placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={password}
-                            placeholder="Enter Password"
+                            placeholder={`${strings.ENTER} ${strings.PASSWORD}`}
                             secureTextEntry={!showPassword}
                             onChangeText={(text) => setPassword(text)}
                             style={Styles.inputStyle}
@@ -169,13 +178,13 @@ const SignUpScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
 
-                    <Text style={Styles.title}>Enter Password Again</Text>
+                    <Text style={Styles.title}>{strings.ENTER} {strings.PASSWORD} {strings.AGAIN}</Text>
                     <View style={Styles.passwordContainer}>
                         <TextInput
                             placeholderTextColor={themes.gray}
                             ref={inputRef}
                             value={confirmPassword}
-                            placeholder="Confirm Your Password"
+                            placeholder={`${strings.CONFIRM} ${strings.YOUR} ${strings.PASSWORD}`}
                             secureTextEntry={!showConfirmPassword}
                             onChangeText={(text) => setConfirmPassword(text)}
                             style={Styles.inputStyle}
@@ -184,22 +193,23 @@ const SignUpScreen = ({ navigation }) => {
                             <Image source={showConfirmPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
                         </TouchableOpacity>
                     </View>
-                    <Text style={Styles.passwordtext}>Use 8 or more characters with a mix of letters, numbers & symbols.</Text>
+                    <Text style={Styles.passwordtext}>{strings.PASSWORD_INFO}</Text>
                     <CustomButton
                         onPress={validateInput}
                         gradientColors={[themes.red, themes.red]}
-                        title="Sign Up"
+                        title={strings.SIGN_UP}
                         textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(20) }} />
-                    <Text style={Styles.signintext}>Do you have already an account?</Text>
+                    <Text style={Styles.signintext}>{strings.OLD_USER}</Text>
                     <CustomButton
                         onPress={onPressLogin}
                         gradientColors={[themes.blue, themes.blue]}
-                        title="Sign In"
+                        title={strings.SIGN_IN}
                         textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(10) }} />
                 </View>
                 <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage} />
+                <CustomLoader visible={isLoading} />
             </View>
         </ScrollView>
     );

@@ -69,12 +69,12 @@ const getStyles = (themes) => StyleSheet.create({
         borderRadius: moderateScale(16),
         backgroundColor: themes.gray,
         height: moderateScale(50),
+        paddingHorizontal: moderateScale(6),
         marginVertical: moderateScaleVertical(20),
         flexDirection: 'row',
         alignItems: 'center',
     },    
     selectedtabOutline: {
-        width: width/3.6,
         backgroundColor: themes.black,     
         borderWidth: moderateScale(1),
         borderColor: themes.gray1,
@@ -86,7 +86,6 @@ const getStyles = (themes) => StyleSheet.create({
     },
     
     unselectedtabOutline: {
-        width: width/3.6,
         backgroundColor: themes.gray,     
         borderWidth: moderateScale(1),
         borderColor: themes.gray1,

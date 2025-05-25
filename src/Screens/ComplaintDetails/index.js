@@ -9,17 +9,20 @@ import CustomButton from "../../Components/CustomButton";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import AlertPopup from "../../Components/AlertPopup";
 import { useSelector } from "react-redux";
+import CustomLoader from "../../Components/Loaders";
+import strings from "../../Constants/languages";
 
 const ComplaintDetail = ({ navigation, route }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
-    const [isModalVisible, setIsModalVisible] = useState({enable: false, status: '' });
-    const [deletePopup, setDeletePopup] = useState({visible: false, deleteId: 0 });
+    const [isModalVisible, setIsModalVisible] = useState({ enable: false, status: '' });
+    const [deletePopup, setDeletePopup] = useState({ visible: false, deleteId: 0 });
+    const [isLoading, setIsLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [deleteMessage, setDeleteMessage] = useState('');
     const complaintData = route?.params?.data || {};
     const userData = useSelector((state) => state?.auth?.userData);
-    
+
 
     const onPressBack = () => {
         navigation.goBack();
@@ -40,27 +43,33 @@ const ComplaintDetail = ({ navigation, route }) => {
     const errorMethod = (error) => {
         console.log(error?.response?.data?.message);
         showError(error?.response?.data?.message);
-      };
+    };
 
-      const deleteComplaint = async() => {
-        await actions.deletedComplaint(deletePopup.deleteId)
-            .then((res) => {
-                showSuccess(res?.message);
-                setDeletePopup({ visible: false, deleteId: 0 });
-                onPressBack();
-            })
-            .catch(errorMethod);
-        
-      };
+    const deleteComplaint = async () => {
+        setIsLoading(true);
+        try {
+            const res = await actions.deletedComplaint(deletePopup.deleteId);
+            showSuccess(res?.message);
+            setDeletePopup({ visible: false, deleteId: 0 });
+            onPressBack();
+        }
+        catch (error) {
+            errorMethod(error);
+        }
+        finally {
+            setIsLoading(false);
+        }
 
-      const openDeletePopup = (deleteId) => {
-        setDeleteMessage('This action cannot be undone. Are you sure you want to delete this complaint?');
-        setDeletePopup({visible: true, deleteId: deleteId});        
-      };
+    };
 
-      const updateStatus = async () => {
+    const openDeletePopup = (deleteId) => {
+        setDeleteMessage(strings.COMPLAINT_DELETE_MGS);
+        setDeletePopup({ visible: true, deleteId: deleteId });
+    };
+
+    const updateStatus = async () => {        
         let data = {};
-    
+
         switch (isModalVisible.status) {
             case "unresolved":
                 data = {
@@ -69,7 +78,7 @@ const ComplaintDetail = ({ navigation, route }) => {
                     reason: "Your complaint is now in progress",
                 };
                 break;
-    
+
             case "inprogress":
                 data = {
                     complaintId: complaintData?._id,
@@ -77,7 +86,7 @@ const ComplaintDetail = ({ navigation, route }) => {
                     reason: "Your complaint was resolved",
                 };
                 break;
-    
+
             case "reject":
                 data = {
                     complaintId: complaintData?._id,
@@ -85,44 +94,47 @@ const ComplaintDetail = ({ navigation, route }) => {
                     reason: "Your complaint was rejected",
                 };
                 break;
-    
+
             case "resolved":
             case "rejected":
                 setAlertMessage('');
                 setIsModalVisible({ enable: false, status: '' });
                 return;
-    
+
             default:
                 return;
         }
-    
-        console.log(data, '📦 Preparing to update complaint status with the following data:');
-    
-        await actions.updateComplaintStatus(data)
-            .then((res) => {
-                showSuccess(res?.message);
-                setIsModalVisible({ enable: false, status: '' });
-                onPressBack();
-            })
-            .catch(errorMethod);
-    };
-    
-
-    const onPressChangeStatus = (status) => {
-        const statusMessages = {
-            unresolved: 'This action cannot be undone. Are you sure you want to proceed this complaint to In Progress?',
-            inprogress: 'This action cannot be undone. Are you sure you want to proceed this complaint to Resolve?',
-            resolved: 'This complaint has already been resolved and cannot be updated further.',
-            rejected: 'This complaint has already been rejected and cannot be updated further.',
-            reject: 'This action cannot be undone. Are you sure you want to proceed this complaint to Reject?',
-        };
-    
-        if (statusMessages[status]) {
-            setIsModalVisible({ enable: true, status });
-            setAlertMessage(statusMessages[status]);
+        try {
+            setIsLoading(true);
+            const res = await actions.updateComplaintStatus(data)
+            showSuccess(res?.message);
+            setIsModalVisible({ enable: false, status: '' });
+            onPressBack();
+        } catch (error) {
+            errorMethod(error);
+        }
+        finally {
+            setIsLoading(false);
         }
     };
-    
+
+
+   const onPressChangeStatus = (status) => {
+    const statusMessages = {
+        unresolved: strings.UNRESOLVE_MSG,
+        inprogress: strings.INPROGRESS_MSG,
+        resolved: strings.RESOLVED_MSG,
+        rejected: strings.REJECTED_MSG,
+        reject: strings.REJECT_MSG,
+    };
+
+    const message = statusMessages[status];
+    if (message) {
+        setIsModalVisible({ enable: true, status });
+        setAlertMessage(message);
+    }
+};
+
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -143,53 +155,54 @@ const ComplaintDetail = ({ navigation, route }) => {
                     </View>
                     <View style={Styles.editprofileContainer}>
                         <Text style={Styles.complaintBoxDetails}>
-                            <Text style={{ fontWeight: '600', color: themes.white }}>Complaint Title : </Text>
+                            <Text style={{ fontWeight: '600', color: themes.white }}>{strings.COMPLAINT} {strings.TITLE} : </Text>
                             {complaintData?.title}
                         </Text>
                         <Text style={Styles.complaintBoxDetails}>
-                            <Text style={{ fontWeight: '600', color: themes.white }}>Complaint ID : </Text>
+                            <Text style={{ fontWeight: '600', color: themes.white }}>{strings.COMPLAINT} {strings.ID} : </Text>
                             {complaintData?.complaintId}
                         </Text>
                         <Text style={Styles.complaintBoxDetails}>
-                            <Text style={{ fontWeight: '600', color: themes.white }}>Created on : </Text>
+                            <Text style={{ fontWeight: '600', color: themes.white }}>{strings.CREATED_ON} : </Text>
                             {ConvertDateFormat()}
                         </Text>
                         <Text style={Styles.complaintBoxDetails}>
-                            <Text style={{ fontWeight: '600', color: themes.white }}>Description : </Text>
+                            <Text style={{ fontWeight: '600', color: themes.white }}>{strings.DESCRIPTION} : </Text>
                             {complaintData?.description}
                         </Text>
                         <Text style={Styles.complaintBoxDetails}>
-                            <Text style={{ fontWeight: '600', color: themes.white }}>Status : </Text>
+                            <Text style={{ fontWeight: '600', color: themes.white }}>{strings.STATUS} : </Text>
                             {complaintData?.status}
                         </Text>
                         {userData?.role !== 'admin' && <Text style={Styles.complaintBoxDetails}>
-                            <Text style={{ fontWeight: '600', color: themes.white }}>message : </Text>
+                            <Text style={{ fontWeight: '600', color: themes.white }}>{strings.MESSAGE} : </Text>
                             {complaintData?.reason}
                         </Text>}
                     </View>
-                    {complaintData?.status !=="rejected" && userData?.role === 'admin' &&  <CustomButton
+                    {complaintData?.status !== "rejected" && userData?.role === 'admin' && <CustomButton
                         onPress={() => onPressChangeStatus(complaintData?.status)}
                         gradientColors={[themes.red, themes.red]}
-                        title={complaintData?.status === "unresolved" ? "Move this to In Progress" : complaintData?.status === "inprogress" ? "Resolve this complaint" : complaintData?.status === "resolved" ? "This complaint is already resolved" : ''}
+                        title={complaintData?.status === "unresolved" ? strings.INPROGRESS_BTN_NAME : complaintData?.status === "inprogress" ? strings.RESOLVE_BTN_NAME : complaintData?.status === "resolved" ? strings.RESOLVED_BTN_NAME : ''}
                         textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(60) }} />
                     }
-                    {userData?.role === 'user' &&  <CustomButton
+                    {userData?.role === 'user' && <CustomButton
                         onPress={() => openDeletePopup(complaintData?._id)}
                         gradientColors={[themes.red, themes.red]}
-                        title={'Delete this complaint'}
+                        title={strings.DELETE_COMPLAINT_BTN_NAME}
                         textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(40) }} />
                     }
                     {complaintData?.status !== "resolved" && userData?.role === 'admin' && <CustomButton
-                        onPress={() => onPressChangeStatus(complaintData?.status !=="rejected" ? 'reject' : "rejected")}
+                        onPress={() => onPressChangeStatus(complaintData?.status !== "rejected" ? 'reject' : "rejected")}
                         gradientColors={[themes.purple, themes.purple]}
-                        title={complaintData?.status !=="rejected" ? "Reject this complaint" : "This complaint is already rejected"}
+                        title={complaintData?.status !== "rejected" ? strings.REJECT_COMPLAINT_BTN_NAME : strings.REJECTED_COMPLAINT_BTN_NAME}
                         textColor={themes.white}
-                        ButtonStyles={{ marginTop: moderateScale(40)}} />}
+                        ButtonStyles={{ marginTop: moderateScale(40) }} />}
                 </View>
-                <AlertPopup isCancelVisible={isModalVisible?.enable && complaintData?.status !== "resolved" && complaintData?.status !== "rejected"} isModalVisible={isModalVisible?.enable} onPressCancel={() => setIsModalVisible({enable: false, status: '' })} onPressSubmit={updateStatus} message={alertMessage}/>
-                <AlertPopup isCancelVisible={deletePopup?.visible} isModalVisible={deletePopup?.visible} onPressCancel={() => setDeletePopup({visible: false, deleteId: 0 })} onPressSubmit={deleteComplaint} message={deleteMessage}/>
+                <AlertPopup isCancelVisible={isModalVisible?.enable && complaintData?.status !== "resolved" && complaintData?.status !== "rejected"} isModalVisible={isModalVisible?.enable} onPressCancel={() => setIsModalVisible({ enable: false, status: '' })} onPressSubmit={updateStatus} message={alertMessage} />
+                <AlertPopup isCancelVisible={deletePopup?.visible} isModalVisible={deletePopup?.visible} onPressCancel={() => setDeletePopup({ visible: false, deleteId: 0 })} onPressSubmit={deleteComplaint} message={deleteMessage} />
+                <CustomLoader visible={isLoading} />
             </View>
         </ScrollView>
 

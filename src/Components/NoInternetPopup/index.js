@@ -3,6 +3,7 @@ import { Modal, Text, View } from 'react-native';
 import getStyles from './styles';
 import CustomButton from '../CustomButton';
 import { useTheme } from '../../Constants/themes';
+import strings from '../../Constants/languages';
 
 const NoInternetPopup = ({
   show = false,
@@ -16,14 +17,14 @@ const NoInternetPopup = ({
       transparent={true}
       visible={show}>
       <View style={Styles.modalContainer}>
-        <Text style={Styles.modalTitle}>Connection error</Text>
+        <Text style={Styles.modalTitle}>{strings.CONNECTION_ERROR}</Text>
         <Text style={Styles.modalText}>
-          Unable to connect with server. Check your internet connection and try again
+          {strings.CONNECTION_ERROR_MSG}
         </Text>
         <CustomButton
           onPress={onRetry}
           gradientColors={[themes.lightgray, themes.lightgray]}
-          title="Try again"
+          title={strings.TRY_AGAIN}
           textColor={themes.white} />
       </View>
     </Modal>

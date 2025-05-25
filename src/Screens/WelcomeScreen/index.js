@@ -4,6 +4,7 @@ import CustomButton from "../../Components/CustomButton";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import Imagepaths from "../../Constants/Imagepaths";
 import { useTheme } from "../../Constants/themes";
+import strings from "../../Constants/languages";
 
 const WelcomeScreen = ({navigation}) => {
     const { themes } = useTheme();
@@ -25,18 +26,18 @@ const WelcomeScreen = ({navigation}) => {
                 <Text style={Styles.headertext}>VCB</Text>
             </View>
             <View style={Styles.bottomContainer}>
-                <Text style={Styles.description}>Make your village complain free with</Text>
-                <Text style={Styles.description}>“Village Complain Box”</Text>
+                <Text style={Styles.description}>{strings.WELCOME_MSG}</Text>
+                <Text style={Styles.description}>{strings.VILLAGE_COMPLAINT_BOX}</Text>
                 <CustomButton
                     onPress={onPressNewUser}
                     gradientColors={[themes.blue, themes.blue]}
-                    title="Get started"
+                    title={strings.GET_STARTED}
                     textColor={themes.white}
                     ButtonStyles={{ marginTop: moderateScale(30)}} />
                 <CustomButton
                     onPress={onPressOldUser}
                     gradientColors={[themes.red, themes.red]}
-                    title="I have an account"
+                    title={strings.I_HAVE_AN_ACCOUNT}
                     textColor={themes.white}
                     ButtonStyles={{ marginTop: moderateScale(20) }} />
             </View>

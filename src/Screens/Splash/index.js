@@ -31,8 +31,7 @@ const SplashScreen = ({navigation}) => {
         else{
     
         try {
-            const res = await actions.viewProfile();
-            
+            const res = await actions.viewProfile();            
             changeTheme(res?.data?.theme);
             changeLaguage(res?.data?.language);
             saveUserData(res?.data);
@@ -45,7 +44,6 @@ const SplashScreen = ({navigation}) => {
                 navigation.navigate('WelcomeScreen');
             }
         } catch (error) {
-            console.log('errrrrrr', error);
             navigation.navigate('WelcomeScreen');
         } finally {
             setIsLoading(false);

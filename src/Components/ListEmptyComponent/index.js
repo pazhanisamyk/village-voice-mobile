@@ -1,10 +1,11 @@
 import { Text, View } from "react-native";
 import { useTheme } from '../../Constants/themes';
 import getStyles from "./styles";
+import strings from "../../Constants/languages";
 
    export const ListEmptyComponent = ({
     containerStyle = {},
-    title = 'No data found'
+    title = strings.NO_DATA_FOUND
    }) => {
     const { themes } = useTheme();
   const Styles = getStyles(themes);

@@ -2,10 +2,11 @@ import React from 'react';
 import { Modal, View, Text, FlatList, TouchableOpacity } from 'react-native';
 import getStyles from './styles';
 import { useTheme } from '../../Constants/themes';
+import strings from '../../Constants/languages';
 
 const CustomSelect = ({
-    data = [{id: 1, label: 'Apple'},{id: 2, label: 'Orange'},{id: 3, label: 'Mango'}],
-    header = 'Please select an option',
+    data = [{id: 1, label: strings.APPLE},{id: 2, label: strings.ORANGE},{id: 3, label: strings.MANGO}],
+    header = strings.SELECT_OPTION,
     isModalVisible = true,
     onSubmit = () => { },
     closeModal = () => { },
@@ -36,7 +37,6 @@ const CustomSelect = ({
                 animationType="slide"
                 transparent={true}
                 visible={isModalVisible}
-                // onRequestClose={onSelect}
             >
                 <View style={Styles.modalOverlay}>
                     <View style={Styles.modalContainer}>
@@ -51,7 +51,7 @@ const CustomSelect = ({
                             showsVerticalScrollIndicator = {false} />
                         <View style={Styles.footerContainer}>
                             <TouchableOpacity onPress={onClose} style={Styles.closeButton}>
-                                <Text style={Styles.closeButtonText}>Close</Text>
+                                <Text style={Styles.closeButtonText}>{strings.CLOSE}</Text>
                             </TouchableOpacity>
                         </View>
                         </View>

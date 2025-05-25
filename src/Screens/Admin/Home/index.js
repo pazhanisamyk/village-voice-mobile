@@ -10,24 +10,25 @@ import { useSelector } from "react-redux";
 import actions from "../../../Redux/actions";
 import { useIsFocused } from "@react-navigation/native";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
+import CustomLoader from "../../../Components/Loaders";
 
-const AdminHomeScreen = ({navigation}) => {
+const AdminHomeScreen = ({ navigation }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const isFocused = useIsFocused();
     const [selectedTAb, setSelectedTab] = useState(1);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const userData = useSelector((state) => state?.auth?.userData);
     const [complaintsData, setComplaintsData] = useState([])
     const [complaintsCategory, setComplaintsCategory] = useState([])
 
 
     useEffect(() => {
-        // Add the back button event listener
+        if (isFocused) {
         const backHandler = BackHandler.addEventListener('hardwareBackPress', androidBackButtonHandler);
-
-        // Cleanup the event listener on component unmount
         return () => backHandler.remove();
+    }
     }, []);
 
     useEffect(() => {
@@ -36,20 +37,20 @@ const AdminHomeScreen = ({navigation}) => {
         }
     }, [isFocused]);
 
-        const getAllComplaints = async () => {
-            try {
-                const res = await actions.getAllUserComplaint(); // API response
-                const complaintBoxes = await actions.getAllComplaintBox(); // Assuming you fetch this too
-    
-                console.log(res, '📦 All Complaint Data');
-                console.log(complaintBoxes, '📦 Complaint Box Configs');
-    
-                setComplaintsData(res);
-                setComplaintsCategory(complaintBoxes);
-            } catch (error) {
-                console.log(error, '❌ Error while fetching complaint boxes');
-            }
+    const getAllComplaints = async () => {
+        setIsLoading(true);
+        try {
+            const res = await actions.getAllUserComplaint();
+            const complaintBoxes = await actions.getAllComplaintBox();
+            setComplaintsData(res);
+            setComplaintsCategory(complaintBoxes);
+        } catch (error) {
+            console.log(error, '❌ Error while fetching complaint boxes');
         }
+        finally {
+            setIsLoading(false);
+        }
+    }
 
     const onPressCancel = () => {
         setIsModalVisible(false);
@@ -62,25 +63,30 @@ const AdminHomeScreen = ({navigation}) => {
 
     const androidBackButtonHandler = () => {
         setIsModalVisible(true);
-        return true; // Prevent default back action
+        return true;
     };
 
 
-    const TAbs = [{ id: 1, name: 'Resolved' }, { id: 2, name: 'Unresloved' }, { id: 3, name: 'Rejected' }]
+    const TAbs = [{ id: 1, name: strings.RESOLVED }, { id: 2, name: strings.UNRESOLVED }, { id: 3, name: strings.INPROGRESS }, { id: 4, name: strings.REJECTED}]
 
     const seleTab = (id) => {
         setSelectedTab(id)
     }
-    const filteredComplaints = complaintsData.filter(item => {
-        return (item.status === "resolved" && selectedTAb === 1) || (item.status === "unresolved" && selectedTAb === 2) || (item.status === "rejected" && selectedTAb === 3);
-    });
+    const statusMap = {
+        1: "resolved",
+        2: "unresolved",
+        3: "inprogress",
+        4: "rejected"
+    };
+
+    const filteredComplaints = complaintsData.filter(item => item.status === statusMap[selectedTAb]);
     const solvedComplaints = complaintsData.filter(item => {
         return (item.status === "resolved");
     });
     const rendertabs = ({ item }) => {
         return (
             <TouchableOpacity
-            key={item.id}
+                key={item.id}
                 onPress={() => seleTab(item.id)}
                 style={item.id === selectedTAb ? Styles.selectedtabOutline : Styles.unselectedtabOutline}>
                 <Text style={[Styles.tabTitle, { color: item.id === selectedTAb ? themes.white : themes.black }]}>
@@ -99,8 +105,8 @@ const AdminHomeScreen = ({navigation}) => {
                 <Text style={[Styles.complainText, { alignSelf: 'flex-start' }]}>{item?.title}</Text>
             </View>
             <View style={Styles.complainactionOutline}>
-                <TouchableOpacity onPress={()=>navigation.navigate('ComplaintDetail',{data: item})} style={Styles.viewOutline}>
-                    <Text style={[Styles.complainText, {color: themes.background}]}>View</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('ComplaintDetail', { data: item })} style={Styles.viewOutline}>
+                    <Text style={[Styles.complainText, { color: themes.background }]}>{strings.VIEW}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -110,23 +116,23 @@ const AdminHomeScreen = ({navigation}) => {
         <View style={Styles.container}>
             <View style={Styles.topview}>
                 <View style={Styles.profileView}>
-                    {userData?.profileImage ? <Image source={{uri:userData?.profileImage}} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
+                    {userData?.profileImage ? <Image source={{ uri: userData?.profileImage }} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
                     <Text style={Styles.userNmae}>{userData?.username}</Text>
                 </View>
                 <View style={Styles.statusContainer}>
                     <View style={Styles.ComplaintBox}>
                         <View style={[Styles.complainboxlilne, { backgroundColor: themes.blue }]}></View>
-                        <Text style={Styles.ComplaintText}>Complaint Box</Text>
+                        <Text style={Styles.ComplaintText}>{strings.COMPLAINT_BOX}</Text>
                         <Text style={Styles.ComplaintcountText}>{complaintsCategory?.length}</Text>
                     </View>
                     <View style={Styles.ComplaintBox}>
                         <View style={[Styles.complainboxlilne, { backgroundColor: themes.purple }]}></View>
-                        <Text style={Styles.ComplaintText}>Compliants</Text>
+                        <Text style={Styles.ComplaintText}>{strings.COMPLAINTS}</Text>
                         <Text style={Styles.ComplaintcountText}>{complaintsData?.length}</Text>
                     </View>
                     <View style={Styles.ComplaintBox}>
                         <View style={[Styles.complainboxlilne, { backgroundColor: themes.green }]}></View>
-                        <Text style={Styles.ComplaintText}>Resolved Complaints</Text>
+                        <Text style={Styles.ComplaintText}>{`${strings.RESOLVED} ${strings.COMPLAINTS}`}</Text>
                         <Text style={Styles.ComplaintcountText}>{solvedComplaints?.length}</Text>
                     </View>
                 </View>
@@ -143,7 +149,7 @@ const AdminHomeScreen = ({navigation}) => {
                 </View>
                 <FlatList
                     data={filteredComplaints}
-                    contentContainerStyle={{paddingBottom: moderateScale(100)}}
+                    contentContainerStyle={{ paddingBottom: moderateScale(100) }}
                     renderItem={renderComplaints}
                     ListEmptyComponent={ListEmptyComponent}
                     keyExtractor={item => item?._id}
@@ -151,13 +157,14 @@ const AdminHomeScreen = ({navigation}) => {
                 />
             </View>
             <AlertPopup
-                header="Hold On"
+                header={strings.HOLD_ON}
                 isModalVisible={isModalVisible}
                 isCancelVisible={isModalVisible}
                 onPressCancel={onPressCancel}
                 onPressSubmit={onPressSubmit}
                 message={strings.LOGOUT_MSG}
             />
+            <CustomLoader visible={isLoading} />
         </View>
     )
 }

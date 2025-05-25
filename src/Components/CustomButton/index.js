@@ -2,9 +2,10 @@ import { Text, TouchableOpacity } from "react-native";
 import getStyles from "./styles";
 import LinearGradient from "react-native-linear-gradient";
 import { useTheme } from "../../Constants/themes";
+import strings from "../../Constants/languages";
 
 const CustomButton = ({
-    title = '',
+    title = strings.SUBMIT,
     onPress = () => { },
     ButtonStyles = {},
     gradientColors = [themes.white, themes.white],
@@ -12,11 +13,11 @@ const CustomButton = ({
     gradientEnd = { x: 1, y: 1 },
     textColor = themes.black
 }) => {
-    const { theme } = useTheme(); // ✅ use current theme
-    const Styles = getStyles(theme); // ✅ pass theme to styles
+    const { theme } = useTheme();
+    const Styles = getStyles(theme);
   
-    const colors = gradientColors || [theme.white, theme.white]; // fallback
-    const txtColor = textColor || theme.black; // fallback
+    const colors = gradientColors || [theme.white, theme.white];
+    const txtColor = textColor || theme.black;
     return (
         <LinearGradient
             colors={colors}

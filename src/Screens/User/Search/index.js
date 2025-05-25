@@ -8,6 +8,7 @@ import { useTheme } from "../../../Constants/themes";
 import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
+import CustomLoader from "../../../Components/Loaders";
 
 const Search = ({navigation}) => {
     const { themes } = useTheme();
@@ -17,6 +18,7 @@ const Search = ({navigation}) => {
     const [showSearchHistory, setShowSearchHistory] = useState(false);
     const [searchHistory, setSearchHistory] = useState([]);
     const [complaintList, setComplaintList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const inputRef = useRef(null);
 
@@ -29,11 +31,9 @@ const Search = ({navigation}) => {
     }, [isFocused]);
 
     const getAllComplaintBoxes = async () => {
+        setIsLoading(true);
         try {
-            const res = await actions.getAllComplaintBox(); // assume it returns an array of complaints
-            console.log(res, '📦 All Complaint Boxes');
-
-            // Get unique categories
+            const res = await actions.getAllComplaintBox();
             const uniqueCategories = [...new Set(res.map(item => item.category))];
             const categoryList = uniqueCategories.map((cat, index) => ({
                 id: `${index}`,
@@ -43,14 +43,21 @@ const Search = ({navigation}) => {
         } catch (error) {
             console.log(error, '❌ Error while fetching complaint boxes');
         }
+        finally{
+            setIsLoading(false);
+        }
     };
 
     const getSingleUserComplaints = async () => {
+        setIsLoading(true);
         try {
-            const res = await actions.getSingleUserComplaint(); // remove the callback, assume it returns a Promise
+            const res = await actions.getSingleUserComplaint();
             setComplaintList(res)
         } catch (error) {
             console.log(error, '❌ Error while fetching complaint boxes');
+        }
+        finally{
+            setIsLoading(false);
         }
     };
 
@@ -91,7 +98,7 @@ const Search = ({navigation}) => {
             <TouchableOpacity key={item?._id} style={Styles.ComplaintsList} onPress={()=>navigation.navigate('ComplaintDetail', {data: item})}>
                 <View style={Styles.ComplaintsText}>
                     <Text style={Styles.complaintId}>{item.complaintId}</Text>
-                    <Text style={Styles.complaintTitle}>{`Title : ${item.title}`}</Text>
+                    <Text style={Styles.complaintTitle}>{`${strings.TITLE} : ${item.title}`}</Text>
                 </View>
                 {item?.imageUrl ? <Image source={{ uri: item?.imageUrl }} resizeMode="cover" style={Styles.image} /> : <Image source={Imagepaths.transparent_logo} resizeMode="contain" style={Styles.image} />}
             </TouchableOpacity>
@@ -132,7 +139,7 @@ const Search = ({navigation}) => {
 
                 {showSearchHistory && (
                     <View style={Styles.recentSearchesOutline}>
-                        <Text style={Styles.recentSearchesText}>Complaint Boxes:</Text>
+                        <Text style={Styles.recentSearchesText}>{strings.COMPLAINT_BOX}:</Text>
                         {filteredData.length > 0 ? (
                             <FlatList
                                 data={filteredData}
@@ -142,7 +149,7 @@ const Search = ({navigation}) => {
                                 ListEmptyComponent={ListEmptyComponent}
                             />
                         ) : (
-                            <Text style={Styles.noResultText}>No categories found.</Text>
+                            <Text style={Styles.noResultText}>{strings.NO_CATEGORY_FOUND}</Text>
                         )}
                     </View>
                 )}
@@ -152,7 +159,7 @@ const Search = ({navigation}) => {
                             { marginTop: showSearchHistory ? moderateScale(20) : moderateScale(0), maxHeight: showSearchHistory ?  height / 3.1 : height/1.4},
                         ]}
                     >
-                        <Text style={Styles.recentSearchesText}>Your complaints:</Text>
+                        <Text style={Styles.recentSearchesText}>{strings.YOUR} {strings.COMPLAINTS}:</Text>
                         {filteredComplaints.length > 0 ? (
                             <FlatList
                                 data={filteredComplaints}
@@ -162,10 +169,11 @@ const Search = ({navigation}) => {
                                 showsVerticalScrollIndicator={false}
                             />
                         ) : (
-                            <Text style={Styles.noResultText}>No complaints found.</Text>
+                            <Text style={Styles.noResultText}>{strings.NO_COMPLAINTS_FOUND}</Text>
                         )}
                     </View>
             </View>
+            <CustomLoader visible={isLoading} />
         </View>
     );
 };

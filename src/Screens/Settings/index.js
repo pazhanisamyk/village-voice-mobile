@@ -11,6 +11,7 @@ import { showError, showSuccess } from "../../Utils/helperfunctions";
 import strings, { changeLaguage } from "../../Constants/languages";
 import { useTheme } from "../../Constants/themes";
 import { saveUserData } from "../../Redux/actions/auth";
+import CustomLoader from "../../Components/Loaders";
 
 const Settings = ({ navigation }) => {
     const { themes, changeTheme } = useTheme();
@@ -21,8 +22,9 @@ const Settings = ({ navigation }) => {
     const [isVisibleReport, setIsVisibleReport] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [reportMessage, setReportMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const userData = useSelector((state) => state?.auth?.userData);
-    
+
 
     const isFocused = useIsFocused();
 
@@ -40,29 +42,41 @@ const Settings = ({ navigation }) => {
     }, [isFocused])
 
     const switchTheme = async () => {
+        setIsLoading(true);
         const data = { theme: isDarkModeEnabled ? 'light' : 'dark' }
+        try{
 
-        await actions.changeTheme(data)
-            .then((res) => {
+       const res = await actions.changeTheme(data)
                 showSuccess(res?.message)
                 setIsDarkModeEnabled(previousState => !previousState);
-                saveUserData({...userData, theme: isDarkModeEnabled ? 'light' : 'dark'});
+                saveUserData({ ...userData, theme: isDarkModeEnabled ? 'light' : 'dark' });
                 changeTheme(isDarkModeEnabled ? 'light' : 'dark');
-            })
-            .catch(errorMethod);
+            }
+            catch(error){
+                errorMethod(error);
+            }
+            finally{
+                setIsLoading(false);
+            }
     }
-    const switchLanguage = async() =>{        
+    const switchLanguage = async () => {
+        setIsLoading(true);
+        const data = { isLangEnabled: isLangEnabled ? 'en' : 'ta' }
 
-         const data = { isLangEnabled: isLangEnabled ? 'en' : 'ta' }
+        try{
 
-         await actions.changeLanguage(data)
-             .then((res) => {
-                 showSuccess(res?.message)
-                 setIsLangEnabled(previousState => !previousState);
-                 saveUserData({...userData, language: isLangEnabled ? 'en' : 'ta'});
-                 changeLaguage(isLangEnabled ? 'en' : 'ta')
-             })
-             .catch(errorMethod);
+       const res = await actions.changeLanguage(data);
+                showSuccess(res?.message)
+                setIsLangEnabled(previousState => !previousState);
+                saveUserData({ ...userData, language: isLangEnabled ? 'en' : 'ta' });
+                changeLaguage(isLangEnabled ? 'en' : 'ta')
+            }
+            catch(error){
+                errorMethod(error);
+            }
+            finally{
+                setIsLoading(false);
+            }
     }
 
     const onPressLogout = () => {
@@ -75,13 +89,20 @@ const Settings = ({ navigation }) => {
     };
 
     const onPressSubmit = async () => {
-        await actions.logout()
-            .then((res) => {
+        setIsLoading(true);
+        try{
+
+       const res = await actions.logout()
                 navigation.navigate('WelcomeScreen')
                 showSuccess(res?.message)
                 setIsModalVisible(false)
-            })
-            .catch(errorMethod);
+            }
+            catch(error){
+                errorMethod(error);
+            }
+            finally{
+                setIsLoading(false);
+            }
 
     }
 
@@ -93,20 +114,27 @@ const Settings = ({ navigation }) => {
         navigation.navigate('HelpScreen')
     }
 
-    const onPressReport = async() => {
+    const onPressReport = async () => {
+        setIsLoading(true);
 
-        await actions.reportProblem()
-        .then((res) => {
-            showSuccess(res?.message)
-            if(userData?.role === 'admin'){
-            setReportMessage(res?.data?.admin)
+        try{
+
+       const res = await actions.reportProblem()
+                showSuccess(res?.message)
+                if (userData?.role === 'admin') {
+                    setReportMessage(res?.data?.admin)
+                }
+                else {
+                    setReportMessage(res?.data?.user)
+                }
+                setIsVisibleReport(true)
             }
-            else{
-                setReportMessage(res?.data?.user)
+            catch(error){
+                errorMethod(error);
             }
-            setIsVisibleReport(true)
-        })
-        .catch(errorMethod);        
+            finally{
+                setIsLoading(false);
+            }
     }
 
     const onPressReportSubmit = () => {
@@ -122,10 +150,10 @@ const Settings = ({ navigation }) => {
     }
 
     return (
-        <ScrollView contentContainerStyle={{paddingBottom: moderateScale(140), backgroundColor: themes.background}} showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={{ paddingBottom: moderateScale(140), backgroundColor: themes.background }} showsVerticalScrollIndicator={false}>
             <View style={Styles.container}>
                 <View style={Styles.outerContainer}>
-                    {userData?.profileImage ? <Image source={{uri:userData?.profileImage}} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
+                    {userData?.profileImage ? <Image source={{ uri: userData?.profileImage }} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
                     <Text style={Styles.userName}>{userData?.username}</Text>
                     <Text style={Styles.email}>{userData?.email}</Text>
                     <Text style={Styles.email}>+91 {userData?.phoneNumber}</Text>
@@ -197,7 +225,8 @@ const Settings = ({ navigation }) => {
                     </View>
                 </View>
                 <AlertPopup isModalVisible={isModalVisible} onPressSubmit={onPressSubmit} onPressCancel={onPressCancel} isCancelVisible={isModalVisible} message={alertMessage} />
-                <AlertPopup header={"Information"} isModalVisible={isVisibleReport} onPressSubmit={onPressReportSubmit} message={reportMessage} />
+                <AlertPopup header={strings.INFORMATION} isModalVisible={isVisibleReport} onPressSubmit={onPressReportSubmit} message={reportMessage} />
+                <CustomLoader visible={isLoading} />
             </View>
         </ScrollView>
     );

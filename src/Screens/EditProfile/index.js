@@ -5,13 +5,14 @@ import { useEffect, useRef, useState } from "react";
 import CustomButton from "../../Components/CustomButton";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import AlertPopup from "../../Components/AlertPopup";
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import actions from "../../Redux/actions";
 import strings from "../../Constants/languages";
 import { useTheme } from "../../Constants/themes";
 import { saveUserData } from "../../Redux/actions/auth";
 import { useSelector } from "react-redux";
+import CustomLoader from "../../Components/Loaders";
 
 const EditProfile = ({ navigation, route }) => {
     const { themes } = useTheme();
@@ -21,88 +22,95 @@ const EditProfile = ({ navigation, route }) => {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
     const inputRef = useRef(null);
     const userData = useSelector((state) => state?.auth?.userData);
 
-    useEffect(()=>{
+    useEffect(() => {
         setUsername(userData?.username);
         setEmail(userData?.email);
         setPhoneNumber(userData?.phoneNumber);
-    },[])
+    }, [])
 
     const selectImage = () => {
         const options = {
-          mediaType: 'photo',
-          quality: 1,
+            mediaType: 'photo',
+            quality: 1,
         };
 
-    launchImageLibrary(options, response => {
-        if (response.didCancel) {
-            console.log('User cancelled image picker');
-        } else if (response.errorCode) {
-            console.log('Image Picker Error: ', response.errorMessage);
-        } else {
-            const uri = response.assets[0].uri;
-            setSelectedImage(uri);
-            updateProfileImage();
-        }
+        launchImageLibrary(options, response => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.errorCode) {
+                console.log('Image Picker Error: ', response.errorMessage);
+            } else {
+                const uri = response.assets[0].uri;
+                setSelectedImage(uri);
+                updateProfileImage();
+            }
         });
     };
 
     const errorMethod = (error) => {
         console.log(error?.response?.data?.message);
         showError(error?.response?.data?.message);
-      };
+    };
 
-      const updateProfileImage = async () => {
-        
+    const updateProfileImage = async () => {
+        setIsLoading(true);
+
         const formData = new FormData();
-      
+
         const fileName = selectedImage.split('/').pop();
         const fileType = fileName.split('.').pop();
-      
+
         formData.append('image', {
-          uri: selectedImage,
-          name: String(userData?.phoneNumber),
-          type: `image/${fileType}`,
+            uri: selectedImage,
+            name: String(userData?.phoneNumber),
+            type: `image/${fileType}`,
         });
-      
+
         // Optional: if user ID or token is needed
-        let  headers = {
+        let headers = {
             'Content-Type': 'multipart/form-data',
-          }
-      
+        }
+
         try {
-            await actions.updateProfileImage(formData, headers)  // ✅ send formData instead of data object
-          .then((res) => {
-            console.log(res, 'resresres');
+            const res = await actions.updateProfileImage(formData, headers);
             saveUserData(res?.user);
             showSuccess(res?.message)
-          })
-          .catch(errorMethod);
         } catch (error) {
-          console.error('Upload error:', error);
+            errorMethod(error);
+            console.error('Upload error:', error);
         }
-      };      
-      
+        finally {
+            setIsLoading(false);
+        }
+    };
+
 
     const updateProfile = async () => {
+        setIsLoading(true);
         const data = {
             email,
             username
         }
 
-        await actions.updateProfile(data)
-        .then((res) => {
-            console.log(res, 'resresres');
+        try {
+            const res = await actions.updateProfile(data)
             saveUserData(res?.user);
-            
             showSuccess(res?.message)
             navigation.goBack();
-        })
-        .catch(errorMethod);
+        }
+        catch (error) {
+            errorMethod(error);
+
+        }
+        finally {
+            setIsLoading(false);
+        }
     }
 
     const onPressBack = () => {
@@ -119,27 +127,27 @@ const EditProfile = ({ navigation, route }) => {
         return nameRegex.test(text);
     };
 
-    const validateInput = () => { 
+    const validateInput = () => {
         if (!username) {
-            setAlertMessage('User name is required');
+            setAlertMessage(`${strings.USERNAME} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else if (username.length < 4) {
-            setAlertMessage('Enter a username with at least 4 letters');
+            setAlertMessage(strings.USERNAME_VALIDATION_LESS);
             setIsModalVisible(true);
         } else if (!isUsername(username)) {
-            setAlertMessage('Enter a valid username (only letters and spaces)');
+            setAlertMessage(strings.USERNAME_VALIDATION_LETTERS_ONLY);
             setIsModalVisible(true);
         } else if (username.length > 15) {
-            setAlertMessage('Username should not be more than 15 characters');
+            setAlertMessage(strings.USERNAME_VALIDATION_MORE);
             setIsModalVisible(true);
         } else if (!isEmail(email)) {
-            setAlertMessage('Enter a valid email address');
+            setAlertMessage(strings.EMAIL_VALIDATION);
             setIsModalVisible(true);
         } else {
-            updateProfile();            
+            updateProfile();
         }
     };
-    
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={Styles.container}>
@@ -151,7 +159,7 @@ const EditProfile = ({ navigation, route }) => {
                 </View>
                 <View style={Styles.outerContainer}>
                     <TouchableOpacity onPress={selectImage} style={Styles.profileOutline}>
-                        {userData?.profileImage ? <Image source={{uri: userData?.profileImage}} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
+                        {userData?.profileImage ? <Image source={{ uri: userData?.profileImage }} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
                         <Image source={Imagepaths.camera} style={Styles.camera} />
                     </TouchableOpacity>
                     <View style={Styles.editprofileContainer}>
@@ -181,9 +189,9 @@ const EditProfile = ({ navigation, route }) => {
                             editable={false}
                             ref={inputRef}
                             value={phoneNumber}
-                            placeholder="Enter Phone Number"
+                            placeholder={`${strings.ENTER} ${strings.PHONE_NUMBER}`}
                             onChangeText={(text) => setPhoneNumber(text)}
-                            style={[Styles.inputStyle,{backgroundColor: themes.gray1}]}
+                            style={[Styles.inputStyle, { backgroundColor: themes.gray1 }]}
                         />
 
                     </View>
@@ -194,7 +202,8 @@ const EditProfile = ({ navigation, route }) => {
                         textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(40) }} />
                 </View>
-                <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage}/>
+                <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage} />
+                <CustomLoader visible={isLoading} />
             </View>
         </ScrollView>
     )

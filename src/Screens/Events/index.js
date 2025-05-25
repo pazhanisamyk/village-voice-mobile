@@ -13,8 +13,9 @@ import { useIsFocused } from "@react-navigation/native";
 import actions from "../../Redux/actions";
 import { showSuccess } from "../../Utils/helperfunctions";
 import { ListEmptyComponent } from "../../Components/ListEmptyComponent";
+import CustomLoader from "../../Components/Loaders";
 
-const Events = ({navigation}) => {
+const Events = ({ navigation }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const [isYearModalVisible, setIsYearModalVisible] = useState(false);
@@ -25,29 +26,32 @@ const Events = ({navigation}) => {
     const [selectedFullDate, setSelectedFullDate] = useState(null);
     const [dateData, setDateData] = useState([]);
     const [eventsData, setEventsData] = useState([]);
-    const [isModalVisible, setIsModalVisible] = useState({status: false, deleteId: 0});
+    const [isModalVisible, setIsModalVisible] = useState({ status: false, deleteId: 0 });
+    const [isLoading, setIsLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const userData = useSelector((state) => state?.auth?.userData);
     const isFocused = useIsFocused();
 
     const colorArray = [themes.blue, themes.red, themes.purple, themes.green, themes.blue1];
 
-    useEffect(()=>{
+    useEffect(() => {
         if (isFocused) {
             getAllEventsData();
         }
-    },[isFocused, selectedFullDate, isModalVisible])
+    }, [isFocused, selectedFullDate, isModalVisible])
 
-    const getAllEventsData = async() => {
+    const getAllEventsData = async () => {
+        setIsLoading(true);
         const [day, month, year] = selectedFullDate.split('-');
         try {
-                    const res = await actions.getallEvents(`?year=${year}&month=${month}&day=${day}`); // remove the callback, assume it returns a Promise
-                    console.log(res);
-                    
-                    setEventsData(res)
-                } catch (error) {
-                    console.log(error.message, '❌ Error while fetching complaint boxes');
-                }
+            const res = await actions.getallEvents(`?year=${year}&month=${month}&day=${day}`);
+            setEventsData(res)
+        } catch (error) {
+            console.log(error.message, '❌ Error while fetching complaint boxes');
+        }
+        finally{
+            setIsLoading(false);
+        }
     }
 
     const currentYear = new Date().getFullYear();
@@ -64,7 +68,7 @@ const Events = ({navigation}) => {
         let data = {
             date: selectedFullDate,
         }
-        navigation.navigate('AddEvent', {data: data})
+        navigation.navigate('AddEvent', { data: data })
     }
     const months = [
         { id: 1, label: strings.JANUARY },
@@ -76,47 +80,45 @@ const Events = ({navigation}) => {
         { id: 7, label: strings.JULY },
         { id: 8, label: strings.AUGUST },
         { id: 9, label: strings.SEPTEMBER },
-        { id: 10, label: strings.OCTOBER},
-        { id: 11, label: strings.NOVEMBER},
+        { id: 10, label: strings.OCTOBER },
+        { id: 11, label: strings.NOVEMBER },
         { id: 12, label: strings.DECEMBER },
     ];
 
     const onPressDelete = (id, event) => {
-        setAlertMessage(`Are you sure, You want to delete ${event}`)
-        setIsModalVisible({status: true, deleteId: id});                
+        setAlertMessage(`${strings.DELETE_MSG} ${event}`)
+        setIsModalVisible({ status: true, deleteId: id });
     }
 
-    const onConfirmDelete = async() => {
+    const onConfirmDelete = async () => {
+        setIsLoading(true);
         try {
-            const res = await actions.deletedEvent(isModalVisible.deleteId); // remove the callback, assume it returns a Promise
+            const res = await actions.deletedEvent(isModalVisible.deleteId);
             console.log(res);
-            setIsModalVisible({status: false, deleteId: 0})
+            setIsModalVisible({ status: false, deleteId: 0 })
             showSuccess(res?.message);
         } catch (error) {
             console.log(error.message, '❌ Error while deleting event');
         }
-
-
-        
-        console.log('delete event id: ',isModalVisible.deleteId);
+        finally{
+            setIsLoading(false);
+        }
 
     }
 
-    const isFutureOrToday  = (dateStr) => {
+    const isFutureOrToday = (dateStr) => {
         const [day, month, year] = dateStr.split('-');
         const inputDate = new Date(`${year}-${month}-${day}`);
         const today = new Date();
-      
-        // Zero out time for accurate comparison
         inputDate.setHours(0, 0, 0, 0);
         today.setHours(0, 0, 0, 0);
-      
+
         return inputDate >= today;
-      };
+    };
 
     const generateDateData = (year, month) => {
         const dateArray = [];
-        const daysOfWeek = [strings.SUN, strings.MON, strings.TUE, strings.WED, strings.THU, strings.FRI, strings.SAT]; 
+        const daysOfWeek = [strings.SUN, strings.MON, strings.TUE, strings.WED, strings.THU, strings.FRI, strings.SAT];
         const daysInMonth = new Date(year, month, 0).getDate();
 
         for (let i = 1; i <= daysInMonth; i++) {
@@ -150,7 +152,7 @@ const Events = ({navigation}) => {
         const isSelected = selectedDate === item.id;
         return (
             <TouchableOpacity
-            key={item?.id}
+                key={item?.id}
                 onPress={() => setDateAndDay(item)}
                 style={[Styles.eventDateList, { backgroundColor: isSelected ? themes.card1 : themes.card }]}
             >
@@ -163,28 +165,28 @@ const Events = ({navigation}) => {
 
     const renderEvents = ({ item, index }) => {
 
-        const usedColors = new Set();    
-                    // Assign color
-                    let color;
-                    if (index < colorArray.length) {
-                        color = colorArray[index];
-                        usedColors.add(color);
-                    } else {
-                        // Pick a random color from array if exceeded
-                        const unusedColors = colorArray.filter(c => !usedColors.has(c));
-                        color = unusedColors.length > 0
-                            ? unusedColors[Math.floor(Math.random() * unusedColors.length)]
-                            : colorArray[Math.floor(Math.random() * colorArray.length)];
-                    }
+        const usedColors = new Set();
+        // Assign color
+        let color;
+        if (index < colorArray.length) {
+            color = colorArray[index];
+            usedColors.add(color);
+        } else {
+            // Pick a random color from array if exceeded
+            const unusedColors = colorArray.filter(c => !usedColors.has(c));
+            color = unusedColors.length > 0
+                ? unusedColors[Math.floor(Math.random() * unusedColors.length)]
+                : colorArray[Math.floor(Math.random() * colorArray.length)];
+        }
         return (
             <View key={item?._id} style={Styles.events}>
                 <View style={Styles.remoEventOutile}>
-                <View style={[Styles.eventnumber, {backgroundColor: color}]}>
-                    <Text style={Styles.eventnum}>{index +1 }</Text>
-                </View>
-                {userData?.role === 'admin' && <TouchableOpacity onPress={()=>onPressDelete(item?._id, item?.event)} style={Styles.eventnumber}>
-                <Image tintColor={themes.white} resizeMode="contain" source={Imagepaths.delete} style={Styles.deleteIcon} />
-                </TouchableOpacity>}
+                    <View style={[Styles.eventnumber, { backgroundColor: color }]}>
+                        <Text style={Styles.eventnum}>{index + 1}</Text>
+                    </View>
+                    {userData?.role === 'admin' && <TouchableOpacity onPress={() => onPressDelete(item?._id, item?.event)} style={Styles.eventnumber}>
+                        <Image tintColor={themes.white} resizeMode="contain" source={Imagepaths.delete} style={Styles.deleteIcon} />
+                    </TouchableOpacity>}
                 </View>
                 <Text style={Styles.eventTime}>{item.event}</Text>
                 <Text style={Styles.eventdetail}>{item.eventDescription}</Text>
@@ -207,7 +209,7 @@ const Events = ({navigation}) => {
                             <Image tintColor={themes.white} resizeMode="contain" source={isYearModalVisible ? Imagepaths.arrow_up : Imagepaths.arrow_down} style={Styles.arrowIcon} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setIsMonthModalVisible(true)} style={Styles.pickerContainer}>
-                            <Text style={Styles.pickerText}>{months[selectedMonth -1 ]?.label}</Text>
+                            <Text style={Styles.pickerText}>{months[selectedMonth - 1]?.label}</Text>
                             <Image tintColor={themes.white} resizeMode="contain" source={isMonthModalVisible ? Imagepaths.arrow_up : Imagepaths.arrow_down} style={Styles.arrowIcon} />
                         </TouchableOpacity>
                     </View>
@@ -222,22 +224,22 @@ const Events = ({navigation}) => {
                     showsHorizontalScrollIndicator={false}
                 />
             </View>
-            <View style={Styles.bottomview}> 
+            <View style={Styles.bottomview}>
                 <View style={Styles.addEventOutline}>
-                <View>
-                <Text style={Styles.month}>{months[selectedMonth -1 ]?.label}</Text>
-                <Text style={Styles.fullDate}>{selectedFullDate}</Text>
-                </View>
-                {userData?.role === 'admin' && selectedFullDate && isFutureOrToday (selectedFullDate) && <CustomButton
-          onPress={onpressAddEvent}
-          ButtonStyles={{width: '50%'}}
-          gradientColors={[themes.red, themes.red]}
-          title="Add new event"
-          textColor={themes.white} />}
+                    <View>
+                        <Text style={Styles.month}>{months[selectedMonth - 1]?.label}</Text>
+                        <Text style={Styles.fullDate}>{selectedFullDate}</Text>
+                    </View>
+                    {userData?.role === 'admin' && selectedFullDate && isFutureOrToday(selectedFullDate) && <CustomButton
+                        onPress={onpressAddEvent}
+                        ButtonStyles={{ width: '50%' }}
+                        gradientColors={[themes.red, themes.red]}
+                        title={strings.ADD_NEW_EVENT}
+                        textColor={themes.white} />}
                 </View>
                 <FlatList
                     data={eventsData}
-                    contentContainerStyle={{paddingBottom: moderateScale(100)}}
+                    contentContainerStyle={{ paddingBottom: moderateScale(100) }}
                     style={[Styles.eventContainer, { marginTop: moderateScale(20) }]}
                     renderItem={renderEvents}
                     ListEmptyComponent={ListEmptyComponent}
@@ -248,17 +250,18 @@ const Events = ({navigation}) => {
             </View>
             <CustomSelect
                 data={yearConvertor()}
-                header={'Select year'}
+                header={`${strings.SELECT} ${strings.YEAR}`}
                 isModalVisible={isYearModalVisible}
                 closeModal={(data) => setIsYearModalVisible(data)}
                 onSubmit={(itemValue) => setSelectedYear(itemValue)} />
             <CustomSelect
                 data={months}
-                header={'Select month'}
+                header={`${strings.SELECT} ${strings.MONTH}`}
                 isModalVisible={isMonthModalVisible}
                 closeModal={(data) => setIsMonthModalVisible(data)}
                 onSubmit={(itemValue) => setSelectedMonth(itemValue)} />
-                <AlertPopup isModalVisible={isModalVisible.status} isCancelVisible={isModalVisible.status} onPressCancel={()=>setIsModalVisible({status: false, deleteId: 0})} onPressSubmit={onConfirmDelete} message={alertMessage}/>
+            <AlertPopup isModalVisible={isModalVisible.status} isCancelVisible={isModalVisible.status} onPressCancel={() => setIsModalVisible({ status: false, deleteId: 0 })} onPressSubmit={onConfirmDelete} message={alertMessage} />
+            <CustomLoader visible={isLoading} />
         </View>
     )
 }

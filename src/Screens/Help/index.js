@@ -7,12 +7,15 @@ import actions from "../../Redux/actions";
 import { showError, showSuccess } from "../../Utils/helperfunctions";
 import { useTheme } from "../../Constants/themes";
 import { ListEmptyComponent } from "../../Components/ListEmptyComponent";
+import CustomLoader from "../../Components/Loaders";
+import strings from "../../Constants/languages";
 
 const HelpScreen = ({ navigation }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const [helpData, setHelpData] = useState([])
-    const [currentIndex, setCurrentIndex] = useState(null)
+    const [currentIndex, setCurrentIndex] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const isFocused = useIsFocused();
 
     const errorMethod = (error) => {
@@ -22,19 +25,25 @@ const HelpScreen = ({ navigation }) => {
 
     useEffect(() => {
         if (isFocused) {
-            const getHelpData = async () => {
-                await actions.help()
-                    .then((res) => {
-                        setHelpData(res?.helpTopics);
-                        showSuccess(res?.message)
-                    })
-                    .catch(errorMethod);
-            }
-
             getHelpData();
         }
 
-    }, [isFocused])
+    }, [isFocused]);
+
+    const getHelpData = async () => {
+        setIsLoading(true);
+        try{
+                const res = await actions.help()
+                        setHelpData(res?.helpTopics);
+                        showSuccess(res?.message)
+                    }
+                    catch(error){
+                        errorMethod(error);
+                    }
+                    finally{
+                        setIsLoading(false);
+                    }
+            }
 
     const onPressBack = () => {
         navigation.goBack();
@@ -71,7 +80,7 @@ const HelpScreen = ({ navigation }) => {
                     <TouchableOpacity style={Styles.backArrow} onPress={onPressBack}>
                         <Image source={Imagepaths.arrow_left} style={Styles.backIcon} />
                     </TouchableOpacity>
-                    <Text style={Styles.headertext}>Help</Text>
+                    <Text style={Styles.headertext}>{strings.HELP}</Text>
                 </View>
                 <View style={Styles.outerContainer}>
                     <FlatList
@@ -84,6 +93,7 @@ const HelpScreen = ({ navigation }) => {
                     />
 
                 </View>
+                <CustomLoader visible={isLoading} />
             </View>
     )
 }
