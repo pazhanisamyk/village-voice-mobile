@@ -9,6 +9,7 @@ import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 import CustomLoader from "../../../Components/Loaders";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const Search = ({navigation}) => {
     const { themes } = useTheme();
@@ -95,7 +96,7 @@ const Search = ({navigation}) => {
 
     const renderComplaintsList = ({ item }) => {
         return (
-            <TouchableOpacity key={item?._id} style={Styles.ComplaintsList} onPress={()=>navigation.navigate('ComplaintDetail', {data: item})}>
+            <TouchableOpacity key={item?._id} style={Styles.ComplaintsList} onPress={()=>navigation.navigate(NavigationStrings.COMPLAINT_DETAIL, {data: item})}>
                 <View style={Styles.ComplaintsText}>
                     <Text style={Styles.complaintId}>{item.complaintId}</Text>
                     <Text style={Styles.complaintTitle}>{`${strings.TITLE} : ${item.title}`}</Text>

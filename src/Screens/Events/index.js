@@ -14,6 +14,7 @@ import actions from "../../Redux/actions";
 import { showSuccess } from "../../Utils/helperfunctions";
 import { ListEmptyComponent } from "../../Components/ListEmptyComponent";
 import CustomLoader from "../../Components/Loaders";
+import NavigationStrings from "../../Constants/NavigationStrings";
 
 const Events = ({ navigation }) => {
     const { themes } = useTheme();
@@ -68,7 +69,7 @@ const Events = ({ navigation }) => {
         let data = {
             date: selectedFullDate,
         }
-        navigation.navigate('AddEvent', { data: data })
+        navigation.navigate(NavigationStrings.ADD_EVENT_SCREEN, { data: data })
     }
     const months = [
         { id: 1, label: strings.JANUARY },

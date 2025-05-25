@@ -1,14 +1,15 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import ComplaintDetail from "../Screens/ComplaintDetails";
 import ComplaintsList from "../Screens/User/ComplaintsList";
+import NavigationStrings from "../Constants/NavigationStrings";
 
 const ComplaintsListStack = () => {
     const Stack = createStackNavigator();
     return(
-        <Stack.Navigator initialRouteName="ComplaintsList">
-            <Stack.Screen name="ComplaintsList" component={ComplaintsList} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName={NavigationStrings.COMPLAINT_LIST}>
+            <Stack.Screen name={NavigationStrings.COMPLAINT_LIST} component={ComplaintsList} options={{ headerShown: false }} />
         <Stack.Screen
-          name={'ComplaintDetail'}
+          name={NavigationStrings.COMPLAINT_DETAIL}
           component={ComplaintDetail} 
           options={{headerShown: false}}
         />

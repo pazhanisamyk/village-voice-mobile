@@ -11,6 +11,7 @@ import actions from "../../../Redux/actions";
 import { useIsFocused } from "@react-navigation/native";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 import CustomLoader from "../../../Components/Loaders";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const AdminHomeScreen = ({ navigation }) => {
     const { themes } = useTheme();
@@ -105,7 +106,7 @@ const AdminHomeScreen = ({ navigation }) => {
                 <Text style={[Styles.complainText, { alignSelf: 'flex-start' }]}>{item?.title}</Text>
             </View>
             <View style={Styles.complainactionOutline}>
-                <TouchableOpacity onPress={() => navigation.navigate('ComplaintDetail', { data: item })} style={Styles.viewOutline}>
+                <TouchableOpacity onPress={() => navigation.navigate(NavigationStrings.COMPLAINT_DETAIL, { data: item })} style={Styles.viewOutline}>
                     <Text style={[Styles.complainText, { color: themes.background }]}>{strings.VIEW}</Text>
                 </TouchableOpacity>
             </View>

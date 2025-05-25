@@ -8,6 +8,7 @@ import actions from "../../../Redux/actions";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 import CustomLoader from "../../../Components/Loaders";
 import strings from "../../../Constants/languages";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const ComplaintsList = ({navigation}) => {
     const {themes } = useTheme();
@@ -37,7 +38,7 @@ const ComplaintsList = ({navigation}) => {
 
     const renderComplaintsList = ({item}) => {
         return(
-            <TouchableOpacity onPress={()=>navigation.navigate('ComplaintDetail', {data: item})} key={item?._id} style={Styles.ComplaintsList}>
+            <TouchableOpacity onPress={()=>navigation.navigate(NavigationStrings.COMPLAINT_DETAIL, {data: item})} key={item?._id} style={Styles.ComplaintsList}>
                 <View style={Styles.ComplaintsText}>
                 <Text style={Styles.complaintId}>{item.complaintId}</Text>
                 <Text style={Styles.complaintTitle}>{`${strings.TITLE} : ${item.title}`}</Text>

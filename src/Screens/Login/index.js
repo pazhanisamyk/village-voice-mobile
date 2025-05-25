@@ -12,6 +12,7 @@ import { setUserData } from "../../Utils/Utils";
 import { saveUserData } from "../../Redux/actions/auth";
 import strings, { changeLaguage } from "../../Constants/languages";
 import CustomLoader from "../../Components/Loaders";
+import NavigationStrings from "../../Constants/NavigationStrings";
 
 const LoginScreen = ({navigation}) => {
     const { themes, changeTheme } = useTheme();
@@ -47,10 +48,10 @@ const LoginScreen = ({navigation}) => {
             changeTheme(res?._doc?.theme);
             changeLaguage(res?._doc?.language);
             if(res?._doc?.role == "user"){
-                navigation.navigate('UserTabroutes')
+                navigation.navigate(NavigationStrings.USER_TAB_ROUTES);
             }
             else{
-                navigation.navigate('AdminTabroutes')
+                navigation.navigate(NavigationStrings.ADMIN_TAB_ROUTES)
             }
         }
         catch(error){
@@ -62,7 +63,7 @@ const LoginScreen = ({navigation}) => {
     }
 
     const onPressSignUp = () => {
-        navigation.navigate('SignUpScreen')
+        navigation.navigate(NavigationStrings.SIGNUP_SCREEN)
     }
     
 

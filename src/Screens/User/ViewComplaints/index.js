@@ -4,6 +4,7 @@ import getStyles from "./styles";
 import { moderateScale } from "../../../Styles/ResponsiveSizes";
 import strings from "../../../Constants/languages";
 import { useTheme } from "../../../Constants/themes";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const ViewComplaints = ({ navigation, route }) => {
     const {themes } = useTheme();
@@ -36,7 +37,7 @@ const ViewComplaints = ({ navigation, route }) => {
                     </View>
                 </View>
                 <View style={Styles.createComplaint}>
-                    <TouchableOpacity style={Styles.plusBtn} onPress={() => navigation.navigate('AddComplaint', {data: complaintData})}>
+                    <TouchableOpacity style={Styles.plusBtn} onPress={() => navigation.navigate(NavigationStrings.ADD_COMPLAINT_SCREEN, {data: complaintData})}>
                         <Image source={Imagepaths.Plus} style={Styles.plusIcon} />
                     </TouchableOpacity>
                 </View>

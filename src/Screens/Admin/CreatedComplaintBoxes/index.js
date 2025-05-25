@@ -8,6 +8,7 @@ import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 import CustomLoader from "../../../Components/Loaders";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const CreatedComplaintBoxes = ({navigation}) => {
     const {themes } = useTheme();
@@ -38,7 +39,7 @@ const CreatedComplaintBoxes = ({navigation}) => {
 
     const renderComplaintBoxes = ({ item }) => {
         return (
-            <TouchableOpacity key={item?._id} onPress={() => navigation.navigate('ViewComplaints',{data: item})} style={Styles.complaints}>
+            <TouchableOpacity key={item?._id} onPress={() => navigation.navigate(NavigationStrings.VIEW_COMPLAINTS,{data: item})} style={Styles.complaints}>
                 {item.imageUrl ? <Image source={{uri: item.imageUrl}} resizeMode="cover" style={Styles.image} /> : <Image source={Imagepaths.transparent_logo} resizeMode="contain" style={Styles.image} />}
                 <Text style={Styles.complaintText}>{item.category}</Text>
             </TouchableOpacity>
@@ -63,7 +64,7 @@ const CreatedComplaintBoxes = ({navigation}) => {
                     ListEmptyComponent={renderEmpty}
                     showsVerticalScrollIndicator={false} />
                 <View style={Styles.createComplaint}>
-                    <TouchableOpacity style={Styles.plusBtn} onPress={() => navigation.navigate('CreateComplainBox')}>
+                    <TouchableOpacity style={Styles.plusBtn} onPress={() => navigation.navigate(NavigationStrings.CREATE_COMPLAINT_BOX)}>
                         <Image source={Imagepaths.Plus} style={Styles.plusIcon} />
                     </TouchableOpacity>
                 </View>

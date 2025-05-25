@@ -3,6 +3,7 @@ import axios from 'axios';
 import { navigationRef } from "../Navigation/NavigationService";
 import { userLogout } from "../Redux/actions/auth";
 import { showError } from "./helperfunctions";
+import NavigationStrings from "../Constants/NavigationStrings";
 
 export async function getHeaders() {
     let userData = await AsyncStorage.getItem('userData');
@@ -101,7 +102,7 @@ export async function getHeaders() {
             // Reset the entire stack and navigate to Login
             navigationRef.current?.reset({
               index: 0,
-              routes: [{ name: "WelcomeScreen" }],
+              routes: [{ name: NavigationStrings.WELCOME_SCREEN }],
             });
           }
         

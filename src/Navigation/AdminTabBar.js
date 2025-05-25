@@ -3,17 +3,18 @@ import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { moderateScale } from '../Styles/ResponsiveSizes'; // Import your scaling function
 import Imagepaths from '../Constants/Imagepaths';
 import { useTheme } from '../Constants/themes';
+import NavigationStrings from '../Constants/NavigationStrings';
 
 const AdminTabBar = ({ state, descriptors, navigation }) => {
   const { themes } = useTheme();
   const Styles = getStyles(themes);
   const renderIcon = (route, focused) => {
     const iconMap = {
-      AdminHomeScreenStack: Imagepaths.Home,
-      ComplaintBox: Imagepaths.Budgets,
-      CreateComplainStack: Imagepaths.file,
-      CreateEventStack: Imagepaths.Calendar,
-      SettingsStack: Imagepaths.Settings,
+      [NavigationStrings.ADMIN_HOME_STACK]: Imagepaths.Home,
+      [NavigationStrings.COMPLAINT_BOX]: Imagepaths.Budgets,
+      [NavigationStrings.CREATE_COMPLAINT_STACK]: Imagepaths.file,
+      [NavigationStrings.CREATE_EVENT_STACK]: Imagepaths.Calendar,
+      [NavigationStrings.SETTINGS_STACK]: Imagepaths.Settings,
     };
     const icon = iconMap[route.name];
 

@@ -7,36 +7,37 @@ import UserTabroutes from "./UserTabroutes";
 import { NavigationContainer } from "@react-navigation/native";
 import SplashScreen from "../Screens/Splash";
 import { navigationRef } from "./NavigationService";
+import NavigationStrings from "../Constants/NavigationStrings";
 
 const CommonRoutes = () => {
     const Stack = createStackNavigator();
 
     return (
             <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator initialRouteName="SplashScreen">
-            <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName={NavigationStrings.SPLASH_SCREEN}>
+            <Stack.Screen name={NavigationStrings.WELCOME_SCREEN} component={WelcomeScreen} options={{ headerShown: false }} />
             <Stack.Screen
-                name={'SignUpScreen'}
+                name={NavigationStrings.SIGNUP_SCREEN}
                 component={SignUpScreen}
                 options={{ headerShown: false }}
             />
             <Stack.Screen
-                name={'LoginScreen'}
+                name={NavigationStrings.LOGIN_SCREEN}
                 component={LoginScreen}
                 options={{ headerShown: false }}
             />
             <Stack.Screen
-                name={'AdminTabroutes'}
+                name={NavigationStrings.ADMIN_TAB_ROUTES}
                 component={AdminTabroutes}
                 options={{ headerShown: false }}
             />
             <Stack.Screen
-                name={'UserTabroutes'}
+                name={NavigationStrings.USER_TAB_ROUTES}
                 component={UserTabroutes}
                 options={{ headerShown: false }}
             />
              <Stack.Screen
-                name={'SplashScreen'}
+                name={NavigationStrings.SPLASH_SCREEN}
                 component={SplashScreen}
                 options={{ headerShown: false }}
             />

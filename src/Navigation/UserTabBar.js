@@ -3,17 +3,18 @@ import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { moderateScale } from '../Styles/ResponsiveSizes'; // Import your scaling function
 import Imagepaths from '../Constants/Imagepaths';
 import { useTheme } from '../Constants/themes';
+import NavigationStrings from '../Constants/NavigationStrings';
 
 const UserTabBar = ({ state, descriptors, navigation }) => {
   const { themes } = useTheme();
   const Styles = getStyles(themes);
   const renderIcon = (route, focused) => {
     const iconMap = {
-      UserHomeScreenSTack: Imagepaths.Home,
+      [NavigationStrings.USER_HOME_STACK]: Imagepaths.Home,
       Search: Imagepaths.Search,
-      ComplaintsListStack: Imagepaths.file,
-      CreateEventStack: Imagepaths.Calendar,
-      SettingsStack: Imagepaths.Settings,
+      [NavigationStrings.COMPLAINT_LIST_STACK]: Imagepaths.file,
+      [NavigationStrings.CREATE_EVENT_STACK]: Imagepaths.Calendar,
+      [NavigationStrings.SETTINGS_STACK]: Imagepaths.Settings,
     };
     const icon = iconMap[route.name];
 

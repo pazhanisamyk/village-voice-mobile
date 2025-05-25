@@ -11,6 +11,7 @@ import AlertPopup from "../../../Components/AlertPopup";
 import actions from "../../../Redux/actions";
 import CustomLoader from "../../../Components/Loaders";
 import strings from "../../../Constants/languages";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const AddComplaint = ({ navigation, route }) => {
     const { themes } = useTheme();
@@ -90,7 +91,7 @@ const AddComplaint = ({ navigation, route }) => {
 
         try {
             const res = await actions.createUserComplaint(formData, headers)
-            navigation.navigate('UserHomeScreen');
+            navigation.navigate(NavigationStrings.USER_HOME);
             showSuccess(res?.message);
         } catch (error) {
             errorMethod(error);

@@ -12,6 +12,7 @@ import strings, { changeLaguage } from "../../Constants/languages";
 import { useTheme } from "../../Constants/themes";
 import { saveUserData } from "../../Redux/actions/auth";
 import CustomLoader from "../../Components/Loaders";
+import NavigationStrings from "../../Constants/NavigationStrings";
 
 const Settings = ({ navigation }) => {
     const { themes, changeTheme } = useTheme();
@@ -85,7 +86,7 @@ const Settings = ({ navigation }) => {
     }
 
     const onPressEditProfile = () => {
-        navigation.navigate('EditProfile', { userData: userData });
+        navigation.navigate(NavigationStrings.EDIT_PROFILE_SCREEN, { userData: userData });
     };
 
     const onPressSubmit = async () => {
@@ -93,7 +94,7 @@ const Settings = ({ navigation }) => {
         try{
 
        const res = await actions.logout()
-                navigation.navigate('WelcomeScreen')
+                navigation.navigate(NavigationStrings.WELCOME_SCREEN)
                 showSuccess(res?.message)
                 setIsModalVisible(false)
             }
@@ -111,7 +112,7 @@ const Settings = ({ navigation }) => {
     }
 
     const onHelpPress = () => {
-        navigation.navigate('HelpScreen')
+        navigation.navigate(NavigationStrings.HELP_SCREEN)
     }
 
     const onPressReport = async () => {
@@ -142,11 +143,11 @@ const Settings = ({ navigation }) => {
     }
 
     const onPressPolicies = () => {
-        navigation.navigate('PoliciesScreen')
+        navigation.navigate(NavigationStrings.POLICIES_SCREEN)
     }
 
     const onPressChangePassword = () => {
-        navigation.navigate('ChangePassword')
+        navigation.navigate(NavigationStrings.CHANGE_PASSWORD_SCREEN)
     }
 
     return (

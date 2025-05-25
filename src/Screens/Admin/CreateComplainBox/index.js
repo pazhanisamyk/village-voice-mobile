@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import CustomLoader from "../../../Components/Loaders";
 import strings from "../../../Constants/languages";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const CreateComplainBox = ({ navigation, route }) => {
     const complaintData = route?.params?.data || {};
@@ -93,7 +94,7 @@ const CreateComplainBox = ({ navigation, route }) => {
             try {
                 await actions.updateComplaintBox(formData, headers)
                     .then((res) => {
-                        navigation.navigate('CreatedComplaintBoxes');
+                        navigation.navigate(NavigationStrings.CREATE_COMPLAINT_BOXES);
                         showSuccess(res?.message);
                     })
                     .catch(errorMethod);

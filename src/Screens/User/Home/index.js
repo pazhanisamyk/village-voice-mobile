@@ -10,6 +10,7 @@ import { useIsFocused } from "@react-navigation/native";
 import actions from "../../../Redux/actions";
 import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 import CustomLoader from "../../../Components/Loaders";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const UserHomeScreen = ({ navigation }) => {
     const {themes } = useTheme();
@@ -66,7 +67,7 @@ const UserHomeScreen = ({ navigation }) => {
 
     const renderComplaintBoxes = ({ item }) => {
         return (
-            <TouchableOpacity key={item?._id} onPress={() => navigation.navigate('Viewcomplaints', { data: item })} style={Styles.complaints}>
+            <TouchableOpacity key={item?._id} onPress={() => navigation.navigate(NavigationStrings.VIEW_COMPLAINTS, { data: item })} style={Styles.complaints}>
                 {item.imageUrl ? <Image resizeMode="cover" source={{uri: item.imageUrl}} style={Styles.image} /> : <Image resizeMode="contain" source={Imagepaths.transparent_logo} style={Styles.image} />}
                 <Text style={Styles.complaintText}>{item.category}</Text>
             </TouchableOpacity>

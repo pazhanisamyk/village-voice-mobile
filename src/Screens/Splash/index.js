@@ -7,6 +7,7 @@ import { changeLaguage } from "../../Constants/languages"
 import { useTheme } from "../../Constants/themes"
 import actions from "../../Redux/actions"
 import { saveUserData } from "../../Redux/actions/auth"
+import NavigationStrings from "../../Constants/NavigationStrings"
 
 const SplashScreen = ({navigation}) => {
     const {themes, changeTheme } = useTheme();
@@ -25,7 +26,7 @@ const SplashScreen = ({navigation}) => {
         
 
         if(!userData?.token){
-            navigation.navigate('WelcomeScreen');
+            navigation.navigate(NavigationStrings.WELCOME_SCREEN);
             setIsLoading(false);
         }
         else{
@@ -37,14 +38,14 @@ const SplashScreen = ({navigation}) => {
             saveUserData(res?.data);
     
             if (res?.data?.role === 'user') {
-                navigation.navigate('UserTabroutes');
+                navigation.navigate(NavigationStrings.USER_TAB_ROUTES);
             } else if (res?.data?.role === 'admin') {
-                navigation.navigate('AdminTabroutes');
+                navigation.navigate(NavigationStrings.ADMIN_TAB_ROUTES);
             } else {
-                navigation.navigate('WelcomeScreen');
+                navigation.navigate(NavigationStrings.WELCOME_SCREEN);
             }
         } catch (error) {
-            navigation.navigate('WelcomeScreen');
+            navigation.navigate(NavigationStrings.WELCOME_SCREEN);
         } finally {
             setIsLoading(false);
         }

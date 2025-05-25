@@ -10,6 +10,7 @@ import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 import CustomButton from "../../../Components/CustomButton";
 import CustomLoader from "../../../Components/Loaders";
 import strings from "../../../Constants/languages";
+import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const ViewComplaints = ({ navigation, route }) => {
     const { themes } = useTheme();
@@ -71,7 +72,7 @@ const ViewComplaints = ({ navigation, route }) => {
 
     const renderComplaintsList = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('ComplaintDetail', { data: item })} key={item?._id} style={Styles.ComplaintsList}>
+            <TouchableOpacity onPress={() => navigation.navigate(NavigationStrings.COMPLAINT_DETAIL, { data: item })} key={item?._id} style={Styles.ComplaintsList}>
                 <View style={Styles.ComplaintsText}>
                     <Text style={Styles.complaintId}>{item.complaintId}</Text>
                     <Text style={Styles.complaintTitle}>{`${strings.TITLE} : ${item.title}`}</Text>
@@ -109,7 +110,7 @@ const ViewComplaints = ({ navigation, route }) => {
                                 )}
                             </View>
                             <CustomButton
-                                onPress={() => navigation.navigate('CreateComplainBox', { data: complaintDetails })}
+                                onPress={() => navigation.navigate(NavigationStrings.CREATE_COMPLAINT_BOX, { data: complaintDetails })}
                                 gradientColors={[themes.red, themes.red]}
                                 title={`${strings.EDIT} ${strings.COMPLAINT_BOX}`}
                                 textColor={themes.white} />

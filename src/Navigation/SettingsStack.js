@@ -4,29 +4,30 @@ import Settings from "../Screens/Settings";
 import HelpScreen from "../Screens/Help";
 import PoliciesScreen from "../Screens/Policies";
 import ChangePassword from "../Screens/ChangePassword";
+import NavigationStrings from "../Constants/NavigationStrings";
 
 const SettingsStack = () => {
     const Stack = createStackNavigator();
     return(
-        <Stack.Navigator initialRouteName="Settings">
-            <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName={NavigationStrings.SETTINGS_SCREEN}>
+            <Stack.Screen name={NavigationStrings.SETTINGS_SCREEN} component={Settings} options={{ headerShown: false }} />
         <Stack.Screen
-          name={'EditProfile'}
+          name={NavigationStrings.EDIT_PROFILE_SCREEN}
           component={EditProfile}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name={'HelpScreen'}
+          name={NavigationStrings.HELP_SCREEN}
           component={HelpScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name={'PoliciesScreen'}
+          name={NavigationStrings.POLICIES_SCREEN}
           component={PoliciesScreen}
           options={{headerShown: false}}
         />
                 <Stack.Screen
-          name={'ChangePassword'}
+          name={NavigationStrings.CHANGE_PASSWORD_SCREEN}
           component={ChangePassword}
           options={{headerShown: false}}
         />

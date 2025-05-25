@@ -10,6 +10,7 @@ import actions from "../../Redux/actions";
 import { useTheme } from "../../Constants/themes";
 import CustomLoader from "../../Components/Loaders";
 import strings from "../../Constants/languages";
+import NavigationStrings from "../../Constants/NavigationStrings";
 
 const SignUpScreen = ({ navigation }) => {
     const { themes } = useTheme();
@@ -44,7 +45,7 @@ const SignUpScreen = ({ navigation }) => {
         try{
        const res = await actions.signUpApi(data)
                 showSuccess(res?.message)
-                navigation.navigate('LoginScreen')
+                navigation.navigate(NavigationStrings.LOGIN_SCREEN);
             }
             catch(error){
                 errorMethod(error);
@@ -55,7 +56,7 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     const onPressLogin = () => {
-        navigation.navigate('LoginScreen')
+        navigation.navigate(NavigationStrings.LOGIN_SCREEN);
     }
 
     const isPhoneNumber = (text) => {

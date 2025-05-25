@@ -5,17 +5,18 @@ import { moderateScale } from "../../Styles/ResponsiveSizes";
 import Imagepaths from "../../Constants/Imagepaths";
 import { useTheme } from "../../Constants/themes";
 import strings from "../../Constants/languages";
+import NavigationStrings from "../../Constants/NavigationStrings";
 
 const WelcomeScreen = ({navigation}) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
 
     const onPressNewUser = () => {
-        navigation.navigate('SignUpScreen')
+        navigation.navigate(NavigationStrings.SIGNUP_SCREEN)
     }
 
     const onPressOldUser = () => {
-        navigation.navigate('LoginScreen')
+        navigation.navigate(NavigationStrings.LOGIN_SCREEN)
     }
 
     return (
