@@ -10,6 +10,7 @@ export default {
     Plus: require('../Assets/Images/Bottom_tabs/Plus.png'),
     file: require('../Assets/Images/Bottom_tabs/file.png'),
     face: require('../Assets/Images/Icons/Face.png'),
+    email: require('../Assets/Images/Icons/email.png'),
     arrow_right: require('../Assets/Images/Icons/arrow_right.png'),
     arrow_left: require('../Assets/Images/Icons/arrow_left.png'),
     arrow_up: require('../Assets/Images/Icons/arrow_up.png'),

@@ -44,6 +44,20 @@ const getStyles = (themes) => StyleSheet.create({
         color: themes.white,
         fontWeight: '500'
     },
+     verifyTitle: {
+        alignSelf: 'center',
+        fontSize: textScale(20),
+        color: themes.white,
+        fontWeight: '800',
+        marginBottom: moderateScale(20)
+    },
+    verifySubTitle: {
+        alignSelf: 'center',
+        fontSize: textScale(16),
+        color: themes.white,
+        fontWeight: '500',
+        marginBottom: moderateScale(20)
+    },
     inputStyle: {
         zIndex: 1,
         borderWidth: moderateScale(1),
@@ -63,29 +77,35 @@ const getStyles = (themes) => StyleSheet.create({
         color: themes.white,
         marginTop: moderateScale(50),
     },
-    forgotpassword: {
-        alignSelf: 'flex-end'
+    backArrow:{
+        position: 'absolute',
+        left: moderateScale(20),
     },
-    forgottext: {
-        fontSize: textScale(14),
-        fontWeight: '400',
-        color: themes.white
+    backIcon:{
+        height: moderateScale(20),
+        width: moderateScale(20),
     },
-    passwordContainer: {
+    passwordContainer:{
         width: '100%',
         justifyContent: 'center',
         flexDirection: 'row'
     },
-    eye: {
+    eye:{
         height: moderateScale(25),
         width: moderateScale(25),
     },
-    eyeOutline: {
+    eyeOutline:{
         zIndex: 1,
         position: 'absolute',
         top: moderateScale(15),
         right: moderateScale(20)
-    }
+    },
+    passwordtext:{
+        fontWeight: '500',
+        color: themes.white,
+        fontSize: textScale(12),
+    },
+
 });
 
 export default getStyles;

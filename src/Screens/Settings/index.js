@@ -149,6 +149,14 @@ const Settings = ({ navigation }) => {
     const onPressChangePassword = () => {
         navigation.navigate(NavigationStrings.CHANGE_PASSWORD_SCREEN)
     }
+    const onPressChangeEmail = () => {
+        let data = {
+                        email: userData?.email,
+                        comesFrom: NavigationStrings.SETTINGS_SCREEN,
+                        goto: NavigationStrings.SETTINGS_SCREEN
+                    }
+        navigation.navigate(NavigationStrings.OTP_SCREEN, {data: data} )
+    }
 
     return (
         <ScrollView contentContainerStyle={{ paddingBottom: moderateScale(140), backgroundColor: themes.background }} showsVerticalScrollIndicator={false}>
@@ -167,6 +175,11 @@ const Settings = ({ navigation }) => {
                             <TouchableOpacity onPress={onPressChangePassword} style={Styles.cardContainer}>
                                 <Image source={Imagepaths.face} style={Styles.icon} />
                                 <Text style={Styles.title}>{strings.CHANGE_PASSWORD}</Text>
+                                <Image source={Imagepaths.arrow_right} style={Styles.rightIcon} />
+                            </TouchableOpacity>
+                             <TouchableOpacity onPress={onPressChangeEmail} style={[Styles.cardContainer, { marginTop: moderateScale(20) }]}>
+                                <Image tintColor={themes.gray} source={Imagepaths.email} style={Styles.icon} resizeMode="contain" />
+                                <Text style={Styles.title}>{strings.CHANGE_EMAIL}</Text>
                                 <Image source={Imagepaths.arrow_right} style={Styles.rightIcon} />
                             </TouchableOpacity>
 

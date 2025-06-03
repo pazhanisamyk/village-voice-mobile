@@ -26,5 +26,8 @@ export default {
     USER_HOME_STACK: 'UserHomeScreenSTack',
     USER_HOME: 'UserHomeScreen',
     ADD_COMPLAINT_SCREEN: 'AddComplaintScreen',
-    COMPLAINT_LIST_STACK: 'ComplaintsListStack'
+    COMPLAINT_LIST_STACK: 'ComplaintsListStack',
+    OTP_SCREEN: 'OtpScreen',
+    VERIFY_OTP_SCREEN: 'VerifyOtpScreen',
+    FORGOT_PASSWORD_SCREEN: 'ForgotPasswordScreen',
 }

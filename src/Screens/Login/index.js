@@ -17,7 +17,7 @@ import NavigationStrings from "../../Constants/NavigationStrings";
 const LoginScreen = ({navigation}) => {
     const { themes, changeTheme } = useTheme();
     const Styles = getStyles(themes);
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +35,7 @@ const LoginScreen = ({navigation}) => {
     const onPressLogin = async () => {
         setIsLoading(true);
         const data = {
-            phoneNumber,
+            email,
             password
         }
 
@@ -65,11 +65,19 @@ const LoginScreen = ({navigation}) => {
     const onPressSignUp = () => {
         navigation.navigate(NavigationStrings.SIGNUP_SCREEN)
     }
-    
 
-    const isPhoneNumber = (text) => {
-        const phoneRegex = /^[6-9]\d{9}$/;
-        return phoneRegex.test(text) && phoneNumber.length === 10;
+    const onPressForgotPassword = () => {
+        let data = {
+                        email: '',
+                        comesFrom: NavigationStrings.LOGIN_SCREEN,
+                        goto: NavigationStrings.FORGOT_PASSWORD_SCREEN
+                    }
+        navigation.navigate(NavigationStrings.OTP_SCREEN ,{data: data})
+    }
+
+    const isEmail = (text) => {
+        const emailRegex = /^[a-z][a-z0-9._%+-]*@[a-z0-9.-]+\.[a-z]{2,}$/;
+        return emailRegex.test(text);
     };
 
     const isValidPassword = (text) => {
@@ -78,11 +86,11 @@ const LoginScreen = ({navigation}) => {
     };
 
     const validateInput = () => {
-        if (!phoneNumber) {
-            setAlertMessage(`${strings.PHONE_NUMBER} ${strings.IS_REQUIRED}`);
+        if (!email) {
+            setAlertMessage(`${strings.EMAIL} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
-        } else if (!isPhoneNumber(phoneNumber)) {
-            setAlertMessage(strings.VALID_PHONE_NUMBER_ERROR);
+        } else if (!isEmail(email)) {
+            setAlertMessage(strings.EMAIL_VALIDATION);
             setIsModalVisible(true);
         } else if (!password) {
             setAlertMessage(`${strings.PASSWORD} ${strings.IS_REQUIRED}`);
@@ -105,17 +113,17 @@ const LoginScreen = ({navigation}) => {
             <Image source={Imagepaths.gradient} resizeMode="stretch" style={Styles.gradient} />
             <View style={Styles.topContainer}>
                 <Text style={Styles.headertext}>VCB</Text>
-            <Image source={Imagepaths.transparent_logo} style={{height:300, width: 300}} resizeMode='contain' />
+            <Image source={Imagepaths.transparent_logo} style={Styles.logo} resizeMode='contain' />
             </View>
             <View style={Styles.bottomContainer}>
-                <Text style={Styles.title}>{strings.PHONE_NUMBER} </Text>
+                <Text style={Styles.title}>{strings.EMAIL} </Text>
                 <TextInput
                     ref={inputRef}
-                    value={phoneNumber}
+                    value={email}
                     placeholderTextColor={themes.gray}
-                    keyboardType={'phone-pad'}
-                    placeholder={`${strings.ENTER} ${strings.PHONE_NUMBER}`}
-                    onChangeText={(text) => setPhoneNumber(text)}
+                    keyboardType={'email-address'}
+                    placeholder={`${strings.ENTER} ${strings.EMAIL}`}
+                    onChangeText={(text) => setEmail(text)}
                     style={Styles.inputStyle}
                 />
 
@@ -134,7 +142,7 @@ const LoginScreen = ({navigation}) => {
                  <Image source={showPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={Styles.forgotpassword} onPress={()=>{}}>
+                <TouchableOpacity style={Styles.forgotpassword} onPress={onPressForgotPassword}>
                     <Text style={Styles.forgottext}>{strings.FORGET} {strings.PASSWORD}?</Text>
                 </TouchableOpacity>
                 <CustomButton

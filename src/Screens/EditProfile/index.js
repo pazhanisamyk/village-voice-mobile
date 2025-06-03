@@ -19,7 +19,6 @@ const EditProfile = ({ navigation, route }) => {
     const Styles = getStyles(themes);
     const [username, setUsername] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
-    const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +29,6 @@ const EditProfile = ({ navigation, route }) => {
 
     useEffect(() => {
         setUsername(userData?.username);
-        setEmail(userData?.email);
         setPhoneNumber(userData?.phoneNumber);
     }, [])
 
@@ -94,7 +92,6 @@ const EditProfile = ({ navigation, route }) => {
     const updateProfile = async () => {
         setIsLoading(true);
         const data = {
-            email,
             username
         }
 
@@ -117,11 +114,6 @@ const EditProfile = ({ navigation, route }) => {
         navigation.goBack();
     }
 
-    const isEmail = (text) => {
-        const emailRegex = /^[a-z][a-z0-9._%+-]*@[a-z0-9.-]+\.[a-z]{2,}$/;
-        return emailRegex.test(text);
-    };
-
     const isUsername = (text) => {
         const nameRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
         return nameRegex.test(text);
@@ -139,9 +131,6 @@ const EditProfile = ({ navigation, route }) => {
             setIsModalVisible(true);
         } else if (username.length > 15) {
             setAlertMessage(strings.USERNAME_VALIDATION_MORE);
-            setIsModalVisible(true);
-        } else if (!isEmail(email)) {
-            setAlertMessage(strings.EMAIL_VALIDATION);
             setIsModalVisible(true);
         } else {
             updateProfile();
@@ -171,16 +160,6 @@ const EditProfile = ({ navigation, route }) => {
                             placeholder={strings.ENTER_USERNAME}
                             keyboardType={'default'}
                             onChangeText={(text) => setUsername(text)}
-                            style={Styles.inputStyle}
-                        />
-                        <Text style={Styles.title}>{strings.EMAIL}</Text>
-                        <TextInput
-                            placeholderTextColor={themes.gray}
-                            ref={inputRef}
-                            value={email}
-                            placeholder={strings.ENTER_EMAIL}
-                            keyboardType={'email-address'}
-                            onChangeText={(text) => setEmail(text)}
                             style={Styles.inputStyle}
                         />
                         <Text style={Styles.title}>{strings.PHONE_NUMBER} ( {strings.VIEW_ONLY} )</Text>

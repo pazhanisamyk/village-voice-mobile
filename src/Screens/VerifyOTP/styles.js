@@ -44,6 +44,40 @@ const getStyles = (themes) => StyleSheet.create({
         color: themes.white,
         fontWeight: '500'
     },
+    verifyTitle: {
+        alignSelf: 'center',
+        fontSize: textScale(20),
+        color: themes.white,
+        fontWeight: '800',
+        marginBottom: moderateScale(20)
+    },
+    verifySubTitle: {
+        alignSelf: 'center',
+        fontSize: textScale(16),
+        color: themes.white,
+        fontWeight: '500',
+        marginBottom: moderateScale(20)
+    },
+    resendOtpText: {
+        alignSelf: 'center',
+        fontSize: textScale(14),
+        color: themes.white,
+        fontWeight: '500',
+    },
+    resendText: {
+        alignSelf: 'center',
+        fontSize: textScale(14),
+        fontWeight: 'bold',
+        color: themes.blue,
+        textDecorationColor: themes.blue,
+        textDecorationLine: 'underline',
+        textDecorationStyle: 'solid'
+    },
+    resendOutline:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
     inputStyle: {
         zIndex: 1,
         borderWidth: moderateScale(1),
@@ -63,29 +97,15 @@ const getStyles = (themes) => StyleSheet.create({
         color: themes.white,
         marginTop: moderateScale(50),
     },
-    forgotpassword: {
-        alignSelf: 'flex-end'
-    },
-    forgottext: {
-        fontSize: textScale(14),
-        fontWeight: '400',
-        color: themes.white
-    },
-    passwordContainer: {
-        width: '100%',
-        justifyContent: 'center',
-        flexDirection: 'row'
-    },
-    eye: {
-        height: moderateScale(25),
-        width: moderateScale(25),
-    },
-    eyeOutline: {
-        zIndex: 1,
+    backArrow: {
         position: 'absolute',
-        top: moderateScale(15),
-        right: moderateScale(20)
-    }
+        left: moderateScale(20),
+    },
+    backIcon: {
+        height: moderateScale(20),
+        width: moderateScale(20),
+    },
+
 });
 
 export default getStyles;
