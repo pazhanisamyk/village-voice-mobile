@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "578105636763",
+    "project_id": "villagevoice-17423",
+    "storage_bucket": "villagevoice-17423.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578105636763:android:5253585b076201a374933e",
+        "android_client_info": {
+          "package_name": "com.villagevoice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyW9R_Mt7Dh8_gozuv68LAiRDgTozj9ew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
