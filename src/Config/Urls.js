@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://192.168.101.9:3000/api/villagevoice';
+export const API_BASE_URL = 'http://192.168.197.119:3000/api/villagevoice';
 
 export const getApiUrl = (endpoint) => API_BASE_URL + endpoint;
 
@@ -20,6 +20,7 @@ export const GET_ALL_COMPLAINT_BOX = getApiUrl('/getAll/complaintbox');
 export const CREATE_USER_COMPLAINT = getApiUrl('/create-user/complaint');
 export const GET_ALL_USER_COMPLAINT = getApiUrl('/getAll-user/complaint');
 export const GET_SINGLE_USER_COMPLAINT = getApiUrl('/getSingle-user/complaint');
+export const GET_SINGLE_COMPLAINT = getApiUrl('/getSingle-complaint/');
 export const CREATE_EVENT = getApiUrl('/event/add-event');
 export const REMOVE_EVENT = getApiUrl('/event/delete-event/');
 export const GET_ALL_EVENTS = getApiUrl('/event/getAll-event');

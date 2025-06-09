@@ -2,7 +2,7 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import getStyles from "./styles";
 import Imagepaths from "../../Constants/Imagepaths";
 import { useTheme } from "../../Constants/themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import actions from "../../Redux/actions";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import CustomButton from "../../Components/CustomButton";
@@ -11,6 +11,8 @@ import AlertPopup from "../../Components/AlertPopup";
 import { useSelector } from "react-redux";
 import CustomLoader from "../../Components/Loaders";
 import strings from "../../Constants/languages";
+import { useIsFocused } from "@react-navigation/native";
+import NavigationStrings from "../../Constants/NavigationStrings";
 
 const ComplaintDetail = ({ navigation, route }) => {
     const { themes } = useTheme();
@@ -20,12 +22,47 @@ const ComplaintDetail = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [deleteMessage, setDeleteMessage] = useState('');
-    const complaintData = route?.params?.data || {};
+    const [complaintData, setComplaintData] = useState('');
+    const complaintId = route?.params?.complaintId || '';
     const userData = useSelector((state) => state?.auth?.userData);
+    const isFocused = useIsFocused();
+    
+        useEffect(() => {
+            if (isFocused) {
+                getComplaintData();
+            }
+    
+        }, [isFocused]);
+    
+        const getComplaintData = async () => {
+            if(!complaintId)
+            {
+                return;
+            }
+
+            setIsLoading(true);
+            try {
+                const res = await actions.getSingleComplaint(complaintId);
+                setComplaintData(res?.complaint);
+                showSuccess(res?.message)
+            }
+            catch (error) {
+                errorMethod(error);
+            }
+            finally {
+                setIsLoading(false);
+            }
+        };
 
 
     const onPressBack = () => {
-        navigation.goBack();
+        if(userData?.role === 'admin' )
+        {
+        navigation.navigate(NavigationStrings.ADDMIN_HOME);
+        }
+        else{
+            navigation.navigate(NavigationStrings.USER_HOME);
+        }
     }
 
     const ConvertDateFormat = () => {

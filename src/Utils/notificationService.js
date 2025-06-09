@@ -1,5 +1,8 @@
 import PushNotification, { Importance } from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { navigationRef } from '../Navigation/NavigationService';
+import NavigationStrings from '../Constants/NavigationStrings';
 
 /**
  * Request permission for push notifications
@@ -79,6 +82,7 @@ export const notificationListener = async () => {
    */
   const handleNotification = (remoteMessage) => {
     console.log('Notification received:', remoteMessage);
+    const { complaintId } = remoteMessage.notification;
 
     const callbackUrl = remoteMessage?.data?.callback_url;
     if (callbackUrl) {
@@ -86,6 +90,15 @@ export const notificationListener = async () => {
       // TODO: Navigate to screen or perform custom action
     } else {
       console.log('Handling notification with custom logic...');
+      navigationRef.current?.reset({
+        index: 0,
+        routes: [
+          {
+            name: NavigationStrings.COMPLAINT_DETAIL,
+            params: { complaintId },
+          },
+        ],
+      });
       // TODO: Trigger Redux action, modal, etc.
     }
   };
@@ -111,14 +124,18 @@ export const notificationListener = async () => {
 };
 
 /**
- * Retrieve the FCM token for this device
+ * Retrieve the FCM token for this device and async storage
  */
+
 export const getFcmToken = async () => {
-  try {
-    const fcmToken = await messaging().getToken();
-    console.log('FCM Token:', fcmToken);
-    return fcmToken;
-  } catch (error) {
-    console.log('Error getting FCM token:', error);
+  let fcmToken = await AsyncStorage.getItem('fcmToken');
+  console.log('fcmToken....', fcmToken);
+  if (!fcmToken) {
+    try {
+      const FcmToken = await messaging().getToken();
+      if (FcmToken) {
+        await AsyncStorage.setItem('fcmToken', FcmToken);
+      }
+    } catch (error) { }
   }
 };

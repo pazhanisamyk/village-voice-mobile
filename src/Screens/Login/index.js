@@ -13,6 +13,7 @@ import { saveUserData } from "../../Redux/actions/auth";
 import strings, { changeLaguage } from "../../Constants/languages";
 import CustomLoader from "../../Components/Loaders";
 import NavigationStrings from "../../Constants/NavigationStrings";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = ({navigation}) => {
     const { themes, changeTheme } = useTheme();
@@ -33,10 +34,15 @@ const LoginScreen = ({navigation}) => {
       
 
     const onPressLogin = async () => {
+        let fcmToken = await AsyncStorage.getItem('fcmToken');
+    if (!fcmToken) {
+      return;
+    }
         setIsLoading(true);
         const data = {
             email,
-            password
+            password,
+            fcmToken
         }
 
         try{

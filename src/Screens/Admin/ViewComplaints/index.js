@@ -72,7 +72,7 @@ const ViewComplaints = ({ navigation, route }) => {
 
     const renderComplaintsList = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate(NavigationStrings.COMPLAINT_DETAIL, { data: item })} key={item?._id} style={Styles.ComplaintsList}>
+            <TouchableOpacity onPress={() => navigation.navigate(NavigationStrings.COMPLAINT_DETAIL, { complaintId: item?._id })} key={item?._id} style={Styles.ComplaintsList}>
                 <View style={Styles.ComplaintsText}>
                     <Text style={Styles.complaintId}>{item.complaintId}</Text>
                     <Text style={Styles.complaintTitle}>{`${strings.TITLE} : ${item.title}`}</Text>
