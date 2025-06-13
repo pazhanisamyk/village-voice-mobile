@@ -11,7 +11,7 @@ import { ListEmptyComponent } from "../../../Components/ListEmptyComponent";
 import CustomLoader from "../../../Components/Loaders";
 import NavigationStrings from "../../../Constants/NavigationStrings";
 
-const Search = ({navigation}) => {
+const Search = ({ navigation }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const isFocused = useIsFocused();
@@ -44,7 +44,7 @@ const Search = ({navigation}) => {
         } catch (error) {
             console.log(error, '❌ Error while fetching complaint boxes');
         }
-        finally{
+        finally {
             setIsLoading(false);
         }
     };
@@ -57,7 +57,7 @@ const Search = ({navigation}) => {
         } catch (error) {
             console.log(error, '❌ Error while fetching complaint boxes');
         }
-        finally{
+        finally {
             setIsLoading(false);
         }
     };
@@ -73,10 +73,10 @@ const Search = ({navigation}) => {
             item.category.toLowerCase().includes(searchValue.trim().toLowerCase())
         )
         : complaintList;
-        console.log(filteredComplaints, complaintList);
-        
+    console.log(filteredComplaints, complaintList);
 
-    const handleClearSearch = () => {setSearchValue(''); setShowSearchHistory(true);}
+
+    const handleClearSearch = () => { setSearchValue(''); setShowSearchHistory(true); }
 
     const onPressSearchText = (item) => {
         setSearchValue(item.title);
@@ -96,7 +96,7 @@ const Search = ({navigation}) => {
 
     const renderComplaintsList = ({ item }) => {
         return (
-            <TouchableOpacity key={item?._id} style={Styles.ComplaintsList} onPress={()=>navigation.navigate(NavigationStrings.COMPLAINT_DETAIL, {complaintId: item?._id})}>
+            <TouchableOpacity key={item?._id} style={Styles.ComplaintsList} onPress={() => navigation.navigate(NavigationStrings.COMPLAINT_DETAIL, { complaintId: item?._id })}>
                 <View style={Styles.ComplaintsText}>
                     <Text style={Styles.complaintId}>{item.complaintId}</Text>
                     <Text style={Styles.complaintTitle}>{`${strings.TITLE} : ${item.title}`}</Text>
@@ -120,9 +120,9 @@ const Search = ({navigation}) => {
                         value={searchValue}
                         placeholder={strings.SEARCH_COMPLAINTS}
                         onChangeText={text => setSearchValue(text)}
-                        style={Styles.inputStyle}
+                        style={[Styles.inputStyle, { width: searchValue ? '80%' : '90%' }]}
                     />
-                    {searchValue ? (
+                    {searchValue && (
                         <TouchableOpacity onPress={handleClearSearch} style={Styles.clearButton}>
                             <Image
                                 tintColor={themes.white}
@@ -130,10 +130,6 @@ const Search = ({navigation}) => {
                                 source={Imagepaths.close}
                                 style={[Styles.close, { marginRight: moderateScale(10) }]}
                             />
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity onPress={() => { }} style={Styles.searchIconOutline}>
-                            <Image tintColor={themes.white} source={Imagepaths.mic} style={Styles.micIcon} />
                         </TouchableOpacity>
                     )}
                 </View>
@@ -154,25 +150,25 @@ const Search = ({navigation}) => {
                         )}
                     </View>
                 )}
-                    <View
-                        style={[
-                            Styles.recentSearchesOutline,
-                            { marginTop: showSearchHistory ? moderateScale(20) : moderateScale(0), maxHeight: showSearchHistory ?  height / 3.1 : height/1.4},
-                        ]}
-                    >
-                        <Text style={Styles.recentSearchesText}>{strings.YOUR} {strings.COMPLAINTS}:</Text>
-                        {filteredComplaints.length > 0 ? (
-                            <FlatList
-                                data={filteredComplaints}
-                                keyExtractor={item => item.id}
-                                renderItem={renderComplaintsList}
-                                ListEmptyComponent={ListEmptyComponent}
-                                showsVerticalScrollIndicator={false}
-                            />
-                        ) : (
-                            <Text style={Styles.noResultText}>{strings.NO_COMPLAINTS_FOUND}</Text>
-                        )}
-                    </View>
+                <View
+                    style={[
+                        Styles.recentSearchesOutline,
+                        { marginTop: showSearchHistory ? moderateScale(20) : moderateScale(0), maxHeight: showSearchHistory ? height / 3.1 : height / 1.4 },
+                    ]}
+                >
+                    <Text style={Styles.recentSearchesText}>{strings.YOUR} {strings.COMPLAINTS}:</Text>
+                    {filteredComplaints.length > 0 ? (
+                        <FlatList
+                            data={filteredComplaints}
+                            keyExtractor={item => item.id}
+                            renderItem={renderComplaintsList}
+                            ListEmptyComponent={ListEmptyComponent}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    ) : (
+                        <Text style={Styles.noResultText}>{strings.NO_COMPLAINTS_FOUND}</Text>
+                    )}
+                </View>
             </View>
             <CustomLoader visible={isLoading} />
         </View>

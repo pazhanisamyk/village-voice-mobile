@@ -24,13 +24,15 @@ const AdminHomeScreen = ({ navigation }) => {
     const [complaintsData, setComplaintsData] = useState([])
     const [complaintsCategory, setComplaintsCategory] = useState([])
 
-
     useEffect(() => {
         if (isFocused) {
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', androidBackButtonHandler);
-        return () => backHandler.remove();
-    }
-    }, []);
+            // Add the back button event listener
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', androidBackButtonHandler);
+
+            // Cleanup the event listener on component unmount
+            return () => backHandler.remove();
+        }
+    }, [isFocused]);
 
     useEffect(() => {
         if (isFocused) {
@@ -68,7 +70,7 @@ const AdminHomeScreen = ({ navigation }) => {
     };
 
 
-    const TAbs = [{ id: 1, name: strings.RESOLVED }, { id: 2, name: strings.UNRESOLVED }, { id: 3, name: strings.INPROGRESS }, { id: 4, name: strings.REJECTED}]
+    const TAbs = [{ id: 1, name: strings.RESOLVED }, { id: 2, name: strings.UNRESOLVED }, { id: 3, name: strings.INPROGRESS }, { id: 4, name: strings.REJECTED }]
 
     const seleTab = (id) => {
         setSelectedTab(id)

@@ -15,7 +15,7 @@ import CustomLoader from "../../Components/Loaders";
 import NavigationStrings from "../../Constants/NavigationStrings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
     const { themes, changeTheme } = useTheme();
     const Styles = getStyles(themes);
     const [email, setEmail] = useState('');
@@ -28,16 +28,13 @@ const LoginScreen = ({navigation}) => {
     const inputRef = useRef(null);
 
     const errorMethod = (error) => {
-        console.log(error?.response?.data?.message );
-        showError(error?.response?.data?.message );
-      };
-      
+        console.log(error?.response?.data?.message);
+        showError(error?.response?.data?.message);
+    };
+
 
     const onPressLogin = async () => {
         let fcmToken = await AsyncStorage.getItem('fcmToken');
-    if (!fcmToken) {
-      return;
-    }
         setIsLoading(true);
         const data = {
             email,
@@ -45,25 +42,25 @@ const LoginScreen = ({navigation}) => {
             fcmToken
         }
 
-        try{
+        try {
 
-        const res = await actions.login(data)
+            const res = await actions.login(data)
             showSuccess(res?.message)
-            setUserData(res);            
+            setUserData(res);
             saveUserData(res?._doc);
             changeTheme(res?._doc?.theme);
             changeLaguage(res?._doc?.language);
-            if(res?._doc?.role == "user"){
+            if (res?._doc?.role == "user") {
                 navigation.navigate(NavigationStrings.USER_TAB_ROUTES);
             }
-            else{
+            else {
                 navigation.navigate(NavigationStrings.ADMIN_TAB_ROUTES)
             }
         }
-        catch(error){
+        catch (error) {
             errorMethod(error);
         }
-        finally{
+        finally {
             setIsLoading(false);
         }
     }
@@ -74,11 +71,11 @@ const LoginScreen = ({navigation}) => {
 
     const onPressForgotPassword = () => {
         let data = {
-                        email: '',
-                        comesFrom: NavigationStrings.LOGIN_SCREEN,
-                        goto: NavigationStrings.FORGOT_PASSWORD_SCREEN
-                    }
-        navigation.navigate(NavigationStrings.OTP_SCREEN ,{data: data})
+            email: '',
+            comesFrom: NavigationStrings.LOGIN_SCREEN,
+            goto: NavigationStrings.FORGOT_PASSWORD_SCREEN
+        }
+        navigation.navigate(NavigationStrings.OTP_SCREEN, { data: data })
     }
 
     const isEmail = (text) => {
@@ -104,7 +101,7 @@ const LoginScreen = ({navigation}) => {
         } else if (!isValidPassword(password)) {
             setAlertMessage(strings.VALID_PASSWORD_ERROR);
             setIsModalVisible(true);
-        }else {
+        } else {
             onPressLogin();
         }
     };
@@ -115,59 +112,59 @@ const LoginScreen = ({navigation}) => {
 
     return (
         <ScrollView>
-        <View style={Styles.container}>
-            <Image source={Imagepaths.gradient} resizeMode="stretch" style={Styles.gradient} />
-            <View style={Styles.topContainer}>
-                <Text style={Styles.headertext}>VCB</Text>
-            <Image source={Imagepaths.transparent_logo} style={Styles.logo} resizeMode='contain' />
-            </View>
-            <View style={Styles.bottomContainer}>
-                <Text style={Styles.title}>{strings.EMAIL} </Text>
-                <TextInput
-                    ref={inputRef}
-                    value={email}
-                    placeholderTextColor={themes.gray}
-                    keyboardType={'email-address'}
-                    placeholder={`${strings.ENTER} ${strings.EMAIL}`}
-                    onChangeText={(text) => setEmail(text)}
-                    style={Styles.inputStyle}
-                />
-
-                <Text style={Styles.title}>{strings.PASSWORD}</Text>
-                <View style={Styles.passwordContainer}>
-                <TextInput
-                    ref={inputRef}
-                    placeholderTextColor={themes.gray}
-                    value={password}
-                    placeholder={`${strings.ENTER} ${strings.PASSWORD}`}
-                    secureTextEntry={!showPassword}
-                    onChangeText={(text) => setPassword(text)}
-                    style={Styles.inputStyle}
-                />
-                <TouchableOpacity onPress={togglePassword} style={Styles.eyeOutline}>
-                 <Image source={showPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
-                 </TouchableOpacity>
+            <View style={Styles.container}>
+                <Image source={Imagepaths.gradient} resizeMode="stretch" style={Styles.gradient} />
+                <View style={Styles.topContainer}>
+                    <Text style={Styles.headertext}>VCB</Text>
+                    <Image source={Imagepaths.transparent_logo} style={Styles.logo} resizeMode='contain' />
                 </View>
-                <TouchableOpacity style={Styles.forgotpassword} onPress={onPressForgotPassword}>
-                    <Text style={Styles.forgottext}>{strings.FORGET} {strings.PASSWORD}?</Text>
-                </TouchableOpacity>
-                <CustomButton
-                    onPress={validateInput}
-                    gradientColors={[themes.red, themes.red]}
-                    title={strings.SIGN_IN}
-                    textColor={themes.white}
-                    ButtonStyles={{ marginTop: moderateScale(20) }} />
-                <Text style={Styles.signintext}>{strings.NEW_USER}</Text>
-                <CustomButton
-                    onPress={onPressSignUp}
-                    gradientColors={[themes.blue, themes.blue]}
-                    title={strings.SIGN_UP}
-                    textColor={themes.white}
-                    ButtonStyles={{ marginTop: moderateScale(10) }} />
+                <View style={Styles.bottomContainer}>
+                    <Text style={Styles.title}>{strings.EMAIL} </Text>
+                    <TextInput
+                        ref={inputRef}
+                        value={email}
+                        placeholderTextColor={themes.gray}
+                        keyboardType={'email-address'}
+                        placeholder={`${strings.ENTER} ${strings.EMAIL}`}
+                        onChangeText={(text) => setEmail(text)}
+                        style={Styles.inputStyle}
+                    />
+
+                    <Text style={Styles.title}>{strings.PASSWORD}</Text>
+                    <View style={Styles.passwordContainer}>
+                        <TextInput
+                            ref={inputRef}
+                            placeholderTextColor={themes.gray}
+                            value={password}
+                            placeholder={`${strings.ENTER} ${strings.PASSWORD}`}
+                            secureTextEntry={!showPassword}
+                            onChangeText={(text) => setPassword(text)}
+                            style={Styles.inputStyle}
+                        />
+                        <TouchableOpacity onPress={togglePassword} style={Styles.eyeOutline}>
+                            <Image source={showPassword ? Imagepaths.eye_hide : Imagepaths.eye} tintColor={themes.gray} resizeMode="contain" style={Styles.eye} />
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={Styles.forgotpassword} onPress={onPressForgotPassword}>
+                        <Text style={Styles.forgottext}>{strings.FORGET} {strings.PASSWORD}?</Text>
+                    </TouchableOpacity>
+                    <CustomButton
+                        onPress={validateInput}
+                        gradientColors={[themes.red, themes.red]}
+                        title={strings.SIGN_IN}
+                        textColor={themes.white}
+                        ButtonStyles={{ marginTop: moderateScale(20) }} />
+                    <Text style={Styles.signintext}>{strings.NEW_USER}</Text>
+                    <CustomButton
+                        onPress={onPressSignUp}
+                        gradientColors={[themes.blue, themes.blue]}
+                        title={strings.SIGN_UP}
+                        textColor={themes.white}
+                        ButtonStyles={{ marginTop: moderateScale(10) }} />
+                </View>
+                <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage} />
+                <CustomLoader visible={isLoading} />
             </View>
-            <AlertPopup isModalVisible={isModalVisible} onPressSubmit={() => setIsModalVisible(false)} message={alertMessage}/>
-            <CustomLoader visible={isLoading} />
-        </View>
         </ScrollView>
     );
 }

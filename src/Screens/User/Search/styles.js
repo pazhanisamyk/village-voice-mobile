@@ -13,14 +13,13 @@ const getStyles = (themes) => StyleSheet.create({
     },
     inputStyle: {
         color: themes.white,
-        width: '80%'
     },
     searchContainer: {
         borderRadius: moderateScale(16),
         marginVertical: moderateScale(20),
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         flexDirection: 'row',
         borderWidth: moderateScale(1),
         borderColor: themes.gray1,
@@ -38,14 +37,17 @@ const getStyles = (themes) => StyleSheet.create({
     searchIconOutline: {
         width: '10%'
     },
+    clearButton: {
+        width: '10%'
+    },
     recentSearchesOutline: {
-        width: width-40,
+        width: width - 40,
         backgroundColor: themes.card,
         borderWidth: moderateScale(1),
         borderRadius: moderateScale(16),
         borderColor: themes.gray1,
         padding: moderateScale(10),
-        maxHeight: height/3.1,
+        maxHeight: height / 3.1,
         paddingBottom: moderateScale(20)
     },
     recentSearchesText: {
@@ -74,42 +76,42 @@ const getStyles = (themes) => StyleSheet.create({
         marginHorizontal: moderateScale(10)
     },
     close: {
-        height: moderateScale(15),
-        width: moderateScale(15),
+        height: moderateScale(12),
+        width: moderateScale(12),
     },
     searchText: {
         alignItems: 'center',
         flexDirection: 'row',
         width: '90%',
     },
-    ComplaintsList:{
-        width: width-moderateScale(60),
+    ComplaintsList: {
+        width: width - moderateScale(60),
         borderRadius: moderateScale(10),
         backgroundColor: themes.card1,
         padding: moderateScale(10),
         flexDirection: 'row',
-        alignItems: 'center',        
+        alignItems: 'center',
         marginVertical: moderateScale(10),
     },
-    complaintId:{
+    complaintId: {
         fontSize: textScale(16),
         color: themes.white,
         fontWeight: '500'
     },
-    complaintTitle:{
+    complaintTitle: {
         fontSize: textScale(14),
         color: themes.gray,
         fontWeight: '400'
     },
-    ComplaintsText:{
+    ComplaintsText: {
         width: '65%'
     },
-    image:{
+    image: {
         height: moderateScale(55),
         width: moderateScale(95),
-        borderRadius:moderateScale(8)
+        borderRadius: moderateScale(8)
     },
-    noResultText:{
+    noResultText: {
         fontSize: textScale(12),
         color: themes.gray,
         fontWeight: '500'
