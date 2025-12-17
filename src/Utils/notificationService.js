@@ -3,6 +3,7 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { navigationRef } from '../Navigation/NavigationService';
 import NavigationStrings from '../Constants/NavigationStrings';
+import { getUserData } from './Utils';
 
 /**
  * Request permission for push notifications
@@ -29,7 +30,10 @@ export const requestUserPermission = async () => {
 export const onDisplayNotification = (remoteMessage) => {
   if (!remoteMessage?.notification) return;
 
-  const { title, body } = remoteMessage.notification;
+  const { title, body, android } = remoteMessage.notification;
+
+  const imageUrl =
+    android?.imageUrl || remoteMessage?.data?.image || undefined;
 
   PushNotification.localNotification({
     channelId: 'villagevoice',
@@ -40,6 +44,8 @@ export const onDisplayNotification = (remoteMessage) => {
     vibration: 300,
     playSound: true,
     soundName: 'default',
+    bigPictureUrl: imageUrl, // ✅ REQUIRED
+    largeIconUrl: imageUrl,  // ✅ REQUIRED
     // bigPictureUrl: remoteMessage.notification.android?.imageUrl, // Uncomment if needed
     // smallIcon: remoteMessage.notification.android?.imageUrl, // Uncomment if needed
   });
@@ -80,32 +86,71 @@ export const notificationListener = async () => {
    * Unified handler for incoming notifications
    * @param {object} remoteMessage
    */
-  const handleNotification = (remoteMessage) => {
-    console.log('Notification received:', remoteMessage);
-    const { complaintId } = remoteMessage.notification;
 
-    const callbackUrl = remoteMessage?.data?.callback_url;
-    if (callbackUrl) {
-      console.log('Notification callback URL:', callbackUrl);
-      // TODO: Navigate to screen or perform custom action
-    } else {
-      console.log('Handling notification with custom logic...');
+const handleNotification = (remoteMessage) => {
+  const complaintId = remoteMessage?.data?.complaintId;
+  if (!complaintId) return;
+
+  const callbackUrl = remoteMessage?.data?.callback_url;
+
+  if (callbackUrl) {
+    console.log('Notification callback URL:', callbackUrl);
+  } else {
+    console.log('Navigating to ComplaintDetail for complaintId:', complaintId);
+
+    // ✅ Use the helper which handles "not ready" state
+    navigateToComplaintDetail(complaintId);
+  }
+};
+
+const navigateToComplaintDetail = async (complaintId) => {
+  const userData = await getUserData();
+  console.log(userData, 'userData');
+
+  // If user not logged in, send to welcome screen
+  if (!userData?.token) {
+    if (navigationRef.isReady()) {
       navigationRef.current?.reset({
         index: 0,
-        routes: [
-          {
-            name: NavigationStrings.COMPLAINT_DETAIL,
-            params: { complaintId },
-          },
-        ],
+        routes: [{ name: NavigationStrings.WELCOME_SCREEN }],
       });
-      // TODO: Trigger Redux action, modal, etc.
+    } else {
+      setTimeout(() => navigateToComplaintDetail(complaintId), 500);
     }
-  };
+    return;
+  }
+
+  if (!navigationRef.isReady()) {
+    console.log('Navigation not ready, retrying...');
+    setTimeout(() => navigateToComplaintDetail(complaintId), 500);
+    return;
+  }
+
+  const role = userData?._doc?.role; // use userData instead of res
+
+  if (role === 'admin') {
+    navigationRef.current?.navigate(NavigationStrings.ADMIN_TAB_ROUTES, {
+      screen: NavigationStrings.ADMIN_HOME_STACK,
+      params: {
+        screen: NavigationStrings.COMPLAINT_DETAIL,
+        params: { complaintId },
+      },
+    });
+  } else if (role === 'user') {
+    navigationRef.current?.navigate(NavigationStrings.USER_TAB_ROUTES, {
+      screen: NavigationStrings.COMPLAINT_LIST_STACK,
+      params: {
+        screen: NavigationStrings.COMPLAINT_DETAIL,
+        params: { complaintId },
+      },
+    });
+  } else {
+    console.warn('Unknown user role, cannot navigate to complaint detail');
+  }
+};
 
   // Foreground message
   messaging().onMessage(async (remoteMessage) => {
-    handleNotification(remoteMessage);
     onDisplayNotification(remoteMessage);
   });
 

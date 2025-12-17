@@ -104,6 +104,10 @@ const VerifyOtpScreen = ({ navigation, route }) => {
     };
 
     const verifyOtp = async () => {
+        if (![otp1, otp2, otp3, otp4, otp5, otp6].every(Boolean)) {
+            showError('Please enter complete OTP');
+            return false;
+        }
         setIsLoading(true);
         const data = {
             email: paramsData?.email,
@@ -126,10 +130,10 @@ const VerifyOtpScreen = ({ navigation, route }) => {
     const forgotPasswordScreen = async () => {
         const otpVeridied = await verifyOtp();
         const data = {
-                email: paramsData?.email,
-            }
+            email: paramsData?.email,
+        }
         if (otpVeridied) {
-            navigation.navigate(paramsData?.goto, {data: data});
+            navigation.navigate(paramsData?.goto, { data: data });
             console.log('navigate to forgot password...');
         }
         else {
@@ -151,8 +155,8 @@ const VerifyOtpScreen = ({ navigation, route }) => {
             }
 
             try {
-                const res = await actions.signUpApi(data)
-                showSuccess(res?.message)
+                const res = await actions.signUpApi(data);
+                showSuccess(res?.message);
                 navigation.navigate(paramsData?.goto);
             }
             catch (error) {
@@ -247,17 +251,17 @@ const VerifyOtpScreen = ({ navigation, route }) => {
                         textColor={themes.white}
                         ButtonStyles={{ marginTop: moderateScale(20) }} />
                     {paramsData?.goto !== NavigationStrings.SETTINGS_SCREEN ?
-                     <>
-                        <Text style={Styles.signintext}>{strings.REMEMBER_PASSWORD}</Text>
-                        <CustomButton
-                            onPress={onPressSignIn}
-                            gradientColors={[themes.blue, themes.blue]}
-                            title={strings.SIGN_IN}
-                            textColor={themes.white}
-                            ButtonStyles={{ marginTop: moderateScale(10) }} />
-                    </>
-                    :
-                         <>
+                        <>
+                            <Text style={Styles.signintext}>{strings.REMEMBER_PASSWORD}</Text>
+                            <CustomButton
+                                onPress={onPressSignIn}
+                                gradientColors={[themes.blue, themes.blue]}
+                                title={strings.SIGN_IN}
+                                textColor={themes.white}
+                                ButtonStyles={{ marginTop: moderateScale(10) }} />
+                        </>
+                        :
+                        <>
                             <CustomButton
                                 onPress={onPressCancel}
                                 gradientColors={[themes.blue, themes.blue]}

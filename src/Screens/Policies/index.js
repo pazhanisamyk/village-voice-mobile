@@ -62,9 +62,18 @@ const PoliciesScreen = ({ navigation }) => {
                     {Object.values(policiesData).map((policy, index) => (
                         <View key={index} style={Styles.policySection}>
                             <Text style={Styles.policyTitle}>{policy.title}</Text>
-                            {policy.content.map((paragraph, i) => (
-                                <Text key={i} style={Styles.policyText}>{paragraph}</Text>
-                            ))}
+                            {policy.content.map((paragraph, i) => {
+    const [boldText, normalText] = paragraph.split(/:(.+)/);
+
+    return (
+        <Text key={i} style={Styles.policyText}>
+            <Text style={Styles.policyBold}>{boldText}:</Text>
+            {'\n'}
+            🔹<Text>{normalText}</Text>
+            {'\n'}
+        </Text>
+    );
+})}
                         </View>
                     ))}
                 </ScrollView>

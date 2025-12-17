@@ -1,8 +1,8 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { BackHandler, Image, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import getStyles from "./styles";
 import Imagepaths from "../../Constants/Imagepaths";
 import { useTheme } from "../../Constants/themes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import actions from "../../Redux/actions";
 import { moderateScale } from "../../Styles/ResponsiveSizes";
 import CustomButton from "../../Components/CustomButton";
@@ -11,7 +11,7 @@ import AlertPopup from "../../Components/AlertPopup";
 import { useSelector } from "react-redux";
 import CustomLoader from "../../Components/Loaders";
 import strings from "../../Constants/languages";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import NavigationStrings from "../../Constants/NavigationStrings";
 
 const ComplaintDetail = ({ navigation, route }) => {
@@ -26,41 +26,54 @@ const ComplaintDetail = ({ navigation, route }) => {
     const complaintId = route?.params?.complaintId || '';
     const userData = useSelector((state) => state?.auth?.userData);
     const isFocused = useIsFocused();
-    
-        useEffect(() => {
-            if (isFocused) {
-                getComplaintData();
-            }
-    
-        }, [isFocused]);
-    
-        const getComplaintData = async () => {
-            if(!complaintId)
-            {
-                return;
-            }
 
-            setIsLoading(true);
-            try {
-                const res = await actions.getSingleComplaint(complaintId);
-                setComplaintData(res?.complaint);
-                showSuccess(res?.message)
-            }
-            catch (error) {
-                errorMethod(error);
-            }
-            finally {
-                setIsLoading(false);
-            }
-        };
+    useEffect(() => {
+        if (isFocused) {
+            getComplaintData();
+        }
+
+    }, [isFocused]);
+
+    const getComplaintData = async () => {
+        if (!complaintId) {
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const res = await actions.getSingleComplaint(complaintId);
+            setComplaintData(res?.complaint);
+            showSuccess(res?.message)
+        }
+        catch (error) {
+            errorMethod(error);
+        }
+        finally {
+            setIsLoading(false);
+        }
+    };
+
+
+    useFocusEffect(
+        useCallback(() => {
+            const subscription = BackHandler.addEventListener(
+                'hardwareBackPress',
+                () => {
+                    onPressBack(); // 👈 your custom back logic
+                    return true;   // ⛔ block default behavior
+                }
+            );
+
+            return () => subscription.remove(); // ✅ correct cleanup
+        }, [userData])
+    );
 
 
     const onPressBack = () => {
-        if(userData?.role === 'admin' )
-        {
-        navigation.navigate(NavigationStrings.ADDMIN_HOME);
+        if (userData?.role === 'admin') {
+            navigation.navigate(NavigationStrings.ADDMIN_HOME);
         }
-        else{
+        else {
             navigation.navigate(NavigationStrings.USER_HOME);
         }
     }
@@ -104,7 +117,7 @@ const ComplaintDetail = ({ navigation, route }) => {
         setDeletePopup({ visible: true, deleteId: deleteId });
     };
 
-    const updateStatus = async () => {        
+    const updateStatus = async () => {
         let data = {};
 
         switch (isModalVisible.status) {
@@ -156,21 +169,21 @@ const ComplaintDetail = ({ navigation, route }) => {
     };
 
 
-   const onPressChangeStatus = (status) => {
-    const statusMessages = {
-        unresolved: strings.UNRESOLVE_MSG,
-        inprogress: strings.INPROGRESS_MSG,
-        resolved: strings.RESOLVED_MSG,
-        rejected: strings.REJECTED_MSG,
-        reject: strings.REJECT_MSG,
-    };
+    const onPressChangeStatus = (status) => {
+        const statusMessages = {
+            unresolved: strings.UNRESOLVE_MSG,
+            inprogress: strings.INPROGRESS_MSG,
+            resolved: strings.RESOLVED_MSG,
+            rejected: strings.REJECTED_MSG,
+            reject: strings.REJECT_MSG,
+        };
 
-    const message = statusMessages[status];
-    if (message) {
-        setIsModalVisible({ enable: true, status });
-        setAlertMessage(message);
-    }
-};
+        const message = statusMessages[status];
+        if (message) {
+            setIsModalVisible({ enable: true, status });
+            setAlertMessage(message);
+        }
+    };
 
 
     return (

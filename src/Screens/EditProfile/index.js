@@ -18,8 +18,8 @@ const EditProfile = ({ navigation, route }) => {
     const { themes } = useTheme();
     const Styles = getStyles(themes);
     const [username, setUsername] = useState('');
-    const [selectedImage, setSelectedImage] = useState(null);
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -30,6 +30,7 @@ const EditProfile = ({ navigation, route }) => {
     useEffect(() => {
         setUsername(userData?.username);
         setPhoneNumber(userData?.phoneNumber);
+        setEmail(userData?.email);
     }, [])
 
     const selectImage = () => {
@@ -45,8 +46,7 @@ const EditProfile = ({ navigation, route }) => {
                 console.log('Image Picker Error: ', response.errorMessage);
             } else {
                 const uri = response.assets[0].uri;
-                setSelectedImage(uri);
-                updateProfileImage();
+                updateProfileImage(uri);
             }
         });
     };
@@ -56,16 +56,16 @@ const EditProfile = ({ navigation, route }) => {
         showError(error?.response?.data?.message);
     };
 
-    const updateProfileImage = async () => {
+    const updateProfileImage = async (imageUri) => {
         setIsLoading(true);
 
         const formData = new FormData();
 
-        const fileName = selectedImage.split('/').pop();
+        const fileName = imageUri.split('/').pop();
         const fileType = fileName.split('.').pop();
 
         formData.append('image', {
-            uri: selectedImage,
+            uri: imageUri,
             name: String(userData?.phoneNumber),
             type: `image/${fileType}`,
         });
@@ -167,9 +167,19 @@ const EditProfile = ({ navigation, route }) => {
                             placeholderTextColor={themes.gray}
                             editable={false}
                             ref={inputRef}
-                            value={phoneNumber}
+                            value={`+91 ${phoneNumber}`}
                             placeholder={`${strings.ENTER} ${strings.PHONE_NUMBER}`}
                             onChangeText={(text) => setPhoneNumber(text)}
+                            style={[Styles.inputStyle, { backgroundColor: themes.gray1 }]}
+                        />
+                        <Text style={Styles.title}>{strings.EMAIL} ( {strings.VIEW_ONLY} )</Text>
+                        <TextInput
+                            placeholderTextColor={themes.gray}
+                            editable={false}
+                            ref={inputRef}
+                            value={email}
+                            placeholder={`${strings.ENTER} ${strings.EMAIL}`}
+                            onChangeText={(text) => setEmail(text)}
                             style={[Styles.inputStyle, { backgroundColor: themes.gray1 }]}
                         />
 

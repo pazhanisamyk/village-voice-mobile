@@ -86,16 +86,58 @@ const AdminHomeScreen = ({ navigation }) => {
     const solvedComplaints = complaintsData.filter(item => {
         return (item.status === "resolved");
     });
+
+    const getCountByTab = (tabId) => {
+  const status = statusMap[tabId];
+  return complaintsData.filter(item => item.status === status).length;
+};
+
     const rendertabs = ({ item }) => {
+        const count = getCountByTab(item.id);
         return (
             <TouchableOpacity
-                key={item.id}
-                onPress={() => seleTab(item.id)}
-                style={item.id === selectedTAb ? Styles.selectedtabOutline : Styles.unselectedtabOutline}>
-                <Text style={[Styles.tabTitle, { color: item.id === selectedTAb ? themes.white : themes.black }]}>
-                    {item.name}
-                </Text>
-            </TouchableOpacity>
+  key={item.id}
+  onPress={() => seleTab(item.id)}
+  style={
+    item.id === selectedTAb
+      ? Styles.selectedtabOutline
+      : Styles.unselectedtabOutline
+  }
+>
+  <View style={Styles.tabRow}>
+    {/* Count Badge */}
+    <View
+      style={[
+        Styles.countBadge,
+        {
+          backgroundColor:
+            item.id === selectedTAb ? themes.white : themes.black,
+        },
+      ]}
+    >
+      <Text
+        style={{
+          color: item.id === selectedTAb ? themes.black : themes.white,
+          fontSize: 12,
+          fontWeight: '600',
+        }}
+      >
+        {count}
+      </Text>
+    </View>
+
+    {/* Tab Name */}
+    <Text
+      style={[
+        Styles.tabTitle,
+        { color: item.id === selectedTAb ? themes.white : themes.black },
+      ]}
+    >
+      {item.name}
+    </Text>
+  </View>
+</TouchableOpacity>
+
         );
     }
 

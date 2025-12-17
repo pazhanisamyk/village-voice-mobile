@@ -74,15 +74,19 @@ const getStyles = (themes) => StyleSheet.create({
         marginVertical: moderateScale(20),
     },
     policyTitle: {
-        fontSize: textScale(18),
+        fontSize: textScale(16),
         fontWeight: '600',
         marginBottom: moderateScale(8),
-        color: themes.gray2,
+        color: themes.gray,
     },
+        policyBold: {
+            fontSize: textScale(14),
+    fontWeight: '600',
+},
     policyText: {
-        fontSize: textScale(16),
+        fontSize: textScale(12),
         fontWeight: '400',
-        color: themes.gray1,
+        color: themes.gray,
         marginBottom: moderateScale(4),
     },
 });

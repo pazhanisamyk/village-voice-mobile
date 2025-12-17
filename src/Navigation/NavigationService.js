@@ -1,14 +1,25 @@
-import * as React from 'react';
+// NavigationService.js
+import { createNavigationContainerRef } from '@react-navigation/native';
 
-export const navigationRef = React.createRef();
+export const navigationRef = createNavigationContainerRef();
 
 export function navigate(name, params) {
-  navigationRef.current?.navigate(name, params);
+  if (navigationRef.isReady()) {
+    navigationRef.navigate(name, params);
+  } else {
+    console.log('Navigation not ready yet');
+  }
 }
 
-export const resetStackAndNavigate = (navigation_, screen) => {
-  navigation_.reset({
-    index: 0,
-    routes: [{name: screen}],
-  });
-};
+export function resetStackAndNavigate(name, params = {}) {
+  if (navigationRef.isReady()) {
+    navigationRef.reset({
+      index: 0,
+      routes: [{ name, params }],
+    });
+  } else {
+    console.log('Navigation not ready yet, delaying...');
+    // Delay retry
+    setTimeout(() => resetStackAndNavigate(name, params), 500);
+  }
+}

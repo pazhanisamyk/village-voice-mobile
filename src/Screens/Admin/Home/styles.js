@@ -2,42 +2,42 @@ import { StyleSheet } from "react-native";
 import { height, moderateScale, moderateScaleVertical, textScale, width } from "../../../Styles/ResponsiveSizes";
 
 const getStyles = (themes) => StyleSheet.create({
-    container:{
+    container: {
         flex: 1,
         backgroundColor: themes.background
     },
-    userNmae:{
+    userNmae: {
         marginTop: moderateScale(10),
         fontSize: textScale(14),
         fontWeight: '600',
         color: themes.white
     },
-    topview:{
-        height: height/2.4,
+    topview: {
+        height: height / 2.4,
         width: width,
         borderBottomLeftRadius: moderateScale(24),
         borderBottomRightRadius: moderateScale(24),
         backgroundColor: themes.lightgray,
     },
-    profileView:{
-        height: moderateScale(height/5),        
+    profileView: {
+        height: moderateScale(height / 5),
         width: '100%',
-        alignItems:'center',
-        justifyContent:'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-    image:{
+    image: {
         height: moderateScale(100),
         width: moderateScale(100),
         borderRadius: moderateScale(100)
     },
-    statusContainer:{
-        height: moderateScale(height/5),
+    statusContainer: {
+        height: moderateScale(height / 5),
         flexDirection: 'row',
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-evenly',
     },
-    ComplaintBox:{
+    ComplaintBox: {
         width: '30%',
         backgroundColor: themes.card,
         borderWidth: moderateScale(1),
@@ -47,20 +47,20 @@ const getStyles = (themes) => StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    ComplaintText:{
+    ComplaintText: {
         textAlign: 'center',
         fontSize: textScale(12),
         fontWeight: '600',
         color: themes.white,
     },
-    ComplaintcountText:{
+    ComplaintcountText: {
         fontSize: textScale(14),
         fontWeight: '600',
         color: themes.white,
     },
-    bottomContainer:{
+    bottomContainer: {
         paddingBottom: moderateScaleVertical(10),
-        height: height/1.7,
+        height: height / 1.7,
         width: '90%',
         marginLeft: '5%',
         backgroundColor: 'transparent',
@@ -73,34 +73,34 @@ const getStyles = (themes) => StyleSheet.create({
         marginVertical: moderateScaleVertical(20),
         flexDirection: 'row',
         alignItems: 'center',
-    },    
+    },
     selectedtabOutline: {
-        backgroundColor: themes.black,     
+        backgroundColor: themes.black,
         borderWidth: moderateScale(1),
         borderColor: themes.gray1,
         borderRadius: moderateScale(16),
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: moderateScale(6), 
+        paddingHorizontal: moderateScale(6),
         margin: moderateScale(5),
     },
-    
+
     unselectedtabOutline: {
-        backgroundColor: themes.gray,     
+        backgroundColor: themes.gray,
         borderWidth: moderateScale(1),
         borderColor: themes.gray1,
         borderRadius: moderateScale(16),
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: moderateScale(6), 
+        paddingHorizontal: moderateScale(6),
         margin: moderateScale(5),
     },
-    tabTitle:{
+    tabTitle: {
         fontSize: textScale(12),
         padding: moderateScaleVertical(8),
         fontWeight: '600',
     },
-    complaintlistOutline:{
+    complaintlistOutline: {
         width: '100%',
         minHeight: moderateScale(65),
         borderWidth: moderateScale(1),
@@ -112,41 +112,55 @@ const getStyles = (themes) => StyleSheet.create({
         justifyContent: 'center',
         marginBottom: moderateScale(10)
     },
-    complainIndexOutline:{
+    complainIndexOutline: {
         width: '10%',
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center'
     },
-    complaindesOutline:{
+    complaindesOutline: {
         width: '70%',
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center'
     },
-    complainactionOutline:{
+    complainactionOutline: {
         width: '20%',
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center'
     },
-    complainText:{
+    complainText: {
         fontSize: textScale(14),
         fontWeight: '600',
         color: themes.white
     },
-    complainboxlilne:{        
-         height: moderateScale(1),
-         borderRadius: moderateScale(10),
-         width: '50%',
-         position: 'absolute',
+    complainboxlilne: {
+        height: moderateScale(1),
+        borderRadius: moderateScale(10),
+        width: '50%',
+        position: 'absolute',
         top: moderateScale(0)
     },
-    viewOutline:{
+    viewOutline: {
         borderWidth: moderateScale(1),
-         borderColor: themes.white,
-         borderRadius: moderateScale(4),
-         backgroundColor: themes.white,
-         paddingVertical: moderateScale(4),
-         paddingHorizontal: moderateScale(10)
-    }
+        borderColor: themes.white,
+        borderRadius: moderateScale(4),
+        backgroundColor: themes.white,
+        paddingVertical: moderateScale(4),
+        paddingHorizontal: moderateScale(10)
+    },
+    tabRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+
+    countBadge: {
+        minWidth: 24,
+        height: 24,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 6,
+    },
 })
 
 export default getStyles;

@@ -45,6 +45,9 @@ const getStyles = (themes) => StyleSheet.create({
         borderRadius: moderateScale(100)
     },
     camera:{
+        borderWidth: 2,
+        borderRadius: 100,
+        borderColor: themes.gray1,
         height: moderateScale(40),
         width: moderateScale(40),
         position: 'absolute',
