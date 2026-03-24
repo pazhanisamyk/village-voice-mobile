@@ -56,9 +56,10 @@ const OtpScreen = ({ navigation, route }) => {
 
     const sendOtp = async () => {
         setIsLoading(true);
-        const data = {
-            email: email
-        };
+            const data = {
+                email: email,
+                type: paramsData?.goto === NavigationStrings.FORGOT_PASSWORD_SCREEN ? 'forgot_password' : 'change_email'
+            };
 
         try {
             const res = await actions.sendOtp(data);            

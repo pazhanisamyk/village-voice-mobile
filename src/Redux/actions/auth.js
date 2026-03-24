@@ -36,7 +36,7 @@ export const login = (data, headers = {}) => {
   return new Promise((resolve, reject) => {
     apiPost(LOGIN_API, data, headers)
       .then((res) => {
-          resolve(res?.data);
+          resolve(res);
       })
       .catch((error) => {
         reject(error);

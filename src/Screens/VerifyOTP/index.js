@@ -52,8 +52,13 @@ const VerifyOtpScreen = ({ navigation, route }) => {
     const onPressResend = async () => {
         if (secondsLeft === 0) {
             setIsLoading(true);
+            let type = 'signup';
+            if (paramsData?.goto === NavigationStrings.FORGOT_PASSWORD_SCREEN) type = 'forgot_password';
+            else if (paramsData?.goto === NavigationStrings.SETTINGS_SCREEN) type = 'change_email';
+
             const data = {
-                email: paramsData?.email
+                email: paramsData?.email,
+                type: type
             };
 
             try {

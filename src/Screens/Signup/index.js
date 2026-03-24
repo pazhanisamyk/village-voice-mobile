@@ -36,7 +36,8 @@ const SignUpScreen = ({ navigation }) => {
     const onPressSignUp = async () => {
         setIsLoading(true);
         const data = {
-            email: email
+            email: email,
+            type: 'signup'
         };
 
         try {

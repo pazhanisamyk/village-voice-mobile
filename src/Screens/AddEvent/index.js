@@ -97,7 +97,7 @@ const AddEvent = ({ navigation, route }) => {
         } else if (!eventDescription?.trim()) {
             setAlertMessage(`${strings.EVENT_DESCRIPTION} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
-        } else if (!eventTime?.trim) {
+        } else if (!eventTime?.trim()) {
             setAlertMessage(`${strings.EVENT_TIME} ${strings.IS_REQUIRED}`);
             setIsModalVisible(true);
         } else {
