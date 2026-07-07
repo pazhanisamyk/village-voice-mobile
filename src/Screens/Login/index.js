@@ -47,10 +47,10 @@ const LoginScreen = ({ navigation }) => {
             const res = await actions.login(data)
             showSuccess(res?.message)
             setUserData(res);
-            saveUserData(res?._doc);
-            changeTheme(res?._doc?.theme);
-            changeLaguage(res?._doc?.language);
-            if (res?._doc?.role == "user") {
+            saveUserData(res?.user);
+            changeTheme(res?.user?.theme);
+            changeLaguage(res?.user?.language);
+            if (res?.user?.role == "user") {
                 navigation.navigate(NavigationStrings.USER_TAB_ROUTES);
             }
             else {

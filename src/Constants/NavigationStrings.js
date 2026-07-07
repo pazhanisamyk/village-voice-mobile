@@ -30,4 +30,9 @@ export default {
     OTP_SCREEN: 'OtpScreen',
     VERIFY_OTP_SCREEN: 'VerifyOtpScreen',
     FORGOT_PASSWORD_SCREEN: 'ForgotPasswordScreen',
+    SCHEMES_SCREEN: 'SchemesScreen',
+    ADD_SCHEME_SCREEN: 'AddSchemeScreen',
+    POLLS_SCREEN: 'PollsScreen',
+    CREATE_POLL_SCREEN: 'CreatePollScreen',
+    NOTIFICATIONS_SCREEN: 'NotificationsScreen',
 }

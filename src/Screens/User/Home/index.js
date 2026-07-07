@@ -13,43 +13,54 @@ import CustomLoader from "../../../Components/Loaders";
 import NavigationStrings from "../../../Constants/NavigationStrings";
 
 const UserHomeScreen = ({ navigation }) => {
-    const {themes } = useTheme();
+    const { themes } = useTheme();
     const Styles = getStyles(themes);
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [complaintBoxData, setComplaintBoxData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [unreadCount, setUnreadCount] = useState(0);
     const isFocused = useIsFocused();
 
 
     useEffect(() => {
         if (isFocused) {
             // Add the back button event listener
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', androidBackButtonHandler);
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', androidBackButtonHandler);
 
-        // Cleanup the event listener on component unmount
-        return () => backHandler.remove();
-    }
+            // Cleanup the event listener on component unmount
+            return () => backHandler.remove();
+        }
     }, [isFocused]);
 
-        useEffect(() => {
-            if (isFocused) {
-                getAllComplaintBoxes();
-            }
-        }, [isFocused]);
-    
-        const getAllComplaintBoxes = async () => {
-            setIsLoading(true);
-            try {
-                const res = await actions.getAllComplaintBox();
-                setComplaintBoxData(res)
-            } catch (error) {
-                console.log(error, '❌ Error while fetching complaint boxes');
-            }
-            finally{
-                setIsLoading(false);
-            }
-        };
+    useEffect(() => {
+        if (isFocused) {
+            getAllComplaintBoxes();
+            fetchUnreadCount();
+        }
+    }, [isFocused]);
+
+    const getAllComplaintBoxes = async () => {
+        setIsLoading(true);
+        try {
+            const res = await actions.getAllComplaintBox();
+            setComplaintBoxData(res)
+        } catch (error) {
+            console.log(error, '❌ Error while fetching complaint boxes');
+        }
+        finally {
+            setIsLoading(false);
+        }
+    };
+
+    const fetchUnreadCount = async () => {
+        try {
+            const res = await actions.getUnreadNotificationsCount();
+            setUnreadCount(res.count || 0);
+        } catch (error) {
+            console.log(error, '❌ Error while fetching unread notifications count');
+        }
+    };
 
     const onPressCancel = () => {
         setIsModalVisible(false);
@@ -68,28 +79,69 @@ const UserHomeScreen = ({ navigation }) => {
     const renderComplaintBoxes = ({ item }) => {
         return (
             <TouchableOpacity key={item?._id} onPress={() => navigation.navigate(NavigationStrings.VIEW_COMPLAINTS, { data: item })} style={Styles.complaints}>
-                {item.imageUrl ? <Image resizeMode="cover" source={{uri: item.imageUrl}} style={Styles.image} /> : <Image resizeMode="contain" source={Imagepaths.transparent_logo} style={Styles.image} />}
+                {item.imageUrl ? <Image resizeMode="cover" source={{ uri: item.imageUrl }} style={Styles.image} /> : <Image resizeMode="contain" source={Imagepaths.transparent_logo} style={Styles.image} />}
                 <Text style={Styles.complaintText}>{item.category}</Text>
             </TouchableOpacity>
         )
     }
 
     const renderEmpty = () => {
-        return(
+        return (
             <ListEmptyComponent
-            containerStyle={{height: moderateScale(height-80)}} />
+                containerStyle={{ height: moderateScale(height - 80) }} />
         )
     }
+
+    const renderHeader = () => {
+        return (
+            <View style={Styles.quickLinksRow}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate(NavigationStrings.SCHEMES_SCREEN)}
+                    style={Styles.quickLinkCard}
+                >
+                    <Text style={Styles.quickLinkEmoji}>🏛️</Text>
+                    <Text style={Styles.quickLinkText}>{strings.SCHEMES}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate(NavigationStrings.POLLS_SCREEN)}
+                    style={Styles.quickLinkCard}
+                >
+                    <Text style={Styles.quickLinkEmoji}>📊</Text>
+                    <Text style={Styles.quickLinkText}>{strings.POLLS}</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
+
     return (
         <View style={Styles.container}>
-                <FlatList
-                    numColumns={2}
-                    contentContainerStyle={{paddingBottom: moderateScale(100)}}
-                    data={complaintBoxData}
-                    keyExtractor={item => item?._id}
-                    renderItem={renderComplaintBoxes}
-                    ListEmptyComponent={renderEmpty}
-                    showsVerticalScrollIndicator={false} />
+            {/* Pinned Header Bar */}
+            <View style={Styles.headerBar}>
+                <Text style={Styles.headerLogo}>Village Voice</Text>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate(NavigationStrings.NOTIFICATIONS_SCREEN)}
+                    style={Styles.notificationBtn}
+                >
+                    <Image resizeMode="contain" source={Imagepaths.notification} style={Styles.bellIcon} />
+                    {unreadCount > 0 && (
+                        <View style={Styles.unreadBadge}>
+                            <Text style={Styles.unreadText}>{unreadCount}</Text>
+                        </View>
+                    )}
+                </TouchableOpacity>
+            </View>
+
+            <FlatList
+                numColumns={2}
+                contentContainerStyle={{ paddingBottom: moderateScale(100) }}
+                data={complaintBoxData}
+                keyExtractor={item => item?._id}
+                renderItem={renderComplaintBoxes}
+                ListHeaderComponent={renderHeader}
+                ListEmptyComponent={renderEmpty}
+                showsVerticalScrollIndicator={false}
+            />
             <AlertPopup
                 header={strings.HOLD_ON}
                 isModalVisible={isModalVisible}

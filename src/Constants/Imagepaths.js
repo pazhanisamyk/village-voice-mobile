@@ -38,4 +38,5 @@ export default {
     eye: require('../Assets/Images/Icons/eye.png'),
     transparent_logo: require('../Assets/Images/Img/transparent_logo.png'),
     delete: require('../Assets/Images/Icons/delete.png'),
+    notification: require('../Assets/Images/Icons/notification.png'),
 }

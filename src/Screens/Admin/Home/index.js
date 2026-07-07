@@ -23,6 +23,7 @@ const AdminHomeScreen = ({ navigation }) => {
     const userData = useSelector((state) => state?.auth?.userData);
     const [complaintsData, setComplaintsData] = useState([])
     const [complaintsCategory, setComplaintsCategory] = useState([])
+    const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
         if (isFocused) {
@@ -37,8 +38,18 @@ const AdminHomeScreen = ({ navigation }) => {
     useEffect(() => {
         if (isFocused) {
             getAllComplaints()
+            fetchUnreadCount()
         }
     }, [isFocused]);
+
+    const fetchUnreadCount = async () => {
+        try {
+            const res = await actions.getUnreadNotificationsCount();
+            setUnreadCount(res.count || 0);
+        } catch (error) {
+            console.log(error, '❌ Error while fetching unread notifications count');
+        }
+    };
 
     const getAllComplaints = async () => {
         setIsLoading(true);
@@ -88,55 +99,55 @@ const AdminHomeScreen = ({ navigation }) => {
     });
 
     const getCountByTab = (tabId) => {
-  const status = statusMap[tabId];
-  return complaintsData.filter(item => item.status === status).length;
-};
+        const status = statusMap[tabId];
+        return complaintsData.filter(item => item.status === status).length;
+    };
 
     const rendertabs = ({ item }) => {
         const count = getCountByTab(item.id);
         return (
             <TouchableOpacity
-  key={item.id}
-  onPress={() => seleTab(item.id)}
-  style={
-    item.id === selectedTAb
-      ? Styles.selectedtabOutline
-      : Styles.unselectedtabOutline
-  }
->
-  <View style={Styles.tabRow}>
-    {/* Count Badge */}
-    <View
-      style={[
-        Styles.countBadge,
-        {
-          backgroundColor:
-            item.id === selectedTAb ? themes.white : themes.black,
-        },
-      ]}
-    >
-      <Text
-        style={{
-          color: item.id === selectedTAb ? themes.black : themes.white,
-          fontSize: 12,
-          fontWeight: '600',
-        }}
-      >
-        {count}
-      </Text>
-    </View>
+                key={item.id}
+                onPress={() => seleTab(item.id)}
+                style={
+                    item.id === selectedTAb
+                        ? Styles.selectedtabOutline
+                        : Styles.unselectedtabOutline
+                }
+            >
+                <View style={Styles.tabRow}>
+                    {/* Count Badge */}
+                    <View
+                        style={[
+                            Styles.countBadge,
+                            {
+                                backgroundColor:
+                                    item.id === selectedTAb ? themes.white : themes.black,
+                            },
+                        ]}
+                    >
+                        <Text
+                            style={{
+                                color: item.id === selectedTAb ? themes.black : themes.white,
+                                fontSize: 12,
+                                fontWeight: '600',
+                            }}
+                        >
+                            {count}
+                        </Text>
+                    </View>
 
-    {/* Tab Name */}
-    <Text
-      style={[
-        Styles.tabTitle,
-        { color: item.id === selectedTAb ? themes.white : themes.black },
-      ]}
-    >
-      {item.name}
-    </Text>
-  </View>
-</TouchableOpacity>
+                    {/* Tab Name */}
+                    <Text
+                        style={[
+                            Styles.tabTitle,
+                            { color: item.id === selectedTAb ? themes.white : themes.black },
+                        ]}
+                    >
+                        {item.name}
+                    </Text>
+                </View>
+            </TouchableOpacity>
 
         );
     }
@@ -160,10 +171,46 @@ const AdminHomeScreen = ({ navigation }) => {
     return (
         <View style={Styles.container}>
             <View style={Styles.topview}>
+                {/* Pinned Header Bar */}
+                <View style={Styles.headerBar}>
+                    <Text style={Styles.headerLogo}>Village Voice Admin</Text>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate(NavigationStrings.NOTIFICATIONS_SCREEN)}
+                        style={Styles.notificationBtn}
+                    >
+                        <Image resizeMode="contain" source={Imagepaths.notification} style={Styles.bellIcon} />
+                        {unreadCount > 0 && (
+                            <View style={Styles.unreadBadge}>
+                                <Text style={Styles.unreadText}>{unreadCount}</Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                </View>
+
                 <View style={Styles.profileView}>
                     {userData?.profileImage ? <Image source={{ uri: userData?.profileImage }} style={Styles.image} /> : <Image source={Imagepaths.Launcher} style={Styles.image} />}
                     <Text style={Styles.userNmae}>{userData?.username}</Text>
                 </View>
+
+                {/* Quick Links */}
+                <View style={Styles.quickLinksRow}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate(NavigationStrings.SCHEMES_SCREEN)}
+                        style={Styles.quickLinkCard}
+                    >
+                        <Text style={Styles.quickLinkEmoji}>🏛️</Text>
+                        <Text style={Styles.quickLinkText}>{strings.SCHEMES}</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate(NavigationStrings.POLLS_SCREEN)}
+                        style={Styles.quickLinkCard}
+                    >
+                        <Text style={Styles.quickLinkEmoji}>📊</Text>
+                        <Text style={Styles.quickLinkText}>{strings.POLLS}</Text>
+                    </TouchableOpacity>
+                </View>
+
                 <View style={Styles.statusContainer}>
                     <View style={Styles.ComplaintBox}>
                         <View style={[Styles.complainboxlilne, { backgroundColor: themes.blue }]}></View>

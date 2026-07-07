@@ -1,0 +1,45 @@
+Download the google-services.json file from the firebase console project and paste it inside the android => app folder
+Path ===> village-voice-mobile/android/app/google-services.json
+
+
+To switch between local IP (development) and onRender (production), you only need to update the IP_ADDRESS variable in src/Config/Urls.js.
+
+Quick Reference
+Change to OnRender (Production): Go to src/Config/Urls.js and update IP_ADDRESS to:
+
+JavaScript
+// Development
+// export const IP_ADDRESS = 'http://[IP_ADDRESS]';
+
+// Production
+export const IP_ADDRESS = 'https://your-production-domain.com';
+
+Then restart your app.
+
+Change to Local IP (Development): Go to src/Config/Urls.js and update IP_ADDRESS to:
+
+JavaScript
+// Production
+// export const IP_ADDRESS = 'https://your-production-domain.com';
+
+// Development
+export const IP_ADDRESS = 'http://[IP_ADDRESS]';
+
+Then restart your app.
+
+Why This Works
+API Base URL is Dynamic: In src/Config/Urls.js, the API_BASE_URL is constructed using the IP_ADDRESS variable:
+
+JavaScript
+export const API_BASE_URL = `${IP_ADDRESS}/api/villagevoice`;
+
+By changing only IP_ADDRESS, you automatically update the base URL for all API endpoints, so you don't need to modify any other code.
+
+
+copy the .env.example file to .env file
+Path ===> village-voice-mobile/.env
+
+replace the dummy values in the .env file with your own values
+Path ===> village-voice-mobile/.env
+
+
